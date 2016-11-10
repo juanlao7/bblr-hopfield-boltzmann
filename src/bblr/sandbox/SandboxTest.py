@@ -33,11 +33,11 @@ session.run(init)
 bestAccuracy = None     # This is an array where [0] = training accuracy and [1] = validation accuracy.
 
 for i in xrange(200):
-    session.run(trainStep, feed_dict = {x: trainingXs, targetY: trainingYs})
+    session.run(trainStep, feed_dict = {'x': trainingXs, 'targetY': trainingYs})
 
     if i % 10 == 0:
-        currentTrainingAccuracy = session.run(accuracy, feed_dict = {x: trainingXs, targetY: trainingYs})
-        currentValidationAccuracy = session.run(accuracy, feed_dict = {x: validationXs, targetY: validationYs})
+        currentTrainingAccuracy = session.run(accuracy, feed_dict = {'x': trainingXs, 'targetY': trainingYs})
+        currentValidationAccuracy = session.run(accuracy, feed_dict = {'x': validationXs, 'targetY': validationYs})
 
         if bestAccuracy == None or currentValidationAccuracy >= bestAccuracy[1]:
             # TODO: store the state of the network NOW.
@@ -49,4 +49,4 @@ print 'Best training accuracy:', bestAccuracy[0]
 print 'Best validation accuracy:', bestAccuracy[1]
 
 # TODO: load the state of the best network here and uncomment the following line.
-# print 'Testing accuracy: ', session.run(accuracy, feed_dict = {x: testingXs, targetY: testingYs})
+# print 'Testing accuracy: ', session.run(accuracy, feed_dict = {'x': testingXs, 'targetY': testingYs})
