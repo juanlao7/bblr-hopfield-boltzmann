@@ -19,7 +19,7 @@ def generateDataset(n):
 INPUT_SIZE = 1
 CLASSES_SIZE = 1
 
-# Defining the model.
+# Defining the placeholders.
 x = tf.placeholder(tf.float32, [None, INPUT_SIZE])
 targetY = tf.placeholder(tf.float32, [None, CLASSES_SIZE])
 
