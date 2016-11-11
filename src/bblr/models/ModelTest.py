@@ -1,17 +1,13 @@
 import tensorflow as tf
-import numpy as np
 
-def createModel():
+def createModel(x, targetY):
     # Setting some constants here.
-    INPUT_SIZE = 1
-    CLASSES_SIZE = 1
+    INPUT_SIZE = tf.size(x)
+    CLASSES_SIZE = tf.size(targetY)
     HIDDEN_LAYER_1_SIZE = 5
     HIDDEN_LAYER_2_SIZE = 3
     
     # Defining the model.
-    x = tf.placeholder(tf.float32, [None, INPUT_SIZE])
-    targetY = tf.placeholder(tf.float32, [None, CLASSES_SIZE])
-    
     weights1 = tf.Variable(tf.random_uniform([INPUT_SIZE, HIDDEN_LAYER_1_SIZE], -1.0, 1.0))
     biases1 = tf.Variable(tf.ones([HIDDEN_LAYER_1_SIZE]))
     
@@ -35,4 +31,4 @@ def createModel():
     success = tf.less(y - targetY, 0.1)     # We consider a success if the difference between the result and the target is less than 0.1
     accuracy = tf.reduce_mean(tf.cast(success, tf.float32))
     
-    return trainStep, accuracy
+    return x, targetY, trainStep, accuracy

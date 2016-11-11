@@ -2,7 +2,6 @@ from bblr.generators.GeneratorTest import generateSample
 from bblr.models.ModelTest import createModel
 
 import tensorflow as tf
-import numpy as np
 
 def generateDataset(n):
     xs = []
@@ -29,7 +28,7 @@ validationXs, validationYs = generateDataset(30)
 testingXs, testingYs = generateDataset(30)
 
 # Creating the model.
-trainStep, accuracy = createModel()     # See ModelTest.py
+trainStep, accuracy = createModel(x, targetY)     # See ModelTest.py
 
 # Initialize the variables.
 init = tf.initialize_all_variables()
