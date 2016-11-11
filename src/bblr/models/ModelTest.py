@@ -2,8 +2,8 @@ import tensorflow as tf
 
 def createModel(x, targetY):
     # Setting some constants here.
-    INPUT_SIZE = tf.size(x)
-    CLASSES_SIZE = tf.size(targetY)
+    INPUT_SIZE = x.get_shape().dims[1].__int__()
+    CLASSES_SIZE = targetY.get_shape().dims[1].__int__()
     HIDDEN_LAYER_1_SIZE = 5
     HIDDEN_LAYER_2_SIZE = 3
     
