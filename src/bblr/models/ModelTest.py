@@ -31,4 +31,4 @@ def createModel(x, targetY):
     success = tf.less(y - targetY, 0.1)     # We consider a success if the difference between the result and the target is less than 0.1
     accuracy = tf.reduce_mean(tf.cast(success, tf.float32))
     
-    return x, targetY, trainStep, accuracy
+    return trainStep, accuracy
