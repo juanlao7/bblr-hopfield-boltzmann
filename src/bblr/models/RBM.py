@@ -7,7 +7,7 @@ class RBM(object):
     '''
 
 
-    def __init__(self, n_visible, n_hidden, W=None, h_offset=None, v_offset=None):
+    def __init__(self, n_visible, n_hidden, W=None, h_offset=None, v_offset=None, verbose=False):
         '''
         Constructor
         '''
@@ -26,6 +26,7 @@ class RBM(object):
         self.v_offset = v_offset
         self.n_visible = n_visible
         self.n_hidden = n_hidden
+        self.verbose = verbose
         
     def train(self, X, epochs, learning_rate, batch_size=1):
         '''
@@ -37,6 +38,11 @@ class RBM(object):
         - Online learning, if batch_size = 1
         - Mini-batch learning, otherwise (10-100 is the most recommended)
         '''
+        if self.verbose:
+            print 'Initial weights', self.W
+            print 'Initial visible offsets', self.v_offset
+            print 'Initial hidden offsets', self.h_offset
+        
         d_w = np.zeros((self.n_visible, self.n_hidden))
         d_v = np.zeros((1, self.n_visible))
         d_h = np.zeros((1, self.n_hidden))
@@ -54,7 +60,7 @@ class RBM(object):
                 # Negative phase: calculate v1 from our h0 samples
                 # Hinton, 2010 recommends not to binarize when updating visible units
                 #No need to sample the last hidden states because they're not used
-                v1 = self.sigmoid(h0, self.W, self.v_offset)
+                v1 = self.sigmoid(h0, self.W.T, self.v_offset)
                 prob_h1 = self.sigmoid(v1, self.W, self.h_offset)
                 
                 # Update increments of weights and offsets
@@ -68,7 +74,7 @@ class RBM(object):
                 self.h_offset += d_h
         
     
-    def reconstruct(self, v0):
+    def recall(self, v0):
         '''
         Given an input vector v0, reconstructs it from the
         patterns that it has learned previously.
@@ -76,7 +82,7 @@ class RBM(object):
         prob_h0 = self.sigmoid(v0, self.W, self.h_offset)
         h0 = prob_h0 > np.random.rand(1, self.n_hidden)
         
-        return self.sigmoid(h0, self.W, self.v_offset)
+        return self.sigmoid(h0, self.W.T, self.v_offset)
     
     
     def sigmoid(self, X, W, b):

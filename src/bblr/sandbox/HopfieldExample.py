@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from bblr.models import Hopfield
 from bblr.generators import SimpleLetterGenerator as gen
 
