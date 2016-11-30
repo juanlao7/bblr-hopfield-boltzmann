@@ -1,5 +1,4 @@
 import numpy as np
-from docutils.utils.punctuation_chars import d_wide
 
 class RBM(object):
     '''
@@ -86,7 +85,3 @@ class RBM(object):
         sigmoid function.
         '''
         return 1.0 / (1 + np.exp(- np.dot(X,W) - b))
-    
-    
-    
-    
