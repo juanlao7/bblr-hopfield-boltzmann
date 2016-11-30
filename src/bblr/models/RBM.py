@@ -25,6 +25,8 @@ class RBM(object):
         self.W = W
         self.h_offset = h_offset
         self.v_offset = v_offset
+        self.n_visible = n_visible
+        self.n_hidden = n_hidden
         
     def train(self, X, epochs, learning_rate, batch_size=1):
         '''
@@ -66,6 +68,16 @@ class RBM(object):
                 self.v_offset += d_v
                 self.h_offset += d_h
         
+    
+    def reconstruct(self, v0):
+        '''
+        Given an input vector v0, reconstructs it from the
+        patterns that it has learned previously.
+        '''
+        prob_h0 = self.sigmoid(v0, self.W, self.h_offset)
+        h0 = prob_h0 > np.random.rand(1, self.n_hidden)
+        
+        return self.sigmoid(h0, self.W, self.v_offset)
     
     
     def sigmoid(self, X, W, b):
