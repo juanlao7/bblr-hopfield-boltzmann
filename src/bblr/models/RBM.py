@@ -28,7 +28,7 @@ class RBM(object):
         self.n_hidden = n_hidden
         self.verbose = verbose
         
-    def train(self, X, epochs, learning_rate, momentum=False, batch_size=1):
+    def train(self, X, epochs, learning_rate, decay=0, momentum=False, batch_size=1):
         '''
         Trains the RBM with the samples provided in X, using
         a specified number of epochs and a learning rate.
@@ -73,7 +73,7 @@ class RBM(object):
                     m = 1
                 
                 # Update increments of weights and offsets
-                d_w = d_w * m + learning_rate * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1))
+                d_w = d_w * m + learning_rate * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1)) - decay * self.W
                 d_v = d_v * m + learning_rate * (np.sum(v0, axis=0) - np.sum(v1, axis=0))
                 d_h = d_h * m + learning_rate * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
                 
@@ -97,6 +97,14 @@ class RBM(object):
     def sigmoid(self, X, W, b):
         '''
         Calculates the activations of a layer using the
-        sigmoid function.
+        sigmoid function, in [0,1].
         '''
         return 1.0 / (1 + np.exp(- np.dot(X,W) - b))
+    
+    def tanh(self, X, W, b):
+        '''
+        Calculates the activations of a layer using the
+        tanh function, in [-1,1].
+        '''
+        z = np.dot(X,W) + b
+        return (np.exp(z) - np.exp(-z)) // (np.exp(z) + np.exp(-z))
