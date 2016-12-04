@@ -28,7 +28,7 @@ class RBM(object):
         self.n_hidden = n_hidden
         self.verbose = verbose
         
-    def train(self, X, epochs, learning_rate, batch_size=1):
+    def train(self, X, epochs, learning_rate, momentum=False, batch_size=1):
         '''
         Trains the RBM with the samples provided in X, using
         a specified number of epochs and a learning rate.
@@ -37,6 +37,9 @@ class RBM(object):
         - Batch learning, if batch_size = X.shape[0]
         - Online learning, if batch_size = 1
         - Mini-batch learning, otherwise (10-100 is the most recommended)
+        
+        It allows to train using the momentum improvement by passing
+        momentum=True
         '''
         if self.verbose:
             print 'Initial weights', self.W
@@ -48,12 +51,12 @@ class RBM(object):
         d_h = np.zeros((1, self.n_hidden))
         
         batches = X.shape[0] // batch_size
-        for _ in range(epochs):
+        for epoch in range(epochs):
             for batch in range(batches):
                 # Positive phase: sample h0 from v0
                 v0 = X[int(batch*batch_size):int((batch+1)*batch_size)]
                 prob_h0 = self.sigmoid(v0, self.W, self.h_offset)
-        
+                
                 # Sample h0: we use binary units we binarize the results of sigmoid
                 h0 = prob_h0 > np.random.rand(batch_size, self.n_hidden)
                 
@@ -63,10 +66,16 @@ class RBM(object):
                 v1 = self.sigmoid(h0, self.W.T, self.v_offset)
                 prob_h1 = self.sigmoid(v1, self.W, self.h_offset)
                 
+                #Momentum is set as specified by Hinton's practical guide
+                if momentum:
+                    m = 0.5 if epoch > 5 else 0.9
+                else:
+                    m = 1
+                
                 # Update increments of weights and offsets
-                d_w += learning_rate * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1))
-                d_v += learning_rate * (np.sum(v0, axis=0) - np.sum(v1, axis=0))
-                d_h += learning_rate * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
+                d_w = d_w * m + learning_rate * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1))
+                d_v = d_v * m + learning_rate * (np.sum(v0, axis=0) - np.sum(v1, axis=0))
+                d_h = d_h * m + learning_rate * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
                 
                 # Update weights and offsets
                 self.W += d_w
