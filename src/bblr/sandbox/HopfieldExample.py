@@ -10,12 +10,23 @@ X...X
 .XXX.
 .XXX.
 """
+
+completeA = """
+.XXX.
+X...X
+XXXXX
+X...X
+X...X
+"""
     
 a = gen.to_pattern(gen.A)
 z = gen.to_pattern(gen.Z)
-hop = Hopfield.Hopfield(verbose=True)
 patterns = np.atleast_2d((a,z))
 print patterns
-hop.train(patterns, normW=True)
-recovered = hop.recall(gen.to_pattern(partialA),steps=5)
+hop = Hopfield.Hopfield(verbose=True)
+'''Using Hebbian rule'''
+#hop.trainHebbian(patterns, normW=True)
+'''Using Storkey rule'''
+hop.trainStorkey(patterns, normW=True)
+recovered = hop.recall(gen.to_pattern(partialA),steps=10)
 gen.display(recovered)
