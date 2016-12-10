@@ -13,14 +13,14 @@ class RBM(object):
         '''
         if W is None:
             # Initializes W randomly as N(mu=2,var=4)
-            W = 2 * np.random.randn(n_visible, n_hidden) + 2
-            
+            #W = 2 * np.random.randn(n_visible, n_hidden) + 2
+            W = 0.1 * np.random.randn(n_visible, n_hidden)
         if h_offset is None:
-            h_offset = np.zeros((1 ,n_hidden))
-            
+            #h_offset = np.zeros((1 ,n_hidden))
+            h_offset = -4.0 * np.ones((1, n_hidden))
         if v_offset is None:
+            #v_offset = np.zeros((1, n_visible))
             v_offset = np.zeros((1, n_visible))
-             
         self.W = W
         self.h_offset = h_offset
         self.v_offset = v_offset
@@ -73,9 +73,9 @@ class RBM(object):
                     m = 1
                 
                 # Update increments of weights and offsets
-                d_w = d_w * m + learning_rate * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1)) - decay * self.W
-                d_v = d_v * m + learning_rate * (np.sum(v0, axis=0) - np.sum(v1, axis=0))
-                d_h = d_h * m + learning_rate * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
+                d_w = d_w * m + (learning_rate/batch_size) * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1)) - decay * self.W
+                d_v = d_v * m + (learning_rate/batch_size) * (np.sum(v0, axis=0) - np.sum(v1, axis=0))
+                d_h = d_h * m + (learning_rate/batch_size) * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
                 
                 # Update weights and offsets
                 self.W += d_w
@@ -99,7 +99,12 @@ class RBM(object):
         Calculates the activations of a layer using the
         sigmoid function, in [0,1].
         '''
-        return 1.0 / (1 + np.exp(- np.dot(X,W) - b))
+        #z = np.dot(X,W) + b
+        #np.clip(z, -500, 500)
+        #return 1.0 / (1 + np.exp(-z))
+        xw = np.dot(X, W)
+    
+        return 1.0 / (1 + np.exp(- xw - b))
     
     def tanh(self, X, W, b):
         '''
