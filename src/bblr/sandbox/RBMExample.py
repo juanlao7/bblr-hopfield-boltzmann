@@ -1,13 +1,13 @@
 import numpy as np
-from bblr.models import RBM
+from bblr.models import Boltzmann
 
 
 partialA = """
-.XXXX
-X..XX
 XXXXX
-X...X
-XX..X
+...XX
+..XXX
+.XXXX
+XXXXX
 """
 
 def exampleWithLetters():
@@ -15,10 +15,11 @@ def exampleWithLetters():
     
     a = gen.to_pattern(gen.A)
     z = gen.to_pattern(gen.Z)
-    rbm = RBM.RBM(25, 1000, verbose=True)
+    rbm = Boltzmann.RBM(25, 5, verbose=False)
+    #print 'W', rbm.W
     patterns = np.atleast_2d((a,z))
     print patterns
-    rbm.train(patterns, epochs=200, learning_rate=0.1)
+    rbm.train(patterns, epochs=10000, learning_rate=0.01, momentum=True)
     recovered = rbm.recall(gen.to_pattern(partialA))
     print "Recovered", recovered
     gen.display(recovered)
@@ -33,8 +34,8 @@ def exampleWithVectors(vector_size=5):
     print 'Training patterns:', patterns
     print 'Test patterns:', test
     
-    rbm = RBM.RBM(n_visible=vector_size, n_hidden=3, verbose=True)
-    rbm.train(patterns, epochs=100, learning_rate=0.01)
+    rbm = Boltzmann.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
+    rbm.train(patterns, epochs=5000, learning_rate=0.01, batch_size=2)
     recovered = rbm.recall(test)
     print 'Recovered:', np.around(recovered)
     

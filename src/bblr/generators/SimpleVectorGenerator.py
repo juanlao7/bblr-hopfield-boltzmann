@@ -6,7 +6,7 @@ def genRandomBinaryVector(n):
     Generates a vector of -1, 1 in a random pattern
     n: length of the vector
     '''
-    return np.array([randint(0,1) for _ in range(1,n+1)]) * 2 - 1
+    return np.array([randint(0,1) for _ in range(1,n+1)])
 
 def genAlternatingVector(n):
     '''
@@ -15,7 +15,7 @@ def genAlternatingVector(n):
     '''
     a = np.empty((n,))
     a[::2] = 1
-    a[1::2] = -1
+    a[1::2] = 0
     return a
 
 def genRepeatedVector(val, n):

@@ -1,13 +1,33 @@
 import numpy as np
 
+def sigmoid(X, W, b):
+    '''
+    Calculates the activations of a layer using the
+    sigmoid function, in [0,1].
+    '''
+    #z = np.dot(X,W) + b
+    #np.clip(z, -500, 500)
+    #return 1.0 / (1 + np.exp(-z))
+    xw = np.dot(X, W)
+
+    return 1.0 / (1 + np.exp(- xw - b))
+
+
+def tanh(X, W, b):
+    '''
+    Calculates the activations of a layer using the
+    tanh function, in [-1,1].
+    '''
+    z = np.dot(X,W) + b
+    return (np.exp(z) - np.exp(-z)) // (np.exp(z) + np.exp(-z))
+
 class RBM(object):
     '''
     Implementation of the Restricted Boltzmann Machine
     as an associative memory.
     '''
 
-
-    def __init__(self, n_visible, n_hidden, W=None, h_offset=None, v_offset=None, verbose=False):
+    def __init__(self, n_visible, n_hidden, W=None, h_offset=None, v_offset=None, activation=sigmoid,verbose=False):
         '''
         Constructor
         '''
@@ -27,6 +47,7 @@ class RBM(object):
         self.n_visible = n_visible
         self.n_hidden = n_hidden
         self.verbose = verbose
+        self.activation = activation
         
     def train(self, X, epochs, learning_rate, decay=0, momentum=False, batch_size=1):
         '''
@@ -55,7 +76,7 @@ class RBM(object):
             for batch in range(batches):
                 # Positive phase: sample h0 from v0
                 v0 = X[int(batch*batch_size):int((batch+1)*batch_size)]
-                prob_h0 = self.sigmoid(v0, self.W, self.h_offset)
+                prob_h0 = self.activation(v0, self.W, self.h_offset)
                 
                 # Sample h0: we use binary units we binarize the results of sigmoid
                 h0 = prob_h0 > np.random.rand(batch_size, self.n_hidden)
@@ -63,8 +84,8 @@ class RBM(object):
                 # Negative phase: calculate v1 from our h0 samples
                 # Hinton, 2010 recommends not to binarize when updating visible units
                 #No need to sample the last hidden states because they're not used
-                v1 = self.sigmoid(h0, self.W.T, self.v_offset)
-                prob_h1 = self.sigmoid(v1, self.W, self.h_offset)
+                v1 = self.activation(h0, self.W.T, self.v_offset)
+                prob_h1 = self.activation(v1, self.W, self.h_offset)
                 
                 #Momentum is set as specified by Hinton's practical guide
                 if momentum:
@@ -88,28 +109,7 @@ class RBM(object):
         Given an input vector v0, reconstructs it from the
         patterns that it has learned previously.
         '''
-        prob_h0 = self.sigmoid(v0, self.W, self.h_offset)
+        prob_h0 = self.activation(v0, self.W, self.h_offset)
         h0 = prob_h0 > np.random.rand(1, self.n_hidden)
         
-        return self.sigmoid(h0, self.W.T, self.v_offset)
-    
-    
-    def sigmoid(self, X, W, b):
-        '''
-        Calculates the activations of a layer using the
-        sigmoid function, in [0,1].
-        '''
-        #z = np.dot(X,W) + b
-        #np.clip(z, -500, 500)
-        #return 1.0 / (1 + np.exp(-z))
-        xw = np.dot(X, W)
-    
-        return 1.0 / (1 + np.exp(- xw - b))
-    
-    def tanh(self, X, W, b):
-        '''
-        Calculates the activations of a layer using the
-        tanh function, in [-1,1].
-        '''
-        z = np.dot(X,W) + b
-        return (np.exp(z) - np.exp(-z)) // (np.exp(z) + np.exp(-z))
+        return self.activation(h0, self.W.T, self.v_offset)

@@ -23,7 +23,7 @@ def to_pattern(letter):
     X being part of the letter and . not being part of it,
     to a vector representation where X=+1 and .=-1
     '''
-    return np.array([+1 if c=='X' else -1 for c in letter.replace('\n','')])
+    return np.array([+1 if c=='X' else 0 for c in letter.replace('\n','')])
 
 def display(pattern):
     '''
