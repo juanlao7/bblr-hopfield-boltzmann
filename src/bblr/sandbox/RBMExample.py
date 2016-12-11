@@ -11,30 +11,32 @@ XXXXX
 """
 
 def exampleWithLetters():
-    from bblr.generators import SimpleLetterGenerator as gen
+    from bblr.generators import Letters as gen
     
-    a = gen.to_pattern(gen.A, neg=0)
-    z = gen.to_pattern(gen.Z, neg=0)
+    slg = gen.SimpleLetterGenerator(pos=1, neg=0)
+    a = slg.toPattern(gen.A)
+    z = slg.toPattern(gen.Z)
     rbm = Boltzmann.RBM(25, 5, verbose=False)
 
     patterns = np.atleast_2d((a,z))
     rbm.train(patterns, epochs=10000, learning_rate=0.01, momentum=True)
-    recovered = rbm.recall(gen.to_pattern(partialA, neg=0))
+    recovered = rbm.recall(slg.toPattern(partialA))
     print "Recovered", recovered
-    gen.display(recovered)
+    slg.display(recovered)
 
 
 def exampleWithVectors(vector_size=5):
-    from bblr.generators import SimpleVectorGenerator as gen
+    from bblr.generators import BinaryVectors as gen
     
-    patterns = np.vstack((gen.genAlternatingVector(vector_size), \
-                         gen.genRepeatedVector(1, vector_size)))
-    test = gen.genRandomBinaryVector(vector_size, neg=0)
+    svg = gen.SimpleVectorGenerator(pos=1, neg=0)
+    patterns = np.vstack((svg.genAlternatingVector(vector_size), \
+                         svg.genRepeatedVector(1, vector_size)))
+    test = svg.genRandomBinaryVector(vector_size)
     print 'Training patterns:', patterns
     print 'Test patterns:', test
     
     rbm = Boltzmann.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
-    rbm.train(patterns, epochs=10000, learning_rate=0.01, batch_size=2)
+    rbm.train(patterns, epochs=5000, learning_rate=0.01, batch_size=2)
     recovered = rbm.recall(test)
     print 'Recovered:', np.around(recovered)
     

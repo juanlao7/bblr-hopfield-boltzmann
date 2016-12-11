@@ -35,16 +35,17 @@ XX.XX
 
 
 def exampleWithLetters():
-    from bblr.generators import SimpleLetterGenerator as gen
+    from bblr.generators import Letters as gen
     
-    a = gen.to_pattern(gen.A)
-    z = gen.to_pattern(gen.Z)
-    i = gen.to_pattern(gen.I)
-    u = gen.to_pattern(gen.U)
-    partialz = gen.to_pattern(partialZ)
-    partiali = gen.to_pattern(partialI)
-    partiala2 = gen.to_pattern(partialA2)
-    partiala1 = gen.to_pattern(partialA1)
+    slg = gen.SimpleLetterGenerator()
+    a = slg.toPattern(gen.A)
+    z = slg.toPattern(gen.Z)
+    i = slg.toPattern(gen.I)
+    u = slg.toPattern(gen.U)
+    partialz = slg.toPattern(partialZ)
+    partiali = slg.toPattern(partialI)
+    partiala2 = slg.toPattern(partialA2)
+    partiala1 = slg.toPattern(partialA1)
     
     test = a
     
@@ -59,17 +60,18 @@ def exampleWithLetters():
     print 'Patterns', patterns
     print 'Test patterns:\n', test
     print "Recovered\n", recovered
-    gen.display(test)
-    gen.display(recovered)
+    slg.display(test)
+    slg.display(recovered)
 
 
 def exampleWithVectors(vector_size=25):
-    from bblr.generators import SimpleVectorGenerator as gen
+    from bblr.generators import BinaryVectors as gen
     
-    patterns = np.vstack((gen.genAlternatingVector(vector_size), \
-                         gen.genRepeatedVector(1, vector_size)))
-    test = gen.genRandomBinaryVector(vector_size)
-    test1 = gen.genRepeatedVector(1, vector_size)
+    svg = gen.SimpleVectorGenerator()
+    patterns = np.vstack((svg.genAlternatingVector(vector_size), \
+                         svg.genRepeatedVector(1, vector_size)))
+    test = svg.genRandomBinaryVector(vector_size)
+    test1 = svg.genRepeatedVector(1, vector_size)
     
     hop = Hopfield.Hopfield(verbose=True)
     hop.train(patterns, learningRule='storkey')
