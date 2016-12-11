@@ -6,15 +6,14 @@ class Hopfield():
     memory using numpy.
     '''
 
-
     def __init__(self, verbose=False):
         '''
         Constructor
         If the verbose flag is indicated, the network will
         output execution logs.
         '''
-        
         self.verbose = verbose;
+        
         
     def train(self, patterns, learningRule='hebbian', normW=True):
         '''
@@ -29,7 +28,6 @@ class Hopfield():
         Note the parameter normW; If set to True (default), the weight matrix 
         is normalized by the number of neurons/input dimensions.
         '''
-        
         self.numPatterns = patterns.shape[0]
         self.n = patterns.shape[1]
         self.W = np.zeros((self.n, self.n))
@@ -38,7 +36,6 @@ class Hopfield():
             self.storkeyRule(patterns, normW)
         else:
             self.hebbianRule(patterns, normW)
-        
         
     
     def hebbianRule(self, patterns, normW):

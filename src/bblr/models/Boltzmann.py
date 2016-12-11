@@ -5,11 +5,7 @@ def sigmoid(X, W, b):
     Calculates the activations of a layer using the
     sigmoid function, in [0,1].
     '''
-    #z = np.dot(X,W) + b
-    #np.clip(z, -500, 500)
-    #return 1.0 / (1 + np.exp(-z))
     xw = np.dot(X, W)
-
     return 1.0 / (1 + np.exp(- xw - b))
 
 
@@ -20,6 +16,7 @@ def tanh(X, W, b):
     '''
     z = np.dot(X,W) + b
     return (np.exp(z) - np.exp(-z)) // (np.exp(z) + np.exp(-z))
+
 
 class RBM(object):
     '''
@@ -32,15 +29,12 @@ class RBM(object):
         Constructor
         '''
         if W is None:
-            # Initializes W randomly as N(mu=2,var=4)
-            #W = 2 * np.random.randn(n_visible, n_hidden) + 2
             W = 0.1 * np.random.randn(n_visible, n_hidden)
         if h_offset is None:
-            #h_offset = np.zeros((1 ,n_hidden))
             h_offset = -4.0 * np.ones((1, n_hidden))
         if v_offset is None:
-            #v_offset = np.zeros((1, n_visible))
             v_offset = np.zeros((1, n_visible))
+            
         self.W = W
         self.h_offset = h_offset
         self.v_offset = v_offset
