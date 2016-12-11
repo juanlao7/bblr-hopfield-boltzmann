@@ -13,14 +13,14 @@ XXXXX
 def exampleWithLetters():
     from bblr.generators import SimpleLetterGenerator as gen
     
-    a = gen.to_pattern(gen.A)
-    z = gen.to_pattern(gen.Z)
+    a = gen.to_pattern(gen.A, neg=0)
+    z = gen.to_pattern(gen.Z, neg=0)
     rbm = Boltzmann.RBM(25, 5, verbose=False)
     #print 'W', rbm.W
     patterns = np.atleast_2d((a,z))
     print patterns
     rbm.train(patterns, epochs=10000, learning_rate=0.01, momentum=True)
-    recovered = rbm.recall(gen.to_pattern(partialA))
+    recovered = rbm.recall(gen.to_pattern(partialA, neg=0))
     print "Recovered", recovered
     gen.display(recovered)
 
@@ -30,7 +30,7 @@ def exampleWithVectors(vector_size=5):
     
     patterns = np.vstack((gen.genAlternatingVector(vector_size), \
                          gen.genRepeatedVector(1, vector_size)))
-    test = gen.genRandomBinaryVector(vector_size)
+    test = gen.genRandomBinaryVector(vector_size, neg=0)
     print 'Training patterns:', patterns
     print 'Test patterns:', test
     

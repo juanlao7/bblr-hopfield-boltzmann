@@ -1,14 +1,15 @@
 import numpy as np
 from random import randint
 
-def genRandomBinaryVector(n):
+def genRandomBinaryVector(n, pos=1, neg=-1):
     '''
     Generates a vector of -1, 1 in a random pattern
     n: length of the vector
     '''
-    return np.array([randint(0,1) for _ in range(1,n+1)])
+    v = np.array([randint(0,1) for _ in range(1,n+1)])
+    return [pos if x==1 else neg for x in v]
 
-def genAlternatingVector(n):
+def genAlternatingVector(n, pos=1, neg=-1):
     '''
     Generates a vector of -1, 1 alternated
     n: length of the vector

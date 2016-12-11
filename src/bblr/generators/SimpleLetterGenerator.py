@@ -17,13 +17,13 @@ XXXXX
 XXXXX
 """
 
-def to_pattern(letter):
+def to_pattern(letter, pos=1, neg=-1):
     '''
     Translates a 5x5 matrix representing a letter, with
     X being part of the letter and . not being part of it,
     to a vector representation where X=+1 and .=-1
     '''
-    return np.array([+1 if c=='X' else 0 for c in letter.replace('\n','')])
+    return np.array([pos if c=='X' else neg for c in letter.replace('\n','')])
 
 def display(pattern):
     '''
