@@ -15,10 +15,10 @@ def exampleWithLetters():
     
     a = gen.to_pattern(gen.A, neg=0)
     z = gen.to_pattern(gen.Z, neg=0)
-    rbm = Boltzmann.RBM(25, 15, verbose=False)
+    rbm = Boltzmann.RBM(25, 5, verbose=False)
 
     patterns = np.atleast_2d((a,z))
-    rbm.train(patterns, epochs=100000, learning_rate=0.01, momentum=True)
+    rbm.train(patterns, epochs=10000, learning_rate=0.01, momentum=True)
     recovered = rbm.recall(gen.to_pattern(partialA, neg=0))
     print "Recovered", recovered
     gen.display(recovered)
@@ -34,7 +34,7 @@ def exampleWithVectors(vector_size=5):
     print 'Test patterns:', test
     
     rbm = Boltzmann.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
-    rbm.train(patterns, epochs=100000, learning_rate=0.01, batch_size=2)
+    rbm.train(patterns, epochs=10000, learning_rate=0.01, batch_size=2)
     recovered = rbm.recall(test)
     print 'Recovered:', np.around(recovered)
     

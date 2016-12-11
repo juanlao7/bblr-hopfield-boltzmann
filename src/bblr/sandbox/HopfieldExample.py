@@ -17,15 +17,6 @@ X...X
 XX..X
 """
 
-
-I = """
-..X..
-..X..
-..X..
-..X..
-..X..
-"""
-
 partialI = """
 .X...
 ..X..
@@ -42,22 +33,14 @@ X....
 XX.XX
 """
 
-U = """
-X...X
-X...X
-X...X
-X...X
-XXXXX
-"""
-
 
 def exampleWithLetters():
     from bblr.generators import SimpleLetterGenerator as gen
     
     a = gen.to_pattern(gen.A)
     z = gen.to_pattern(gen.Z)
-    i = gen.to_pattern(I)
-    u = gen.to_pattern(U)
+    i = gen.to_pattern(gen.I)
+    u = gen.to_pattern(gen.U)
     partialz = gen.to_pattern(partialZ)
     partiali = gen.to_pattern(partialI)
     partiala2 = gen.to_pattern(partialA2)
