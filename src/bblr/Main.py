@@ -3,6 +3,9 @@ import json
 import re
 from bblr.generators.MainGenerator import MainGenerator
 
+PATTERN_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
+MODELS_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
+
 def loadJsonFile(path):
     with open(path) as handler:
         data = handler.read()
@@ -15,9 +18,10 @@ def generateModel(modelPropertiesCombination):
 
 if __name__ == '__main__':
     # Parsing arguments
-    parser = argparse.ArgumentParser(prog='bblr-hopfield-boltzmann analyzer', description='Automatic script to obtain the final results of the project bblr-hopfield-boltzmann.', epilog='*1: The format for this file is specified here: <URL>')
-    parser.add_argument('model_properties_file', help='Path to a file containing the combinations of model properties you want to test (*1)')
-    parser.add_argument('pattern_data_set_properties_file', help='Path to a file containing the combinations of pattern data set properties you want to test (*1)')
+    parser = argparse.ArgumentParser(prog='bblr-hopfield-boltzmann analyzer', description='Automatic script to obtain the final results of the project bblr-hopfield-boltzmann.')
+    parser.add_argument('pattern_data_set_properties_file', help='Path to a file containing the combinations of pattern data set properties you want to test. See ' + PATTERN_FORMAT_URL)
+    parser.add_argument('model_properties_file', help='Path to a file containing the combinations of model properties you want to test. See ' + MODELS_FORMAT_URL)
+    parser.add_argument('--seed', dest='seed', help='Fixed random seed for reproducibility purposes (0 by default)', type=int, default=0)
     arguments = parser.parse_args()
     
     # Loading preferences
@@ -27,7 +31,7 @@ if __name__ == '__main__':
     # Main loop
     
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
-        patternDataSetGenerator = MainGenerator(0, patternDataSetPropertiesCombination)
+        patternDataSetGenerator = MainGenerator(patternDataSetPropertiesCombination)
         
         for modelPropertiesCombination in modelPropertiesCombinations:
             model = generateModel(modelPropertiesCombination)

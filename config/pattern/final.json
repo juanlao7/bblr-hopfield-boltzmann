@@ -1,5 +1,5 @@
 [
-	// Combination 1: lorem ipsum
+  // Combination 1: lorem ipsum
   {
     "datasetSize": 100,
     "patternSize": 10,       // patterns are vectors of 10 dimensions
@@ -8,7 +8,7 @@
       "factor": 2
     },
     "similitude": {
-      "type": "common bits",
+      "type": "common 1s",
       "matches": 3
     }
   },

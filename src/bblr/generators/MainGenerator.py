@@ -4,46 +4,65 @@ class MainGenerator(object):
     properties = None
     dataSetSize = 0
     
-    def __init__(self, randomSeed, patternDataSetProperties):
+    def __init__(self, patternDataSetProperties):
         self.properties = patternDataSetProperties
         self.dataSetSize = patternDataSetProperties['dataSetSize']
         
         # Validating the configuration
+        patternSize = self.properties['patternSize']
+        scale = self.properties['scale']
+        similitude = self.properties['similitude']
         
         self.assertInt('Data set size', self.dataSetSize, 1)
-        self.assertInt('Pattern size', self.properties['patternSize'], 1)
+        self.assertInt('Pattern size', patternSize, 1)
         
-        if self.properties['scale'] != None:
-            if self.properties['scale']['type'] == '1D':
-                self.assertInt('Scale factor for 1D', self.properties['scale']['factor'], 1)
-            elif self.properties['scale']['type'] == '2D':
-                self.assertInt('Scale pattern width', self.properties['scale']['patternWidth'], 1)
-                self.assertInt('Scale pattern height', self.properties['scale']['patternHeight'], 1)
-                self.assertInt('Scale width factor', self.properties['scale']['widthFactor'], 1)
-                self.assertInt('Scale height factor', self.properties['scale']['heightFactor'], 1)
+        if scale != None:
+            if scale['type'] == '1D':
+                self.assertInt('Scale factor for 1D', scale['factor'], 1)
+            elif scale['type'] == '2D':
+                self.assertInt('Scale pattern width', scale['patternWidth'], 1)
+                self.assertInt('Scale pattern height', scale['patternHeight'], 1)
+                self.assertInt('Scale width factor', scale['widthFactor'], 1)
+                self.assertInt('Scale height factor', scale['heightFactor'], 1)
                 
-                if self.properties['scale']['patternWidth'] * self.properties['scale']['patternHeight'] != self.properties['patternSize']:
+                if scale['patternWidth'] * scale['patternHeight'] != patternSize:
                     raise Exception('Scale pattern width and pattern height do not fit with the given pattern size')
             else:
-                raise Exception('Unknown scale type ' + self.properties['scale']['type'])
+                raise Exception('Unknown scale type ' + scale['type'])
         
-        if self.properties['similitude'] != None:
-            self.assertInt('Matches number', self.properties['similitude']['matches'], 1)
+        if similitude != None:
+            matches = similitude['matches']
+            self.assertInt('Matches number', matches, 1)
             
-            if self.properties['similitude']['type'] == 'equal neighbors 2D':
-                self.assertInt('Equal neighbors 2D pattern width', self.properties['similitude']['patternWidth'], 1)
-                self.assertInt('Equal neighbors 2D pattern height', self.properties['similitude']['patternHeight'], 1)
-                self.assertInt('Equal neighbors 2D k', self.properties['similitude']['k'], 8)
+            # TODO: implement the affectation grade
+            
+            if similitude['type'] in ['common 1s', 'common 0s']:
+                # TODO: link to the explanation of this fact
+                maxDataSetSize = patternSize - matches + 1 if patternSize - matches <= 1 else matches + 2
                 
-                n = (math.sqrt(self.properties['similitude']['k'] + 1) - 1) / 2.0
+                if self.dataSetSize > maxDataSetSize:
+                    raise Exception('Data set size cannot be greater than ' + maxDataSetSize + ' when similitude type is "' + similitude['type'] + '", patternSize is ' + patternSize + ' and matches is ' + matches)
+            elif similitude['type'] == 'equal neighbors 1D':
+                # TODO: check if dataSize overflows the limit of this constraint.
+                self.assertInt('Equal neighbors 1D k', similitude['k'], 0)
+                n = similitude['k'] / 2.0
                 
                 if int(n) != n:
-                    raise Exception('Equal neighbors 2D k must be (2n + 1)^2 - 1, where n is an integer equal or greater than 1')
+                    raise Exception('Equal neighbors 1D k must be 2n, where n is an integer equal or greater than 0')
+            elif similitude['type'] == 'equal neighbors 2D':
+                # TODO: check if dataSize overflows the limit of this constraint.
+                self.assertInt('Equal neighbors 2D pattern width', similitude['patternWidth'], 1)
+                self.assertInt('Equal neighbors 2D pattern height', similitude['patternHeight'], 1)
+                self.assertInt('Equal neighbors 2D k', similitude['k'], 0)
+                n = (math.sqrt(similitude['k'] + 1) - 1) / 2.0
                 
-                if self.properties['similitude']['patternWidth'] * self.properties['similitude']['patternHeight'] != self.properties['patternSize']:
+                if int(n) != n:
+                    raise Exception('Equal neighbors 2D k must be (2n + 1)^2 - 1, where n is an integer equal or greater than 0')
+                
+                if similitude['patternWidth'] * similitude['patternHeight'] != patternSize:
                     raise Exception('Equal neighbors pattern width and pattern height do not fit with the given pattern size')
-            elif self.properties['similitude']['type'] not in ['common bits', 'common 1s', 'common 0s']:
-                raise Exception('Unknown similitude type "' + self.properties['similitude']['type'] + '"')
+            else:
+                raise Exception('Unknown similitude type "' + similitude['type'] + '"')
     
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
@@ -59,30 +78,32 @@ class MainGenerator(object):
     
     # Private methods.
     
-    def assertInt(self, name, value, min=None):
+    def assertInt(self, name, value, minValue=None):
         if type(value) is not int:
             raise Exception(name + ' must be an integer')
         
         if min != None and value < min:
-            raise Exception(name + ' must be equal or greater than ' + str(min))
+            raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
     def generatePattern(self):
         # TODO: implement this
         return [4] * self.properties['patternSize']
 
     def scale(self, pattern):
-        if self.properties['scale'] == None:
+        scale = self.properties['scale']
+        
+        if scale == None:
             return pattern
         
-        if self.properties['scale']['type'] == '1D':
-            return self.scaleImpl(pattern, self.properties['scale']['factor'])
-        elif self.properties['scale']['type'] == '2D':
-            patternWidth = self.properties['scale']['patternWidth']
-            patternHeight = self.properties['scale']['patternHeight']
+        if scale['type'] == '1D':
+            return self.scaleImpl(pattern, scale['factor'])
+        elif scale['type'] == '2D':
+            patternWidth = scale['patternWidth']
+            patternHeight = scale['patternHeight']
             pattern2D = [[pattern[i * patternWidth + j] for j in xrange(patternWidth)] for i in xrange(patternHeight)]
             
-            pattern2D = map(lambda x: self.scaleImpl(x, self.properties['scale']['widthFactor']), pattern2D)
-            pattern2D = self.scaleImpl(pattern2D, self.properties['scale']['heightFactor'])
+            pattern2D = map(lambda x: self.scaleImpl(x, scale['widthFactor']), pattern2D)
+            pattern2D = self.scaleImpl(pattern2D, scale['heightFactor'])
             
             return [j for i in pattern2D for j in i]
     
