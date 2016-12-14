@@ -1,6 +1,7 @@
 import argparse
 import json
 import re
+from bblr.generators.MainGenerator import MainGenerator
 
 def loadJsonFile(path):
     with open(path) as handler:
@@ -8,9 +9,6 @@ def loadJsonFile(path):
         data = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,data) # remove all occurance streamed comments (/*COMMENT */) from string
         data = re.sub(re.compile("//.*?\n" ) ,"" ,data)             # remove all occurance singleline comments (//COMMENT\n ) from string
         return json.loads(data)
-
-def generatePatternDataSet(patternDataSetPropertiesCombination):
-    raise 'Not implemented yet'
 
 def generateModel(modelPropertiesCombination):
     raise 'Not implemented yet'
@@ -29,11 +27,11 @@ if __name__ == '__main__':
     # Main loop
     
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
-        patternDataSet = generatePatternDataSet(patternDataSetPropertiesCombination)
+        patternDataSetGenerator = MainGenerator(0, patternDataSetPropertiesCombination)
         
         for modelPropertiesCombination in modelPropertiesCombinations:
             model = generateModel(modelPropertiesCombination)
-            model.train(patternDataSet)
+            model.train(patternDataSetGenerator)
             #result = model.test(inputDataSet)
             #result.add(other things such as the training cost)
             #print result

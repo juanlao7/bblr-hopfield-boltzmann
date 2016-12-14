@@ -1,7 +1,7 @@
 [
 	// Combination 1: lorem ipsum
   {
-    "datasetSize": 100,
+    "dataSetSize": 100,
     "patternSize": 10,       // patterns are vectors of 10 dimensions
     "scale": {
       "type": "1D",
@@ -14,7 +14,7 @@
   },
   // Combination 2: dolor sit amet
   {
-    "datasetSize": 100,
+    "dataSetSize": 100,
     "patternSize": 25,
     "scale": {
       "type": "2D",
@@ -24,7 +24,7 @@
       "heightFactor": 3
     },
     "similitude": {
-      "type": "equal neighbors",
+      "type": "equal neighbors 2D",
       "matches": 5,
       "patternWidth": 5,
       "patternHeight": 5,
