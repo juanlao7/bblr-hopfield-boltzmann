@@ -1,0 +1,13 @@
+[
+	// Combination 1: lorem ipsum
+	{
+		"model": "hopfield",
+		"trainingRule": "hebbian",
+		"extraNeurons": 5
+	},
+  // Combination 2: dolor sit amet
+	{
+		"model": "restricted-boltzmann",
+		"hiddenNeurons": 5
+	}
+]

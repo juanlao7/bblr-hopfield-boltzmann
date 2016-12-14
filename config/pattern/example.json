@@ -1,0 +1,34 @@
+[
+	// Combination 1: lorem ipsum
+  {
+    "datasetSize": 100,
+    "patternSize": 10,       // patterns are vectors of 10 dimensions
+    "scale": {
+      "type": "1D",
+      "factor": 2
+    },
+    "similitude": {
+      "type": "common bits",
+      "matches": 3
+    }
+  },
+  // Combination 2: dolor sit amet
+  {
+    "datasetSize": 100,
+    "patternSize": 25,
+    "scale": {
+      "type": "2D",
+      "patternWidth": 5,
+      "patternHeight": 5,
+      "widthFactor": 2,
+      "heightFactor": 3
+    },
+    "similitude": {
+      "type": "equal neighbors",
+      "matches": 5,
+      "patternWidth": 5,
+      "patternHeight": 5,
+      "k": 8
+    }
+  }
+]
