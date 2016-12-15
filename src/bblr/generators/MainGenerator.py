@@ -1,4 +1,4 @@
-import math
+import random
 
 class MainGenerator(object):
     properties = None
@@ -51,7 +51,7 @@ class MainGenerator(object):
             return None
         
         self.dataSetSize -= 1
-        return self.scale(self.generatePattern())
+        return self.scale(self.addExtraBits(self.generatePattern()))
     
     # Private methods.
     
@@ -72,6 +72,14 @@ class MainGenerator(object):
     def generatePattern(self):
         # TODO: implement this
         return [4] * self.properties['patternSize']
+    
+    def addExtraBits(self, pattern):
+        extraBits = self.properties['extraBits']
+        
+        if extraBits['values'] in (0, 1):
+            return pattern + [extraBits['values']] * extraBits['number']
+        
+        return pattern + [random.randint(0, 1) for i in xrange(extraBits['number'])]
 
     def scale(self, pattern):
         scale = self.properties['scale']
