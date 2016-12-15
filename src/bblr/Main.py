@@ -21,7 +21,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='bblr-hopfield-boltzmann analyzer', description='Automatic script to obtain the final results of the project bblr-hopfield-boltzmann.')
     parser.add_argument('pattern_data_set_properties_file', help='Path to a file containing the combinations of pattern data set properties you want to test. See ' + PATTERN_FORMAT_URL)
     parser.add_argument('model_properties_file', help='Path to a file containing the combinations of model properties you want to test. See ' + MODELS_FORMAT_URL)
-    parser.add_argument('--seed', dest='seed', help='Fixed random seed for reproducibility purposes (0 by default)', type=int, default=0)
     arguments = parser.parse_args()
     
     # Loading preferences
@@ -33,9 +32,17 @@ if __name__ == '__main__':
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
         patternDataSetGenerator = MainGenerator(patternDataSetPropertiesCombination)
         
-        for modelPropertiesCombination in modelPropertiesCombinations:
-            model = generateModel(modelPropertiesCombination)
-            model.train(patternDataSetGenerator)
-            #result = model.test(inputDataSet)
-            #result.add(other things such as the training cost)
-            #print result
+        # This code is temporal. It just prints the generated patterns and their length
+        while patternDataSetGenerator.hasNext():
+            p = patternDataSetGenerator.next()
+            print p, len(p)
+        
+        print '--------'
+            
+        if False:
+            for modelPropertiesCombination in modelPropertiesCombinations:
+                model = generateModel(modelPropertiesCombination)
+                model.train(patternDataSetGenerator)
+                #result = model.test(inputDataSet)
+                #result.add(other things such as the training cost)
+                #print result
