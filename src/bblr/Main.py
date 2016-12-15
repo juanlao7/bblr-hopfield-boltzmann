@@ -32,11 +32,19 @@ if __name__ == '__main__':
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
         patternDataSetGenerator = MainGenerator(patternDataSetPropertiesCombination)
         
-        # This code is temporal. It just prints the generated patterns and their length
+        # This code is temporal.
+        totalOnes = 0
+        totalZeros = 0
+        
         while patternDataSetGenerator.hasNext():
             p = patternDataSetGenerator.next()
-            print p, len(p)
+            ones = len(filter(lambda x: x == 1, p))
+            zeros = len(filter(lambda x: x == 0, p))
+            print p, '; length:', len(p), '; ones:', ones, '; zeros:', zeros
+            totalOnes += ones
+            totalZeros += zeros
         
+        print 'total ones:', totalOnes, '; total zeros:', totalZeros
         print '--------'
             
         if False:

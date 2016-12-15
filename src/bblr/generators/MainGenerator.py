@@ -1,9 +1,9 @@
-import random
+from numpy.random import RandomState
 
 class MainGenerator(object):
     properties = None
     dataSetSize = 0
-    patternRandomGenerator = random.Random()
+    patternRandomGenerator = RandomState()
     extraBitsRandomGenerator = None
     
     def __init__(self, properties):
@@ -49,7 +49,7 @@ class MainGenerator(object):
         self.patternRandomGenerator.seed(seed)
         
         if extraBits != None:
-            self.extraBitsRandomGenerator = random.Random()
+            self.extraBitsRandomGenerator = RandomState()
             self.extraBitsRandomGenerator.seed(seed + 1)        # To generate different numbers than the other generator
     
     # Public methods. A generator must implement these methods in order to use it in Main.py
@@ -80,9 +80,12 @@ class MainGenerator(object):
         if minValue != None and value < minValue:
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
+    def randomBits(self, randomGenerator, size):
+        return randomGenerator.random_integers(0, 1, size)
+
     def generatePattern(self):
         # TODO: implement this
-        return [self.patternRandomGenerator.randint(0, 1) for i in xrange(self.properties.get('patternSize'))]
+        return self.randomBits(self.patternRandomGenerator, self.properties.get('patternSize'))
     
     def addExtraBits(self, pattern):
         extraBits = self.properties.get('extraBits')
@@ -93,7 +96,7 @@ class MainGenerator(object):
         if extraBits.get('values') in (0, 1):
             return pattern + [extraBits.get('values')] * extraBits.get('number')
         
-        return pattern + [self.extraBitsRandomGenerator.randint(0, 1) for i in xrange(extraBits.get('number'))]
+        return pattern + self.randomBits(self.extraBitsRandomGenerator, extraBits.get('number'))
 
     def scale(self, pattern):
         scale = self.properties.get('scale')
