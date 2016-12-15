@@ -10,11 +10,22 @@ class MainGenerator(object):
         
         # Validating the configuration
         patternSize = self.properties['patternSize']
+        extraBits = self.properties['extraBits']
+        constraint = self.properties['constraint']
         scale = self.properties['scale']
-        similitude = self.properties['similitude']
         
         self.assertInt('Data set size', self.dataSetSize, 1)
         self.assertInt('Pattern size', patternSize, 1)
+        
+        if extraBits != None:
+            self.assertInt('Number of extra bits', extraBits['number'], 1)
+            
+            if extraBits['values'] not in (0, 1, 'random'):
+                raise Exception('Extra bits values must be 0, 1 or "random"')
+        
+        if constraint != None:
+            self.assertFloat('Average distance', constraint['average'], 0)
+            self.assertFloat('Standard deviation', constraint['stdev'], 0)
         
         if scale != None:
             if scale['type'] == '1D':
@@ -29,40 +40,6 @@ class MainGenerator(object):
                     raise Exception('Scale pattern width and pattern height do not fit with the given pattern size')
             else:
                 raise Exception('Unknown scale type ' + scale['type'])
-        
-        if similitude != None:
-            matches = similitude['matches']
-            self.assertInt('Matches number', matches, 1)
-            
-            # TODO: implement the affectation grade
-            
-            if similitude['type'] in ['common 1s', 'common 0s']:
-                # TODO: link to the explanation of this fact
-                maxDataSetSize = patternSize - matches + 1 if patternSize - matches <= 1 else matches + 2
-                
-                if self.dataSetSize > maxDataSetSize:
-                    raise Exception('Data set size cannot be greater than ' + maxDataSetSize + ' when similitude type is "' + similitude['type'] + '", patternSize is ' + patternSize + ' and matches is ' + matches)
-            elif similitude['type'] == 'equal neighbors 1D':
-                # TODO: check if dataSize overflows the limit of this constraint.
-                self.assertInt('Equal neighbors 1D k', similitude['k'], 0)
-                n = similitude['k'] / 2.0
-                
-                if int(n) != n:
-                    raise Exception('Equal neighbors 1D k must be 2n, where n is an integer equal or greater than 0')
-            elif similitude['type'] == 'equal neighbors 2D':
-                # TODO: check if dataSize overflows the limit of this constraint.
-                self.assertInt('Equal neighbors 2D pattern width', similitude['patternWidth'], 1)
-                self.assertInt('Equal neighbors 2D pattern height', similitude['patternHeight'], 1)
-                self.assertInt('Equal neighbors 2D k', similitude['k'], 0)
-                n = (math.sqrt(similitude['k'] + 1) - 1) / 2.0
-                
-                if int(n) != n:
-                    raise Exception('Equal neighbors 2D k must be (2n + 1)^2 - 1, where n is an integer equal or greater than 0')
-                
-                if similitude['patternWidth'] * similitude['patternHeight'] != patternSize:
-                    raise Exception('Equal neighbors pattern width and pattern height do not fit with the given pattern size')
-            else:
-                raise Exception('Unknown similitude type "' + similitude['type'] + '"')
     
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
@@ -81,6 +58,13 @@ class MainGenerator(object):
     def assertInt(self, name, value, minValue=None):
         if type(value) is not int:
             raise Exception(name + ' must be an integer')
+        
+        if min != None and value < min:
+            raise Exception(name + ' must be equal or greater than ' + str(minValue))
+        
+    def assertFloat(self, name, value, minValue=None):
+        if type(value) is not float:
+            raise Exception(name + ' must be a floating-point number')
         
         if min != None and value < min:
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
