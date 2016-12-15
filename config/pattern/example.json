@@ -1,34 +1,72 @@
 [
-  // Combination 1: lorem ipsum
+  /*
+   * Test 1:
+   * Testing the same data set, with and without extra bits for decorrelation.
+   * Added 10 random bits for decorrelation.
+   */
+
+  // A data set without 'decorrelation'
   {
-    "dataSetSize": 100,
-    "patternSize": 10,       // patterns are vectors of 10 dimensions
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 25,
+    "constraint": {
+      "average": 5,
+      "stdev": 1
+    }
+  },
+
+  // A data set with 'decorrelation'
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 25,
+    "constraint": {
+      "average": 5,
+      "stdev": 1
+    },
+    "extraBits": {
+      "number": 10,
+      "values": "random"
+    }
+  },
+
+  /*
+   * Test 2:
+   * Testing the same data set, with a 2x 1D and 2D scale.
+   * It is the same data set as in Test 1.
+   */
+
+  // 1D scaled data set
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 25,
+    "constraint": {
+      "average": 5,
+      "stdev": 1
+    },
     "scale": {
       "type": "1D",
       "factor": 2
-    },
-    "similitude": {
-      "type": "common 1s",
-      "matches": 3
     }
   },
-  // Combination 2: dolor sit amet
+
+  // 2D scaled data set
   {
-    "dataSetSize": 100,
+    "seed": 0,
+    "dataSetSize": 5,
     "patternSize": 25,
+    "constraint": {
+      "average": 5,
+      "stdev": 1
+    },
     "scale": {
       "type": "2D",
       "patternWidth": 5,
       "patternHeight": 5,
       "widthFactor": 2,
-      "heightFactor": 3
-    },
-    "similitude": {
-      "type": "equal neighbors 2D",
-      "matches": 5,
-      "patternWidth": 5,
-      "patternHeight": 5,
-      "k": 8
+      "heightFactor": 2
     }
   }
 ]
