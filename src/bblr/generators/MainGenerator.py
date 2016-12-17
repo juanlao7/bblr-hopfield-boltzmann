@@ -1,8 +1,10 @@
 from numpy.random import RandomState
+from random import sample
 
 class MainGenerator(object):
     properties = None
     dataSetSize = 0
+    last = None
     patternRandomGenerator = RandomState()
     extraBitsRandomGenerator = None
     
@@ -14,7 +16,7 @@ class MainGenerator(object):
         seed = properties.get('seed')
         patternSize = properties.get('patternSize')
         extraBits = properties.get('extraBits')
-        constraint = properties.get('constraint')
+        distance = properties.get('distance')
         scale = properties.get('scale')
         
         self.assertInt('Random seed', seed)
@@ -27,9 +29,9 @@ class MainGenerator(object):
             if extraBits.get('values') not in (0, 1, 'random'):
                 raise Exception('Extra bits values must be 0, 1 or "random"')
         
-        if constraint != None:
-            self.assertFloat('Average distance', constraint.get('average'), 0)
-            self.assertFloat('Standard deviation', constraint.get('stdev'), 0)
+        if distance != None:
+            self.assertFloat('Mean distance', distance.get('mean'), 0)
+            self.assertFloat('Standard deviation of distance', distance.get('stdev'), 0)
         
         if scale != None:
             if scale.get('type') == '1D':
@@ -81,11 +83,27 @@ class MainGenerator(object):
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
     def randomBits(self, randomGenerator, size):
-        return randomGenerator.random_integers(0, 1, size)
+        return list(randomGenerator.random_integers(0, 1, size))
 
     def generatePattern(self):
-        # TODO: implement this
-        return self.randomBits(self.patternRandomGenerator, self.properties.get('patternSize'))
+        distance = self.properties.get('distance')
+        
+        if distance == None or self.last == None:
+            self.last = self.randomBits(self.patternRandomGenerator, self.properties.get('patternSize'))
+            return self.last
+        
+        patternSize = self.properties.get('patternSize')
+        computedDistance = int(round(max(0, min(distance.get('mean') + distance.get('stdev') * self.patternRandomGenerator.standard_normal(), patternSize))))
+        pattern = []
+        
+        for i in xrange(computedDistance):
+            pattern.append(int(not self.last[i]))
+        
+        for i in xrange(computedDistance, patternSize):
+            pattern.append(self.last[i])
+        
+        self.last = pattern
+        return pattern
     
     def addExtraBits(self, pattern):
         extraBits = self.properties.get('extraBits')

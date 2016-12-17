@@ -10,8 +10,8 @@
     "seed": 0,
     "dataSetSize": 5,
     "patternSize": 25,
-    "constraint": {
-      "average": 5,
+    "distance": {
+      "mean": 5,
       "stdev": 1
     }
   },
@@ -21,7 +21,7 @@
     "seed": 0,
     "dataSetSize": 5,
     "patternSize": 25,
-    "constraint": {
+    "distance": {
       "average": 5,
       "stdev": 1
     },
@@ -42,7 +42,7 @@
     "seed": 0,
     "dataSetSize": 5,
     "patternSize": 25,
-    "constraint": {
+    "distance": {
       "average": 5,
       "stdev": 1
     },
@@ -57,7 +57,7 @@
     "seed": 0,
     "dataSetSize": 5,
     "patternSize": 25,
-    "constraint": {
+    "distance": {
       "average": 5,
       "stdev": 1
     },
