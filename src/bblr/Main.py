@@ -54,7 +54,7 @@ if __name__ == '__main__':
     
     patternDataSetPropertiesCombinations = []
     
-    for i in xrange(100):
+    for i in xrange(1):
         patternDataSetPropertiesCombinations.append({
             'seed': random.randint(0, 100),
             'dataSetSize': 100,

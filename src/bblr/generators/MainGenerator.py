@@ -1,16 +1,16 @@
 from numpy.random import RandomState
-from random import sample
+import bisect
 
 class MainGenerator(object):
     properties = None
-    dataSetSize = 0
-    last = None
+    remainingPatterns = 0
+    grayPatterns = []
     patternRandomGenerator = RandomState()
     extraBitsRandomGenerator = None
     
     def __init__(self, properties):
         self.properties = properties
-        self.dataSetSize = self.properties.get('dataSetSize')
+        self.remainingPatterns = self.properties.get('dataSetSize')
         
         # Validating the configuration
         seed = properties.get('seed')
@@ -20,7 +20,7 @@ class MainGenerator(object):
         scale = properties.get('scale')
         
         self.assertInt('Random seed', seed)
-        self.assertInt('Data set size', self.dataSetSize, 1)
+        self.assertInt('Data set size', self.remainingPatterns, 1)
         self.assertInt('Pattern size', patternSize, 1)
                 
         if extraBits != None:
@@ -57,13 +57,13 @@ class MainGenerator(object):
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
     def hasNext(self):
-        return self.dataSetSize > 0
+        return self.remainingPatterns > 0
     
     def next(self):
-        if self.dataSetSize <= 0:
+        if self.remainingPatterns <= 0:
             return None
         
-        self.dataSetSize -= 1
+        self.remainingPatterns -= 1
         return self.scale(self.addExtraBits(self.generatePattern()))
     
     # Private methods.
@@ -86,23 +86,23 @@ class MainGenerator(object):
         return list(randomGenerator.random_integers(0, 1, size))
 
     def generatePattern(self):
+        patternSize = self.properties.get('patternSize')
         distance = self.properties.get('distance')
         
-        if distance == None or self.last == None:
-            self.last = self.randomBits(self.patternRandomGenerator, self.properties.get('patternSize'))
-            return self.last
+        if distance == None:
+            return self.randomBits(self.patternRandomGenerator, patternSize)
         
-        patternSize = self.properties.get('patternSize')
-        computedDistance = int(round(max(0, min(distance.get('mean') + distance.get('stdev') * self.patternRandomGenerator.standard_normal(), patternSize))))
-        pattern = []
+        if len(self.grayPatterns) == 0:
+            pattern = self.randomBits(self.patternRandomGenerator, patternSize)
+        else:
+            desiredDistance = int(round(max(0, min(distance.get('mean') + distance.get('stdev') * self.patternRandomGenerator.standard_normal(), patternSize))))
+            bestX, bestDistance = self.findBestFit(desiredDistance)
+            print desiredDistance, bestDistance
+            bestX = int(round(bestX))
+            pattern = self.int2gray(bestX)
+            pattern = [0] * (patternSize - len(pattern)) + pattern      # Adding leading 0s
         
-        for i in xrange(computedDistance):
-            pattern.append(int(not self.last[i]))
-        
-        for i in xrange(computedDistance, patternSize):
-            pattern.append(self.last[i])
-        
-        self.last = pattern
+        bisect.insort(self.grayPatterns, self.gray2int(pattern))
         return pattern
     
     def addExtraBits(self, pattern):
@@ -136,4 +136,108 @@ class MainGenerator(object):
     
     def scaleImpl(self, listOfItems, factor):
         return [j for i in listOfItems for j in [i] * factor]
+    
+    def findBestFit(self, desiredDistance):
+        # Let d(x) be the mean distance between x and all the n patterns in the set, that is equal to 1/n * sum(i from 0 to n, abs(i - x))
+        # We want x such that d(x) = desiredDistance
+        # In other words, we want x such that f(x) = d(x) - desiredDistance = 0
+        # Or, if x does not exist, we want x' such that f(x') is the global minimum of f
+        
+        # a) We know that d(x) is "convex" (actually, we work with integers and not reals) for x from -inf to +inf
+        # So there are 0 or 2 x such that f(x) = 0
+        
+        # b) We also know that d(x) is a composition of lines with different slope, and they intersect exactly in the patterns of the set.
+        # For example, if the set contains the patterns 1, 4, 5, 8, then d(x) is composed by line from -inf to 1, a line from 1 to 4,
+        # a line from 4 to 5, a line from 5 to 8 and a line from 8 to +inf.
+        
+        # Taking in account (a) and (b), we deduce that, if x exists, there will be 2 possible x, and they will be:
+        #    1. In the line that goes from -inf to the first pattern if f(first pattern) <= 0
+        #    2. In the line that goes from the last pattern to +inf if f(last pattern) <= 0
+        #    3. In the line that goes from pattern A to pattern B if f(A) * f(B) <= 0
+        # Note that x cannot be negative
+        
+        # If x does not exist, then we x' such that f(x') is the global minimum of f.
+        # If patterns are sortered, x' will be in the first pattern i such that f(i) < f(i+1) or pattern i+1 does not exist
+        
+        if self.targetFunction(self.grayPatterns[0], desiredDistance) <= 0:
+            # x is in the line that goes from -inf to the first pattern.
+            root = self.findRoot(self.grayPatterns[0] - 1, self.grayPatterns[0], desiredDistance=desiredDistance)
+            
+            if root >= 0:
+                return root, 0
+        
+        if self.targetFunction(self.grayPatterns[-1], desiredDistance) <= 0:
+            # x is in the line that goes from the last pattern to +inf
+            return self.findRoot(self.grayPatterns[-1], self.grayPatterns[-1] + 1, desiredDistance=desiredDistance), 0
+        
+        y1 = self.meanDistance(self.grayPatterns[0])
+        
+        for i in xrange(len(self.grayPatterns) - 1):
+            x0 = self.grayPatterns[i]
+            y0 = y1
+            x1 = self.grayPatterns[i + 1]
+            y1 = self.targetFunction(x1, desiredDistance)
+            
+            if y0 < y1:
+                # x' is in the first pattern i such that f(i) < f(i+1)
+                return x0, y0
+            
+            if y0 * y1 <= 0:
+                # x is in the line that goes from pattern i to pattern i+1
+                return self.findRoot(x0, x1, y0, y1), 0
+        
+        # x' is in the first pattern i such that i+1 does not exist
+        return self.grayPatterns[-1], self.targetFunction(self.grayPatterns[-1], desiredDistance)
+
+    def findRoot(self, x0, x1, y0=None, y1=None, desiredDistance=0):
+        if y0 == None:
+            y0 = self.targetFunction(x0, desiredDistance)
+        
+        if y1 == None:
+            y1 = self.targetFunction(x1, desiredDistance)
+        
+        m = (y0 - y1) / float(x0 - x1)
+        n = (x0 * y1 - x1 * y0) / float(x0 - x1)
+        return -n / m
+    
+    def targetFunction(self, x, desiredDistance):
+        return self.meanDistance(x) - desiredDistance
+    
+    def meanDistance(self, x):
+        mean = 0.0
+        
+        for i in self.grayPatterns:
+            mean += abs(i - x)
+        
+        return mean / len(self.grayPatterns)
+    
+    def bin2gray(self, bits):
+        print bits
+        return bits[:1] + [i ^ ishift for i, ishift in zip(bits[:-1], bits[1:])]
+ 
+    def gray2bin(self, bits):
+        b = [bits[0]]
+        for nextb in bits[1:]: b.append(b[-1] ^ nextb)
+        return b
+
+    def int2bin(self, n):
+        if n:
+            bits = []
+            while n:
+                n,remainder = divmod(n, 2)
+                bits.insert(0, remainder)
+            return bits
+        else: return [0]
+    
+    def bin2int(self, bits):
+        i = 0
+        for bit in bits:
+            i = i * 2 + bit
+        return i
+
+    def gray2int(self, bits):
+        return self.bin2int(self.gray2bin(bits))
+    
+    def int2gray(self, n):
+        return self.bin2gray(self.int2bin(n))
 
