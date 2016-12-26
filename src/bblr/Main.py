@@ -2,8 +2,7 @@ import argparse
 import json
 import re
 from bblr.generators.MainGenerator import MainGenerator
-from math import factorial
-import random
+from bblr.models.ModelFactory import ModelFactory
 import math
 
 PATTERN_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
@@ -27,9 +26,9 @@ def distance(a, b):
 
 def analyze(dataSet):
     n = len(dataSet)
-    print 'Size:', n
+    print 'Data set size:', n
     dimension = len(dataSet[0])
-    print 'Dimension:', dimension
+    print 'Pattern size:', dimension
     mean = 0.0
     k = 0
     
@@ -40,7 +39,7 @@ def analyze(dataSet):
             k += 1
     
     mean /= k 
-    print 'Mean:', mean
+    print 'Mean distance:', mean
 
     variance = 0.0
 
@@ -51,9 +50,9 @@ def analyze(dataSet):
 
     variance /= k
     stdev = math.sqrt(variance)
-    print 'Stdev:', stdev
-    print 'Relative mean:', mean / dimension
-    print 'Relative stdev:', stdev / dimension
+    print 'Distance standard deviation:', stdev
+    print 'Relative mean distance:', mean / dimension
+    print 'Relative distance standard deviation:', stdev / dimension
     print '-------'
 
 def generateModel(modelPropertiesCombination):
@@ -64,6 +63,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='bblr-hopfield-boltzmann analyzer', description='Automatic script to obtain the final results of the project bblr-hopfield-boltzmann.')
     parser.add_argument('pattern_data_set_properties_file', help='Path to a file containing the combinations of pattern data set properties you want to test. See ' + PATTERN_FORMAT_URL)
     parser.add_argument('model_properties_file', help='Path to a file containing the combinations of model properties you want to test. See ' + MODELS_FORMAT_URL)
+    parser.add_argument('--just-analyze', action='store_true', help='Just create the random pattern data sets and analyze them. Do not create or train the models.')
     arguments = parser.parse_args()
     
     # Loading preferences
@@ -74,13 +74,15 @@ if __name__ == '__main__':
     
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
         patternDataSetGenerator = MainGenerator(patternDataSetPropertiesCombination)
-        patterns = patternDataSetGenerator.getPatterns()
-        analyze(patterns)
+        patternDataSet = patternDataSetGenerator.getPatterns()
         
-        if False:
+        if arguments.just_analyze:
+            analyze(patternDataSet)
+        else:
             for modelPropertiesCombination in modelPropertiesCombinations:
-                model = generateModel(modelPropertiesCombination)
-                model.train(patternDataSetGenerator)
+                modelFactory = ModelFactory(modelPropertiesCombination)
+                model = modelFactory.buildModel()
+                model.train(patternDataSet)
                 #result = model.test(inputDataSet)
                 #result.add(other things such as the training cost)
                 #print result
