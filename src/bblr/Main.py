@@ -86,3 +86,5 @@ if __name__ == '__main__':
                 #result = model.test(inputDataSet)
                 #result.add(other things such as the training cost)
                 #print result
+        
+            raise 'die!'

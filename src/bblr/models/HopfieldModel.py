@@ -1,4 +1,5 @@
 import numpy
+from sre_parse import Pattern
 
 class HopfieldModel(object):
     def __init__(self, properties):
@@ -11,7 +12,6 @@ class HopfieldModel(object):
 
     def train(self, patternDataSet):
         self.patternSize = len(patternDataSet[0])
-        self.weights = numpy.zeros((self.patternSize, self.patternSize))
         
         if self.trainingRule == 'hebbian':
             self.trainHebbian(patternDataSet)
@@ -19,12 +19,37 @@ class HopfieldModel(object):
             self.trainStorkey(patternDataSet)
     
     def trainHebbian(self, patternDataSet):
+        self.weights = numpy.zeros((self.patternSize, self.patternSize))
+        
         for pattern in patternDataSet:
             self.weights += numpy.outer(pattern, pattern)
         
         self.weights[numpy.diag_indices(self.patternSize)] = 0
-        self.W /= self.patternSize
+        self.weights /= self.patternSize
     
     def trainStorkey(self, patternDataSet):
-        # TODO
+        self.weights = numpy.zeros((self.patternSize, self.patternSize))
+        
+        for v in xrange(len(patternDataSet)):
+            lastWeights = self.weights.copy()
+            
+            for i in range(0, self.patternSize):
+                for j in range(i + 1, self.patternSize):    
+                    s = (patternDataSet[v][i] * patternDataSet[v][j]
+                        - patternDataSet[v][i] * self.h(v, j, i, lastWeights, patternDataSet) 
+                        - patternDataSet[v][j] * self.h(v, i, j, lastWeights, patternDataSet))
+                    
+                    self.weights[i][j] += s
+                    self.weights[j][i] += s
+                        
+        self.weights /= self.patternSize
+    
+    def h(self, v, i, j, lastWeights, patternDataSet):
+        s = 0.0
+        
+        for k in range(self.patternSize):
+            if k != i and k != j:
+                s += lastWeights[i][k] * patternDataSet[v][k]
+        
+        return s
     

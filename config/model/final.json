@@ -2,8 +2,7 @@
 	// Combination 1: lorem ipsum
 	{
 		"model": "hopfield",
-		"trainingRule": "hebbian",
-		"extraNeurons": 5
+		"trainingRule": "hebbian"
 	},
   	// Combination 2: dolor sit amet
 	{

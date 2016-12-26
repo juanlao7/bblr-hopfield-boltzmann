@@ -1,5 +1,6 @@
 from numpy.random import RandomState
 import math
+from bblr.Utils import Utils
 
 class MainGenerator(object):
     MAX_TRIES = 10
@@ -15,28 +16,28 @@ class MainGenerator(object):
         distance = properties.get('distance')
         scale = properties.get('scale')
         
-        self.assertInt('Random seed', seed)
-        self.assertInt('Data set size', self.remainingPatterns, 1)
-        self.assertInt('Pattern size', patternSize, 1)
+        Utils.assertInt('Random seed', seed)
+        Utils.assertInt('Data set size', self.remainingPatterns, 1)
+        Utils.assertInt('Pattern size', patternSize, 1)
 
         if extraBits != None:
-            self.assertInt('Number of extra bits', extraBits.get('number'), 1)
+            Utils.assertInt('Number of extra bits', extraBits.get('number'), 1)
             
             if extraBits.get('values') not in (0, 1, 'random'):
                 raise Exception('Extra bits values must be 0, 1 or "random"')
         
         if distance != None:
-            self.assertFloat('Mean distance', distance.get('mean'), 0)
-            self.assertFloat('Standard deviation of distance', distance.get('stdev'), 0)
+            Utils.assertFloat('Mean distance', distance.get('mean'), 0)
+            Utils.assertFloat('Standard deviation of distance', distance.get('stdev'), 0)
         
         if scale != None:
             if scale.get('type') == '1D':
-                self.assertInt('Scale factor for 1D', scale.get('factor'), 1)
+                Utils.assertInt('Scale factor for 1D', scale.get('factor'), 1)
             elif scale.get('type') == '2D':
-                self.assertInt('Scale pattern width', scale.get('patternWidth'), 1)
-                self.assertInt('Scale pattern height', scale.get('patternHeight'), 1)
-                self.assertInt('Scale width factor', scale.get('widthFactor'), 1)
-                self.assertInt('Scale height factor', scale.get('heightFactor'), 1)
+                Utils.assertInt('Scale pattern width', scale.get('patternWidth'), 1)
+                Utils.assertInt('Scale pattern height', scale.get('patternHeight'), 1)
+                Utils.assertInt('Scale width factor', scale.get('widthFactor'), 1)
+                Utils.assertInt('Scale height factor', scale.get('heightFactor'), 1)
                 
                 if scale.get('patternWidth') * scale.get('patternHeight') != patternSize:
                     raise Exception('Scale pattern width and pattern height do not fit with the given pattern size')
@@ -87,20 +88,6 @@ class MainGenerator(object):
         return self.patterns
     
     # Private methods.
-    
-    def assertInt(self, name, value, minValue=None):
-        if type(value) is not int:
-            raise Exception(name + ' must be an integer')
-        
-        if minValue != None and value < minValue:
-            raise Exception(name + ' must be equal or greater than ' + str(minValue))
-        
-    def assertFloat(self, name, value, minValue=None):
-        if type(value) is not float and type(value) is not int:
-            raise Exception(name + ' must be a floating-point number')
-        
-        if minValue != None and value < minValue:
-            raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
     def randomBits(self, randomGenerator, size):
         return list(randomGenerator.random_integers(0, 1, size))
