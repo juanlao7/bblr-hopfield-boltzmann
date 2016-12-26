@@ -4,6 +4,7 @@ import re
 from bblr.generators.MainGenerator import MainGenerator
 from math import factorial
 import random
+import math
 
 PATTERN_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
 MODELS_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
@@ -25,9 +26,12 @@ def distance(a, b):
     return d 
 
 def analyze(dataSet):
+    n = len(dataSet)
+    print 'Size:', n
+    dimension = len(dataSet[0])
+    print 'Dimension:', dimension
     mean = 0.0
     k = 0
-    n = len(dataSet)
     
     for i in xrange(n):
         for j in xrange(i + 1, n):
@@ -37,6 +41,20 @@ def analyze(dataSet):
     
     mean /= k 
     print 'Mean:', mean
+
+    variance = 0.0
+
+    for i in xrange(n):
+        for j in xrange(i + 1, n):
+            d = distance(dataSet[i], dataSet[j])
+            variance += (d - mean)**2
+
+    variance /= k
+    stdev = math.sqrt(variance)
+    print 'Stdev:', stdev
+    print 'Relative mean:', mean / dimension
+    print 'Relative stdev:', stdev / dimension
+    print '-------'
 
 def generateModel(modelPropertiesCombination):
     raise 'Not implemented yet'
@@ -52,42 +70,13 @@ if __name__ == '__main__':
     modelPropertiesCombinations = loadJsonFile(arguments.model_properties_file)
     patternDataSetPropertiesCombinations = loadJsonFile(arguments.pattern_data_set_properties_file)
     
-    patternDataSetPropertiesCombinations = []
-    
-    for i in xrange(1):
-        patternDataSetPropertiesCombinations.append({
-            'seed': random.randint(0, 100),
-            'dataSetSize': 100,
-            'patternSize': 30,
-            'distance': {
-                'mean': 15,
-                'stdev': 0
-            }
-        })
-    
     # Main loop
     
     for patternDataSetPropertiesCombination in patternDataSetPropertiesCombinations:
         patternDataSetGenerator = MainGenerator(patternDataSetPropertiesCombination)
+        patterns = patternDataSetGenerator.getPatterns()
+        analyze(patterns)
         
-        # This code is temporal.
-        dataSet = []
-        totalOnes = 0
-        totalZeros = 0
-        
-        while patternDataSetGenerator.hasNext():
-            p = patternDataSetGenerator.next()
-            dataSet.append(p)
-            ones = len(filter(lambda x: x == 1, p))
-            zeros = len(filter(lambda x: x == 0, p))
-            #print p, '; length:', len(p), '; ones:', ones, '; zeros:', zeros
-            totalOnes += ones
-            totalZeros += zeros
-        
-        #print 'total ones:', totalOnes, '; total zeros:', totalZeros
-        analyze(dataSet)
-        print '--------'
-            
         if False:
             for modelPropertiesCombination in modelPropertiesCombinations:
                 model = generateModel(modelPropertiesCombination)

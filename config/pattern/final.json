@@ -8,24 +8,24 @@
   // A data set without 'decorrelation'
   {
     "seed": 0,
-    "dataSetSize": 5,
+    "dataSetSize": 30,
     "patternSize": 25,
     "distance": {
-      "mean": 5,
-      "stdev": 1
+      "mean": 15,
+      "stdev": 2
     }
   },
   // A data set with 'decorrelation'
   {
     "seed": 0,
-    "dataSetSize": 5,
+    "dataSetSize": 30,
     "patternSize": 25,
     "distance": {
-      "mean": 5,
-      "stdev": 1
+      "mean": 15,
+      "stdev": 2
     },
     "extraBits": {
-      "number": 10,
+      "number": 25,
       "values": "random"
     }
   },
@@ -39,11 +39,11 @@
   // 1D scaled data set
   {
     "seed": 0,
-    "dataSetSize": 5,
+    "dataSetSize": 30,
     "patternSize": 25,
     "distance": {
-      "mean": 5,
-      "stdev": 1
+      "mean": 15,
+      "stdev": 2
     },
     "scale": {
       "type": "1D",
@@ -54,11 +54,11 @@
   // 2D scaled data set
   {
     "seed": 0,
-    "dataSetSize": 5,
+    "dataSetSize": 30,
     "patternSize": 25,
     "distance": {
-      "mean": 5,
-      "stdev": 1
+      "mean": 15,
+      "stdev": 2
     },
     "scale": {
       "type": "2D",
