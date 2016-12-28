@@ -1,12 +1,17 @@
 [
 	// Combination 1: lorem ipsum
-	{
+	/*{
 		"model": "hopfield",
 		"trainingRule": "hebbian"
-	},
+	},*/
   	// Combination 2: dolor sit amet
 	{
 		"model": "restricted-boltzmann",
-		"hiddenNeurons": 5
+		"hiddenNeurons": 5,
+		"learningRate": 0.5,
+		"weightDecay": 0,
+		"momentum": true,
+		"batchSize": 2,
+		"activation": "sigmoid"
 	}
 ]

@@ -15,3 +15,7 @@ class Utils(object):
         if minValue != None and value < minValue:
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
+    @staticmethod
+    def assertBoolean(name, value):
+        if type(value) is not bool:
+            raise Exception(name + ' must be boolean')
