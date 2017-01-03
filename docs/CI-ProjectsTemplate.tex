@@ -1,0 +1,111 @@
+\documentclass[anon]{CI}
+
+% The following packages will be automatically loaded:
+% amsmath, amssymb, natbib, graphicx, url, algorithm2e
+
+\title[My CI Project]{My beautiful CI Project}
+
+ % Use \Name{Author Name} to specify the name.
+ % If the surname contains spaces, enclose the surname
+ % in braces, e.g. \Name{John {Smith Jones}} similarly
+ % if the name has a "von" part, e.g \Name{Jane {de Winter}}.
+ % If the first letter in the forenames is a diacritic
+ % enclose the diacritic in braces, e.g. \Name{{\'E}louise Smith}
+
+ % Two authors with the same address
+  % \coltauthor{\Name{Author Name1} \Email{abc@sample.com}\and
+  %  \Name{Author Name2} \Email{xyz@sample.com}\\
+  %  \addr Address}
+
+ % Three or more authors with the same address:
+ % \coltauthor{\Name{Author Name1} \Email{an1@sample.com}\\
+ %  \Name{Author Name2} \Email{an2@sample.com}\\
+ %  \Name{Author Name3} \Email{an3@sample.com}\\
+ %  \addr Address}
+
+
+ % Authors with different addresses:
+ \author{
+ \Name{Javier Beltr{\'a}n} \Email{javierbeltranj@gmail.com}\\
+ \addr Academic address (optional)
+ \AND
+ \Name{Guillermo Bern{\'e}rdez} \Email{gbg1441@gmail.com}\\
+ \addr Academic address (optional)
+ \AND
+ \Name{Juan Lao} \Email{nitzing@gmail.com}\\
+ \addr Academic address (optional)
+ \AND
+ \Name{Jorge Rodr{\'i}guez} \Email{j.rodriguez.molinuevo@gmail.com}\\
+ \addr Academic address (optional)
+ }
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper analyses the performance of Hopfield Neural Network and Restricted Boltzmann Machine for several kinds of addressable content. In particular, it focuses on which of the algorithms has a better performance for each database defined by a certain property. 
+\end{abstract}
+
+\begin{keywords}
+Neural Networks, Hopfield Neural Networks, Boltzman Machine, Database, 
+\end{keywords}
+
+
+\section{Problem statement and goals}
+
+This is where the content of your paper starts. Remember:
+\begin{itemize}
+\item Limit the main text (without bibliography and appendices) to 10 pages.
+\item Include, either in the main text or the appendices, enough details to convince the lecturers of the project's merits.
+\item You should cite or give credit to all material that is not yours (including pictures, books, web pages, code, ...)
+\end{itemize}
+
+The main goal for this project is to analyse the performance of Hopfield Neural Networks and Boltzman Machines as content addressable memory system, for this we create a series of databases with a certain property each. We will focus on Restricted Boltzman Machines, since the learning procedure is impractical in General Boltzman Machines and their use is very limited. This paper will try to answer the following questions:
+
+\begin{itemize}
+	\item Given a database with a certain property ¿Which of both algorithm works best?
+	\item ¿Is there a way of improving this results?
+	\item ¿In which cases Holpfield Neural Networks should be used and in which Boltzman Machines?
+\end{itemize}
+
+The general problem to be solve is, given a database for which a content addressable memory system is needed, which of the two Neural Networks should be used. 
+
+% para citar \cite{lo que ponga en el principio de bib} eg
+\cite{Ackley1985147}
+
+
+\section{Previous work}
+
+This is a very important part, because it puts your work in context.
+
+\section{The CI methods}
+
+Do not repeat well-known theory or formulas. Just mention which methods you use and why you choose them, and provide relevant citations. 
+
+\section{Results and Discussion}
+
+The main part of the document.
+
+\section{Strengths and weaknesses}
+
+Be critic with your work ...
+
+\section{Conclusions and future work}
+
+The conclusions are not a mere repetition of the abstract. Basically, you should describe ``what you know now that you did \emph{not} before doing the work''. In addition, mention what would be natural follow-up lines of work.
+
+\section*{References}
+
+\bibliography{bibfile}
+
+
+
+\appendix
+
+\section{Proof of theoretical results} (if applicable)
+
+\section{Implementation details} (if applicable)
+
+
+\end{document}
