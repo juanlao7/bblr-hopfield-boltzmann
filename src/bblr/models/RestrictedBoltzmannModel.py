@@ -74,6 +74,9 @@ class RestrictedBoltzmannModel(object):
                 self.visibleOffset += deltaVisibleOffset
                 self.hiddenOffset += deltaHiddenOffset
 
+    def test(self, inputDataSet):
+        return ['TODO']
+    
     @staticmethod
     def sigmoid(batch, weights, offset):
         return 1.0 / (1 + numpy.exp(-numpy.dot(batch, weights) - offset))

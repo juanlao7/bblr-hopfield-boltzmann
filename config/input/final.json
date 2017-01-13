@@ -1,0 +1,10 @@
+[
+  {
+    "seed": 0,
+    "dataSetSize": 30,
+    "minDistance": {
+      "mean": 15,
+      "stdev": 2
+    }
+  }
+]

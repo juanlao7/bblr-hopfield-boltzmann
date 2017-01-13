@@ -18,6 +18,9 @@ class HopfieldModel(object):
         else:
             self.trainStorkey(patternDataSet)
     
+    def test(self, inputDataSet):
+        return ['TODO']
+    
     def trainHebbian(self, patternDataSet):
         self.weights = numpy.zeros((self.patternSize, self.patternSize))
         

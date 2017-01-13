@@ -2,22 +2,22 @@ from numpy.random import RandomState
 import math
 from bblr.Utils import Utils
 
-class MainGenerator(object):
+class MainPatternGenerator(object):
     MAX_TRIES = 10
     
-    def __init__(self, properties):
+    def __init__(self, properties, seedAddition):
         self.properties = properties
-        self.remainingPatterns = self.properties.get('dataSetSize')
         
         # Validating the configuration.
         seed = properties.get('seed')
+        dataSetSize = self.properties.get('dataSetSize')
         patternSize = properties.get('patternSize')
         extraBits = properties.get('extraBits')
         distance = properties.get('distance')
         scale = properties.get('scale')
         
         Utils.assertInt('Random seed', seed)
-        Utils.assertInt('Data set size', self.remainingPatterns, 1)
+        Utils.assertInt('Input data set size', dataSetSize, 1)
         Utils.assertInt('Pattern size', patternSize, 1)
 
         if extraBits != None:
@@ -45,130 +45,49 @@ class MainGenerator(object):
                 raise Exception('Unknown scale type ' + scale.get('type'))
         
         # Initializing the random generator.
-        self.randomGenerator = RandomState()
-        self.randomGenerator.seed(seed)
+        randomGenerator = RandomState()
+        randomGenerator.seed(seed + seedAddition)
         
-        # Generating the patterns (greedy algorithm, approximate solution)
-        self.patterns = []
+        # Generating the patterns.
+        self.patterns = Utils.generateDataSet(randomGenerator, dataSetSize, patternSize, self.computeError if 'distance' in self.properties else None, MainPatternGenerator.MAX_TRIES)
         
-        for i in xrange(self.remainingPatterns):
-            self.patterns.append(self.generatePattern())
-        
-        if distance != None:
-            bestError = self.analyzeDataSet(self.patterns)
-            tries = 0
-            
-            while tries < MainGenerator.MAX_TRIES:
-                candidate = self.generatePattern()
-                improved = False
-                
-                for vectorToDiscard in self.patterns:
-                    patternsCopy = list(self.patterns)
-                    patternsCopy.remove(vectorToDiscard)
-                    patternsCopy.append(candidate)
-                    candidateError = self.analyzeDataSet(patternsCopy)
-                    
-                    if candidateError < bestError:
-                        improved = True
-                        self.patterns = patternsCopy
-                        bestError = candidateError
-                        break
-                
-                if improved:
-                    tries = 0
-                else:
-                    tries += 1
-        
-        # Applying transformations
-        self.patterns = map(lambda x: self.scale(self.addExtraBits(list(x))), self.patterns)
+        # Applying transformations.
+        self.patterns = Utils.transformDataSet(randomGenerator, self.patterns, self.properties)
 
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
     def getPatterns(self):
         return self.patterns
     
+    def analyze(self):
+        analysis = self.analyzeDataSet(self.patterns)
+        return analysis['dataSetSize'], analysis['dimension'], analysis['mean'], analysis['stdev'], analysis['mean'] / analysis['dimension'], analysis['stdev'] / analysis['dimension']
+    
     # Private methods.
     
-    def randomBits(self, randomGenerator, size):
-        return list(randomGenerator.random_integers(0, 1, size))
-
-    def generatePattern(self):
-        while True:
-            pattern = tuple(self.randomBits(self.randomGenerator, self.properties.get('patternSize')))
-            
-            if pattern not in self.patterns:
-                return pattern
-    
-    def addExtraBits(self, pattern):
-        extraBits = self.properties.get('extraBits')
-        
-        if extraBits == None:
-            return pattern
-        
-        if extraBits.get('values') in (0, 1):
-            return pattern + [extraBits.get('values')] * extraBits.get('number')
-        
-        return pattern + self.randomBits(self.randomGenerator, extraBits.get('number'))
-
-    def scale(self, pattern):
-        scale = self.properties.get('scale')
-        
-        if scale == None:
-            return pattern
-        
-        if scale.get('type') == '1D':
-            return self.scaleImpl(pattern, scale.get('factor'))
-        elif scale.get('type') == '2D':
-            patternWidth = scale.get('patternWidth')
-            patternHeight = scale.get('patternHeight')
-            pattern2D = [[pattern[i * patternWidth + j] for j in xrange(patternWidth)] for i in xrange(patternHeight)]
-            
-            pattern2D = map(lambda x: self.scaleImpl(x, scale.get('widthFactor')), pattern2D)
-            pattern2D = self.scaleImpl(pattern2D, scale.get('heightFactor'))
-            
-            return [j for i in pattern2D for j in i]
-    
-    def scaleImpl(self, listOfItems, factor):
-        return [j for i in listOfItems for j in [i] * factor]
-
-    def distance(self, a, b):
-        d = 0
-        
-        for i in xrange(len(a)):
-            if a[i] != b[i]:
-                d += 1
-        
-        return d
-
     def analyzeDataSet(self, dataSet):
         n = len(dataSet)
-        mean = 0.0
+        ds = []
         k = 0
         
         for i in xrange(n):
             for j in xrange(i + 1, n):
-                d = self.distance(dataSet[i], dataSet[j])
-                mean += d
+                ds.append(Utils.distance(dataSet[i], dataSet[j]))
                 k += 1
         
-        mean /= k 
-        variance = 0.0
-    
-        for i in xrange(n):
-            for j in xrange(i + 1, n):
-                d = self.distance(dataSet[i], dataSet[j])
-                variance += (d - mean)**2
-                
-        variance /= k
+        k = float(k)
+        mean = sum(ds) / k
+        variance = sum(map(lambda d: (d - mean)**2, ds)) / k
         stdev = math.sqrt(variance)
+        
+        return {
+            'dataSetSize': n,
+            'dimension': len(dataSet[0]),
+            'mean': mean,
+            'stdev': stdev
+        }
+
+    def computeError(self, dataSet):
+        analysis = self.analyzeDataSet(dataSet)
         distance = self.properties.get('distance')
-        return self.meanSquareError([mean, stdev], [distance.get('mean'), distance.get('stdev')])
-    
-    def meanSquareError(self, y, target):
-        error = 0.0
-        n = len(y)
-        
-        for i in xrange(n):
-            error += (target[i] - y[i])**2
-        
-        return error / n
+        return Utils.meanSquareError([analysis['mean'], analysis['stdev']], [distance.get('mean'), distance.get('stdev')])

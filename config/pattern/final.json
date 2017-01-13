@@ -1,9 +1,4 @@
 [
-  {
-    "seed": 0,
-    "dataSetSize": 2,
-    "patternSize": 1
-  },
   /*
    * Test 1:
    * Testing the same data set, with and without extra bits for decorrelation.
