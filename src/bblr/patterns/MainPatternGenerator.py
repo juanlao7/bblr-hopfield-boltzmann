@@ -49,15 +49,18 @@ class MainPatternGenerator(object):
         randomGenerator.seed(seed + seedAddition)
         
         # Generating the patterns.
-        self.patterns = Utils.generateDataSet(randomGenerator, dataSetSize, patternSize, self.computeError if 'distance' in self.properties else None, MainPatternGenerator.MAX_TRIES)
+        self.originalPatterns = Utils.generateDataSet(randomGenerator, dataSetSize, patternSize, self.computeError if 'distance' in self.properties else None, MainPatternGenerator.MAX_TRIES)
         
         # Applying transformations.
-        self.patterns = Utils.transformDataSet(randomGenerator, self.patterns, self.properties)
+        self.patterns = Utils.transformDataSet(randomGenerator, self.originalPatterns, self.properties)
 
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
     def getPatterns(self):
         return self.patterns
+    
+    def getOriginalPatterns(self):
+        return self.originalPatterns
     
     def analyze(self):
         analysis = self.analyzeDataSet(self.patterns)

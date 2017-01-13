@@ -22,6 +22,8 @@ def loadJsonFile(path):
 def printAnalysis(analysis, labels, identation=0):
     for i in xrange(len(analysis)):
         print '\t' * identation, labels[i], ':', analysis[i]
+    
+    print
 
 if __name__ == '__main__':
     # Parsing arguments
@@ -45,8 +47,8 @@ if __name__ == '__main__':
         print 'PATTERN:', patternDataSetProperties
         patternDataSetGenerator = MainPatternGenerator(patternDataSetProperties, arguments.seed)
         patternDataSet = patternDataSetGenerator.getPatterns()
+        originalPatternDataSet = patternDataSetGenerator.getOriginalPatterns()
         printAnalysis(patternDataSetGenerator.analyze(), PATTERN_ANALYSIS_LABELS, 1)
-        print
         
         if not arguments.just_analyze_patterns:
             for modelProperties in modelPropertiesCombinations:
@@ -57,7 +59,7 @@ if __name__ == '__main__':
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
                     print '\t\tINPUT:', inputDataSetProperties
-                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, patternDataSet, patternDataSetProperties, arguments.seed)
+                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
                     printAnalysis(inputDataSetGenerator.analyze(), INPUT_ANALYSIS_LABELS, 4)
                     

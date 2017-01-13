@@ -5,9 +5,9 @@ from bblr.Utils import Utils
 class MainInputGenerator(object):
     MAX_TRIES = 400
     
-    def __init__(self, properties, patternDataSet, patternDataSetProperties, seedAddition):
+    def __init__(self, properties, originalPatternDataSet, patternDataSetProperties, seedAddition):
         self.properties = properties
-        self.patternDataSet = patternDataSet
+        self.originalPatternDataSet = originalPatternDataSet
         
         # Validating the configuration.
         seed = properties.get('seed')
@@ -25,10 +25,10 @@ class MainInputGenerator(object):
         
         # Generating the inputs.
         patternSize = patternDataSetProperties.get('patternSize')
-        self.inputs = Utils.generateDataSet(randomGenerator, None, patternSize, self.computeError, MainInputGenerator.MAX_TRIES)
+        self.originalInputs = Utils.generateDataSet(randomGenerator, None, patternSize, self.computeError, MainInputGenerator.MAX_TRIES)
         
         # Applying transformations.
-        self.inputs = Utils.transformDataSet(randomGenerator, self.inputs, patternDataSetProperties)
+        self.inputs = Utils.transformDataSet(randomGenerator, self.originalInputs, patternDataSetProperties)
 
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
@@ -36,13 +36,13 @@ class MainInputGenerator(object):
         return self.inputs
     
     def analyze(self):
-        analysis = self.analyzeDataSet(self.inputs)
+        analysis = self.analyzeDataSet(self.originalInputs)
         return analysis['dataSetSize'], analysis['dimension'], analysis['mean'], analysis['stdev'], analysis['mean'] / analysis['dimension'], analysis['stdev'] / analysis['dimension']
     
     # Private methods.
     
     def analyzeDataSet(self, dataSet):
-        minDs = map(lambda x: Utils.minDistance(x, self.patternDataSet), dataSet)
+        minDs = map(lambda x: Utils.minDistance(x, self.originalPatternDataSet), dataSet)
         n = float(len(dataSet))
         mean = sum(minDs) / n
         variance = sum(map(lambda minD: (minD - mean)**2, minDs)) / n
