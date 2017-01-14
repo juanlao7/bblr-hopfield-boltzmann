@@ -43,7 +43,7 @@ class RBM(object):
         self.verbose = verbose
         self.activation = activation
         
-    def train(self, X, epochs, learning_rate, decay=0, momentum=False, batch_size=1):
+    def train(self, X, epochs, thr=0.0, learning_rate=0.001, decay=0, momentum=False, batch_size=1):
         '''
         Trains the RBM with the samples provided in X, using
         a specified number of epochs and a learning rate.
@@ -86,6 +86,7 @@ class RBM(object):
                     m = 0.5 if epoch > 5 else 0.9
                 else:
                     m = 1
+                old_dw = np.array(d_w)
                 
                 # Update increments of weights and offsets
                 d_w = d_w * m + (learning_rate/batch_size) * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1)) - decay * self.W
@@ -93,9 +94,15 @@ class RBM(object):
                 d_h = d_h * m + (learning_rate/batch_size) * (np.sum(prob_h0, axis=0) - np.sum(prob_h1, axis=0))
                 
                 # Update weights and offsets
+                
                 self.W += d_w
                 self.v_offset += d_v
                 self.h_offset += d_h
+                diff_dw = np.linalg.norm((d_w - old_dw))
+                #print diff_dw
+                
+                if diff_dw < thr:
+                    break
         
     
     def recall(self, v0):

@@ -11,7 +11,7 @@ XXXXX
 """
 
 def exampleWithLetters():
-    from bblr.generators import Letters as gen
+    from bblr.patterns import Letters as gen
     
     slg = gen.SimpleLetterGenerator(pos=1, neg=0)
     a = slg.toPattern(gen.A)
@@ -19,14 +19,14 @@ def exampleWithLetters():
     rbm = Boltzmann.RBM(25, 5, verbose=False)
 
     patterns = np.atleast_2d((a,z))
-    rbm.train(patterns, epochs=10000, learning_rate=0.01, momentum=True)
+    rbm.train(patterns, epochs=10000, thr=0.0001, learning_rate=0.01, momentum=True)
     recovered = rbm.recall(slg.toPattern(partialA))
     print "Recovered", recovered
     slg.display(recovered)
 
 
 def exampleWithVectors(vector_size=5):
-    from bblr.generators import BinaryVectors as gen
+    from bblr.patterns import BinaryVectors as gen
     
     svg = gen.SimpleVectorGenerator(pos=1, neg=0)
     patterns = np.vstack((svg.genAlternatingVector(vector_size), \
@@ -36,7 +36,7 @@ def exampleWithVectors(vector_size=5):
     print 'Test patterns:', test
     
     rbm = Boltzmann.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
-    rbm.train(patterns, epochs=5000, learning_rate=0.01, batch_size=2)
+    rbm.train(patterns, epochs=5000, thr=0.01, learning_rate=0.01, batch_size=2)
     recovered = rbm.recall(test)
     print 'Recovered:', np.around(recovered)
     
