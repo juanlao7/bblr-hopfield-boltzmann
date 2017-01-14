@@ -61,7 +61,7 @@ if __name__ == '__main__':
                     print '\t\tINPUT:', inputDataSetProperties
                     inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
-                    printAnalysis(inputDataSetGenerator.analyze(), INPUT_ANALYSIS_LABELS, 4)
+                    printAnalysis(inputDataSetGenerator.analyze(), INPUT_ANALYSIS_LABELS, 3)
                     
                     if not arguments.just_analyze_inputs:
                         testResults = model.test(inputDataSet)

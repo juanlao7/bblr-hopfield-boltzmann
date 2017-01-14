@@ -17,7 +17,7 @@ class MainPatternGenerator(object):
         scale = properties.get('scale')
         
         Utils.assertInt('Random seed', seed)
-        Utils.assertInt('Input data set size', dataSetSize, 1)
+        Utils.assertInt('Pattern data set size', dataSetSize, 1)
         Utils.assertInt('Pattern size', patternSize, 1)
 
         if extraBits != None:
