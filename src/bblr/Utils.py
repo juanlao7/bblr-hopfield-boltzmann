@@ -66,11 +66,8 @@ class Utils(object):
         # Greedy algorithm, approximate solution
         dataSet = []
         
-        if dataSetSize == None:
+        for _ in xrange(dataSetSize):
             dataSet.append(Utils.generateUniqueVector(randomGenerator, dimension, dataSet))
-        else:
-            for _ in xrange(dataSetSize):
-                dataSet.append(Utils.generateUniqueVector(randomGenerator, dimension, dataSet))
 
         if errorFunction != None:
             bestError = errorFunction(dataSet)
@@ -80,9 +77,9 @@ class Utils(object):
                 candidate = Utils.generateUniqueVector(randomGenerator, dimension, dataSet)
                 improved = False
                 
-                # If dataSetSize is not defined then we try to add as much vectors as we can (only if when adding them the error decreases).
-                if dataSetSize == None:
+                for vectorToDiscard in dataSet:
                     dataSetCopy = list(dataSet)
+                    dataSetCopy.remove(vectorToDiscard)
                     dataSetCopy.append(candidate)
                     candidateError = errorFunction(dataSetCopy)
                     
@@ -90,20 +87,7 @@ class Utils(object):
                         improved = True
                         dataSet = dataSetCopy
                         bestError = candidateError
-                
-                # If the error do not decrease, then we try to replace one of the existing vectors.
-                if not improved:
-                    for vectorToDiscard in dataSet:
-                        dataSetCopy = list(dataSet)
-                        dataSetCopy.remove(vectorToDiscard)
-                        dataSetCopy.append(candidate)
-                        candidateError = errorFunction(dataSetCopy)
-                        
-                        if candidateError < bestError:
-                            improved = True
-                            dataSet = dataSetCopy
-                            bestError = candidateError
-                            break
+                        break
                     
                 if improved:
                     tries = 0
