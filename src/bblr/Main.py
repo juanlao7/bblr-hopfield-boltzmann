@@ -34,6 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', help='This random seed is added to the seed defined in the configuration files to obtain different results.', default=0, type=int)
     parser.add_argument('--just-analyze-patterns', action='store_true', help='Just create the random pattern data sets and analyze them. Do not do anything else.')
     parser.add_argument('--just-analyze-inputs', action='store_true', help='Just create the random pattern data sets, the random input data sets and analyze them. Do not do anything else.')
+    parser.add_argument('--out', dest='results_file', help='Store the results as a JSON file.')
     arguments = parser.parse_args()
     
     # Loading preferences
@@ -42,12 +43,14 @@ if __name__ == '__main__':
     inputDataSetPropertiesCombinations = loadJsonFile(arguments.input_data_set_properties_file)
     
     # Main loop
+    results = []
     
     for patternDataSetProperties in patternDataSetPropertiesCombinations:
         print 'PATTERN:', patternDataSetProperties
         patternDataSetGenerator = MainPatternGenerator(patternDataSetProperties, arguments.seed)
         patternDataSet = patternDataSetGenerator.getPatterns()
         originalPatternDataSet = patternDataSetGenerator.getOriginalPatterns()
+        
         printAnalysis(patternDataSetGenerator.analyze(), PATTERN_ANALYSIS_LABELS, 1)
         
         if not arguments.just_analyze_patterns:
@@ -55,13 +58,34 @@ if __name__ == '__main__':
                 print '\tMODEL:', modelProperties
                 modelFactory = ModelFactory(modelProperties)
                 model = modelFactory.buildModel()
-                model.train(patternDataSet)
+                
+                trainingResults = model.train(patternDataSet)
+                validationResults = model.test(patternDataSet, patternDataSet)
+                
+                validationResults = {
+                    'storedPatterns': validationResults['successfulEquilibriums'],
+                    'relativeStoredPatterns': validationResults['relativeSuccessfulEquilibriums']  
+                }
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
                     print '\t\tINPUT:', inputDataSetProperties
                     inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
+                    
                     printAnalysis(inputDataSetGenerator.analyze(), INPUT_ANALYSIS_LABELS, 3)
                     
                     if not arguments.just_analyze_inputs:
-                        testResults = model.test(inputDataSet)
+                        testResults = model.test(inputDataSet, patternDataSet)
+                        
+                        # TODO include in the results also the pattern, model and input properties
+                        result = {}
+                        result.update(trainingResults)
+                        result.update(validationResults)
+                        result.update(testResults)
+                        
+                        results.append(result)
+    
+    if arguments.results_file:
+        handler = open(arguments.results_file, 'w')
+        handler.write(json.dumps(results, indent=4, sort_keys=True))
+        handler.close()

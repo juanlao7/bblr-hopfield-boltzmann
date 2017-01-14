@@ -1,7 +1,8 @@
 from bblr.Utils import Utils
 import numpy
+from bblr.models.Model import Model
 
-class RestrictedBoltzmannModel(object):
+class RestrictedBoltzmannModel(Model):
     def __init__(self, properties):
         self.hiddenNeurons = properties.get('hiddenNeurons')
         self.learningRate = properties.get('learningRate')
@@ -24,6 +25,8 @@ class RestrictedBoltzmannModel(object):
         Utils.assertBoolean('Momentum', self.momentum)
         Utils.assertInt('Batch size', self.batchSize, 0)
         self.batchSize = int(self.batchSize)
+    
+    # Public methods. A model must implement these methods in order to use it in Main.py
 
     def train(self, patternDataSet):
         visibleNeurons = len(patternDataSet[0])
@@ -73,9 +76,10 @@ class RestrictedBoltzmannModel(object):
                 self.weights += deltaWeights
                 self.visibleOffset += deltaVisibleOffset
                 self.hiddenOffset += deltaHiddenOffset
-
-    def test(self, inputDataSet):
-        return ['TODO']
+        
+        return {'trainingEpochs': epochs}
+    
+    # Private methods.
     
     @staticmethod
     def sigmoid(batch, weights, offset):

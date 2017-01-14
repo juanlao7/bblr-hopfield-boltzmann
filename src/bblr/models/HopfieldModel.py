@@ -1,7 +1,7 @@
 import numpy
-from sre_parse import Pattern
+from bblr.models.Model import Model
 
-class HopfieldModel(object):
+class HopfieldModel(object, Model):
     def __init__(self, properties):
         self.trainingRule = properties.get('trainingRule')
         
@@ -10,6 +10,8 @@ class HopfieldModel(object):
         if self.trainingRule not in ('hebbian', 'storkey'):
             raise Exception('Unknown training rule "' + self.trainingRule + '". Only "hebbian" and "storkey" are supported')
 
+    # Public methods. A model must implement these methods in order to use it in Main.py
+    
     def train(self, patternDataSet):
         self.patternSize = len(patternDataSet[0])
         
@@ -17,9 +19,10 @@ class HopfieldModel(object):
             self.trainHebbian(patternDataSet)
         else:
             self.trainStorkey(patternDataSet)
+        
+        return {'trainingEpochs': 1}
     
-    def test(self, inputDataSet):
-        return ['TODO']
+    # Private methods.
     
     def trainHebbian(self, patternDataSet):
         self.weights = numpy.zeros((self.patternSize, self.patternSize))
