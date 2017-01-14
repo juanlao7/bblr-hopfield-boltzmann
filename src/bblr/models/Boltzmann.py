@@ -43,7 +43,7 @@ class RBM(object):
         self.verbose = verbose
         self.activation = activation
         
-    def train(self, X, epochs, thr=0.0, learning_rate=0.001, decay=0, momentum=False, batch_size=1):
+    def train(self, X, thr=0.0, learning_rate=0.001, decay=0, momentum=False, batch_size=1):
         '''
         Trains the RBM with the samples provided in X, using
         a specified number of epochs and a learning rate.
@@ -66,7 +66,8 @@ class RBM(object):
         d_h = np.zeros((1, self.n_hidden))
         
         batches = X.shape[0] // batch_size
-        for epoch in range(epochs):
+        epoch = 0
+        while 1:
             for batch in range(batches):
                 # Positive phase: sample h0 from v0
                 v0 = X[int(batch*batch_size):int((batch+1)*batch_size)]
@@ -98,12 +99,12 @@ class RBM(object):
                 self.W += d_w
                 self.v_offset += d_v
                 self.h_offset += d_h
-                diff_dw = np.linalg.norm((d_w - old_dw))
-                #print diff_dw
+            
+            epoch += 1
+            diff_dw = np.linalg.norm((d_w - old_dw))
+            if diff_dw < thr:
+                break
                 
-                if diff_dw < thr:
-                    break
-        
     
     def recall(self, v0):
         '''
