@@ -79,6 +79,13 @@ class RestrictedBoltzmannModel(Model):
         
         return {'trainingEpochs': epochs}
     
+    def input(self, visibleValues):
+        hiddenProbability = self.activation(visibleValues, self.weights, self.hiddenOffset)
+        hiddenValues = hiddenProbability > numpy.random.rand(1, self.hiddenNeurons)
+        
+        # TODO return 0 o 1, and not float values
+        return self.activation(hiddenValues, self.weights.T, self.visibleOffset)[0].tolist(), 1
+    
     # Private methods.
     
     @staticmethod

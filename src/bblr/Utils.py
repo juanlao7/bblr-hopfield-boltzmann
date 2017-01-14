@@ -36,8 +36,8 @@ class Utils(object):
     def distance(a, b):
         d = 0
         
-        for i in xrange(len(a)):
-            if a[i] != b[i]:
+        for i, j in zip(a, b):
+            if i != j:
                 d += 1
         
         return d

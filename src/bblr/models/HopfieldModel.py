@@ -1,7 +1,7 @@
 import numpy
 from bblr.models.Model import Model
 
-class HopfieldModel(object, Model):
+class HopfieldModel(Model):
     def __init__(self, properties):
         self.trainingRule = properties.get('trainingRule')
         
@@ -21,6 +21,17 @@ class HopfieldModel(object, Model):
             self.trainStorkey(patternDataSet)
         
         return {'trainingEpochs': 1}
+    
+    def input(self, inputVector):
+        result = list(inputVector)
+        iterations = 0
+        changed = True
+        
+        while (changed):
+            changed = self.updateNeurons(result)
+            iterations += 1
+
+        return result, iterations
     
     # Private methods.
     
@@ -58,4 +69,19 @@ class HopfieldModel(object, Model):
                 s += lastWeights[i][k] * patternDataSet[v][k]
         
         return s
+    
+    def updateNeurons(self, inputVector):
+        changed = False
+        
+        for neuron in range(self.patternSize):
+            neuronOutput = self.calculateNeuronOutput(neuron, inputVector)
+            
+            if neuronOutput != inputVector[neuron]:
+                inputVector[neuron] = neuronOutput
+                changed = True
+        
+        return changed
+    
+    def calculateNeuronOutput(self, neuron, inputVector):
+        return 1.0 if numpy.sum(numpy.multiply(self.weights[neuron,:], inputVector)) > 0.0 else -1.0
     

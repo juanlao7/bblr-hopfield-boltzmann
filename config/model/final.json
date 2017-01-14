@@ -1,10 +1,10 @@
 [
 	// Combination 1: lorem ipsum
-	/*{
+	{
 		"model": "hopfield",
 		"trainingRule": "hebbian"
-	},*/
-  	// Combination 2: dolor sit amet
+	},
+  // Combination 2: dolor sit amet
 	{
 		"model": "restricted-boltzmann",
 		"hiddenNeurons": 5,
