@@ -19,7 +19,7 @@ def exampleWithLetters():
     rbm = Boltzmann.RBM(25, 5, verbose=False)
 
     patterns = np.atleast_2d((a,z))
-    rbm.train(patterns, thr=0.00001, learning_rate=0.01, momentum=True)
+    rbm.train(patterns, thr=0.000001, learning_rate=0.01, momentum=True)
     recovered = rbm.recall(slg.toPattern(partialA))
     print "Recovered", recovered
     slg.display(recovered)

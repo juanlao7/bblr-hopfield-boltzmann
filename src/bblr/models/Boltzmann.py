@@ -68,6 +68,7 @@ class RBM(object):
         batches = X.shape[0] // batch_size
         epoch = 0
         while 1:
+            old_dw = np.array(d_w)
             for batch in range(batches):
                 # Positive phase: sample h0 from v0
                 v0 = X[int(batch*batch_size):int((batch+1)*batch_size)]
@@ -87,7 +88,6 @@ class RBM(object):
                     m = 0.5 if epoch > 5 else 0.9
                 else:
                     m = 1
-                old_dw = np.array(d_w)
                 
                 # Update increments of weights and offsets
                 d_w = d_w * m + (learning_rate/batch_size) * (np.dot(v0.T, prob_h0) - np.dot(v1.T, prob_h1)) - decay * self.W
