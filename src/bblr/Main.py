@@ -90,17 +90,18 @@ if __name__ == '__main__':
         
         if not arguments.just_analyze_patterns:
             for modelProperties in modelPropertiesCombinations:
-                print '\tMODEL:', modelProperties
-                modelFactory = ModelFactory(modelProperties, arguments.seed)
-                model = modelFactory.buildModel()
-                
-                trainingResults = model.train(patternDataSet)
-                validationResults = model.test(patternDataSet, patternDataSet)
-                
-                validationResults = {
-                    'successfullyStoredPatterns': validationResults['successfulEquilibriums'],
-                    'unsuccessfullyStoredPatterns': validationResults['unsuccessfulEquilibriums']
-                }
+                if not arguments.just_analyze_inputs:
+                    print '\tMODEL:', modelProperties
+                    modelFactory = ModelFactory(modelProperties, arguments.seed)
+                    model = modelFactory.buildModel()
+                    
+                    trainingResults = model.train(patternDataSet)
+                    validationResults = model.test(patternDataSet, patternDataSet)
+                    
+                    validationResults = {
+                        'successfullyStoredPatterns': validationResults['successfulEquilibriums'],
+                        'unsuccessfullyStoredPatterns': validationResults['unsuccessfulEquilibriums']
+                    }
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
                     print '\t\tINPUT:', inputDataSetProperties
