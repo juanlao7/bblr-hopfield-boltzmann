@@ -1,7 +1,6 @@
 from numpy.random import RandomState
 import math
 from bblr.Utils import Utils
-from bblr import patterns
 
 class MainInputGenerator(object):
     MAX_TRIES = 400
@@ -57,8 +56,7 @@ class MainInputGenerator(object):
         return self.inputs
     
     def analyze(self):
-        analysis = self.analyzeDataSet(self.originalInputs)
-        return analysis['dataSetSize'], analysis['dimension'], analysis['mean'], analysis['stdev'], analysis['mean'] / analysis['dimension'], analysis['stdev'] / analysis['dimension']
+        return self.analyzeDataSet(self.originalInputs)
     
     # Private methods.
     
@@ -70,10 +68,10 @@ class MainInputGenerator(object):
         stdev = math.sqrt(variance)
         
         return {
-            'dataSetSize': n,
-            'dimension': len(dataSet[0]),
-            'mean': mean,
-            'stdev': stdev
+            'inputDataSetSize': n,
+            'inputDimension': len(dataSet[0]),
+            'inputMinimumDistanceMean': mean,
+            'inputMinimumDistanceStdev': stdev
         }
 
     def computeError(self, dataSet):

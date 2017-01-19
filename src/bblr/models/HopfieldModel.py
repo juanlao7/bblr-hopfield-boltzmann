@@ -2,7 +2,7 @@ import numpy
 from bblr.models.Model import Model
 
 class HopfieldModel(Model):
-    def __init__(self, properties):
+    def __init__(self, properties, seedAddition):
         self.trainingRule = properties.get('trainingRule')
         
         # Validating the configuration.
@@ -31,7 +31,7 @@ class HopfieldModel(Model):
             changed = self.updateNeurons(result)
             iterations += 1
 
-        return result, iterations
+        return map(lambda x: int(x != -1.0), result), iterations
     
     # Private methods.
     

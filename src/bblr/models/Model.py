@@ -35,9 +35,7 @@ class Model(object):
             'iterationsStdev': numpy.std(allIterations),
             'successfulEquilibriums': successfulEquilibriums,
             'unsuccessfulEquilibriums': unsuccessfulEquilibriums,
-            'spuriousEquilibriums': spuriousEquilibriums,
-            'relativeSuccessfulEquilibriums': successfulEquilibriums / len(inputDataSet),
-            'relativeUnsuccessfulEquilibriums': unsuccessfulEquilibriums / len(inputDataSet)
+            'spuriousEquilibriums': spuriousEquilibriums
         }
 
     def getTime(self):

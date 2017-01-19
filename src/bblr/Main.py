@@ -9,8 +9,41 @@ PATTERN_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/P
 MODELS_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
 INPUT_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Input-data-set-properties-file-format'
 
-PATTERN_ANALYSIS_LABELS = ['Pattern data set size', 'Dimension', 'Mean distance', 'Distance standard deviation', 'Relative mean distance', 'Relative distance standard deviation']
-INPUT_ANALYSIS_LABELS = ['Input data set size', 'Dimension', 'Mean minimum distance', 'Minimum distance standard deviation', 'Relative mean minimum distance', 'Relative minimum distance standard deviation']
+ANALYSIS_LABELS = [
+    # Pattern data set analysis
+    ['patternDataSetSize', 'Pattern data set size'],
+    ['patternDimension', 'Pattern dimension'],
+    ['patternsDistanceMean', 'Distance between patterns mean'],
+    ['patternsDistanceStdev', 'Distance between patterns standard deviation'],
+    
+    # Model properties
+    ['model', 'Model'],
+    ['trainingRule', 'Training rule'],
+    ['hiddenNeurons', 'Number of hidden neurons'],
+    ['learningRate', 'Learning rate'],
+    ['weightDecay', 'Weight decay'],
+    ['momentum', 'Momentum'],
+    ['batchSize', 'Batch size'],
+    
+    # Validation results
+    ['successfullyStoredPatterns', 'Number of stored patterns'],
+    ['unsuccessfullyStoredPatterns', 'Number of not stored patterns'],
+    
+    # Input data set analysis
+    ['inputDataSetSize', 'Input data set size'],
+    ['inputDimension', 'Input vector dimension'],
+    ['inputMinimumDistanceMean', 'Minimum distance of inputs to patterns mean'],
+    ['inputMinimumDistanceStdev', 'Minimum distance of inputs to patterns standard deviation'],
+    
+    # Test results
+    ['timeMean', 'CPU time mean'],
+    ['timeStdev', 'CPU time standard deviation'],
+    ['iterationsMean', 'Iterations mean'],
+    ['iterationsStdev', 'Iterations standard deviation'],
+    ['successfulEquilibriums', 'Successful equilibriums'],
+    ['unsuccessfulEquilibriums', 'Unsuccessful equilibriums'],
+    ['spuriousEquilibriums', 'Spurious equilibriums']
+]
 
 def loadJsonFile(path):
     with open(path) as handler:
@@ -19,9 +52,10 @@ def loadJsonFile(path):
         data = re.sub(re.compile("//.*?\n" ), '', data)             # remove all occurrence single line comments (// COMMENT\n)
         return json.loads(data)
 
-def printAnalysis(analysis, labels, identation=0):
-    for i in xrange(len(analysis)):
-        print '\t' * identation, labels[i], ':', analysis[i]
+def printAnalysis(analysis, identation=0):
+    for key, label in ANALYSIS_LABELS:
+        if key in analysis:
+            print '\t' * identation, label, ':', analysis[key] 
     
     print
 
@@ -51,20 +85,21 @@ if __name__ == '__main__':
         patternDataSet = patternDataSetGenerator.getPatterns()
         originalPatternDataSet = patternDataSetGenerator.getOriginalPatterns()
         
-        printAnalysis(patternDataSetGenerator.analyze(), PATTERN_ANALYSIS_LABELS, 1)
+        patternDataSetAnalysis = patternDataSetGenerator.analyze()
+        printAnalysis(patternDataSetAnalysis, 1)
         
         if not arguments.just_analyze_patterns:
             for modelProperties in modelPropertiesCombinations:
                 print '\tMODEL:', modelProperties
-                modelFactory = ModelFactory(modelProperties)
+                modelFactory = ModelFactory(modelProperties, arguments.seed)
                 model = modelFactory.buildModel()
                 
                 trainingResults = model.train(patternDataSet)
                 validationResults = model.test(patternDataSet, patternDataSet)
                 
                 validationResults = {
-                    'storedPatterns': validationResults['successfulEquilibriums'],
-                    'relativeStoredPatterns': validationResults['relativeSuccessfulEquilibriums']  
+                    'successfullyStoredPatterns': validationResults['successfulEquilibriums'],
+                    'unsuccessfullyStoredPatterns': validationResults['unsuccessfulEquilibriums']
                 }
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
@@ -72,16 +107,25 @@ if __name__ == '__main__':
                     inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
                     
-                    printAnalysis(inputDataSetGenerator.analyze(), INPUT_ANALYSIS_LABELS, 3)
+                    inputDataSetAnalysis = inputDataSetGenerator.analyze()
+                    printAnalysis(inputDataSetAnalysis, 3)
                     
                     if not arguments.just_analyze_inputs:
                         testResults = model.test(inputDataSet, patternDataSet)
                         
-                        # TODO include in the results also the pattern, model and input properties
+                        print '\t\t\tRESULT:'
+                        printAnalysis(testResults, 3)
+                        
                         result = {}
+                        result.update(patternDataSetAnalysis)
+                        result.update(modelProperties)
                         result.update(trainingResults)
                         result.update(validationResults)
+                        result.update(inputDataSetAnalysis)
                         result.update(testResults)
+                        
+                        print '\t\t\tTOTAL:'
+                        printAnalysis(result, 3)
                         
                         results.append(result)
     

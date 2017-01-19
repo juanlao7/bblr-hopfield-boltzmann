@@ -63,8 +63,7 @@ class MainPatternGenerator(object):
         return self.originalPatterns
     
     def analyze(self):
-        analysis = self.analyzeDataSet(self.patterns)
-        return analysis['dataSetSize'], analysis['dimension'], analysis['mean'], analysis['stdev'], analysis['mean'] / analysis['dimension'], analysis['stdev'] / analysis['dimension']
+        return self.analyzeDataSet(self.patterns)
     
     # Private methods.
     
@@ -84,13 +83,13 @@ class MainPatternGenerator(object):
         stdev = math.sqrt(variance)
         
         return {
-            'dataSetSize': n,
-            'dimension': len(dataSet[0]),
-            'mean': mean,
-            'stdev': stdev
+            'patternDataSetSize': n,
+            'patternDimension': len(dataSet[0]),
+            'patternsDistanceMean': mean,
+            'patternsDistanceStdev': stdev
         }
 
     def computeError(self, dataSet):
         analysis = self.analyzeDataSet(dataSet)
         distance = self.properties.get('distance')
-        return Utils.meanSquareError([analysis['mean'], analysis['stdev']], [distance.get('mean'), distance.get('stdev')])
+        return Utils.meanSquareError([analysis['patternsDistanceMean'], analysis['patternsDistanceStdev']], [distance.get('mean'), distance.get('stdev')])
