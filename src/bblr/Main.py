@@ -124,9 +124,6 @@ if __name__ == '__main__':
                         result.update(inputDataSetAnalysis)
                         result.update(testResults)
                         
-                        print '\t\t\tTOTAL:'
-                        printAnalysis(result, 3)
-                        
                         results.append(result)
     
     if arguments.results_file:
