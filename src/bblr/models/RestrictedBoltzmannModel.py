@@ -4,7 +4,7 @@ from bblr.models.Model import Model
 from numpy.random import RandomState
 
 class RestrictedBoltzmannModel(Model):
-    TRAINING_STOP_THRESHOLD = 0.0
+    TRAINING_STOP_THRESHOLD = 0.000001
     
     def __init__(self, properties, seedAddition):
         # Validating the configuration.
