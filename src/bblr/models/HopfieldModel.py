@@ -53,25 +53,25 @@ class HopfieldModel(Model):
     
     def trainStorkey(self, patternDataSet):
         self.weights = numpy.zeros((self.patternSize, self.patternSize))
+        n = len(patternDataSet)
         
-        for v in xrange(len(patternDataSet)):
+        for v in xrange(n):
             lastWeights = self.weights.copy()
             
             for i in range(0, self.patternSize):
-                for j in range(i + 1, self.patternSize):    
-                    s = (patternDataSet[v][i] * patternDataSet[v][j]
-                        - patternDataSet[v][i] * self.h(v, j, i, lastWeights, patternDataSet) 
-                        - patternDataSet[v][j] * self.h(v, i, j, lastWeights, patternDataSet))
+                for j in range(i + 1, self.patternSize):
+                    weight = lastWeights[i][j]
+                    weight += patternDataSet[v][i] * patternDataSet[v][j] / n
+                    weight -= patternDataSet[v][i] * self.h(v, j, i, lastWeights, patternDataSet) / n
+                    weight -= patternDataSet[v][j] * self.h(v, i, j, lastWeights, patternDataSet) / n 
                     
-                    self.weights[i][j] += s
-                    self.weights[j][i] += s
-                        
-        self.weights /= self.patternSize
+                    self.weights[i][j] = weight
+                    self.weights[j][i] = weight
     
     def h(self, v, i, j, lastWeights, patternDataSet):
         s = 0.0
         
-        for k in range(self.patternSize):
+        for k in xrange(self.patternSize):
             if k != i and k != j:
                 s += lastWeights[i][k] * patternDataSet[v][k]
         
