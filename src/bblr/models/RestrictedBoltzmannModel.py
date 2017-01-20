@@ -98,7 +98,7 @@ class RestrictedBoltzmannModel(Model):
         hiddenProbability = self.sigmoid(visibleValues, self.weights, self.hiddenOffset)
         hiddenValues = (hiddenProbability > self.randomGenerator.rand(1, self.hiddenNeurons))
         result = self.sigmoid(hiddenValues, self.weights.T, self.visibleOffset)
-        return map(lambda x: int(x), result[0] > 0.5)
+        return map(lambda x: int(x), result[0] > 0.5), 1
     
     # Private methods.
     
