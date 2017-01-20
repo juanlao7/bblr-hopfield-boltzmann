@@ -5,10 +5,10 @@
   [
   {
     "seed": 0,
-    "dataSetSize": 20,
-    "patternSize": 200,
+    "dataSetSize": 15,
+    "patternSize": 60,
     "distance": {
-      "mean": 40,
+      "mean": 55,
       "stdev": 1
     }
   }
