@@ -1,0 +1,10 @@
+[
+  {
+    "seed": 0,
+    "inputsPerPattern": 10,
+    "minDistance": {
+      "mean": 7,
+      "stdev": 1
+    }
+  }
+]

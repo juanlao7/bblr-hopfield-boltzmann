@@ -1,0 +1,7 @@
+[
+	// Combination 1: lorem ipsum
+	{
+		"model": "hopfield",
+		"trainingRule": "storkey"
+	}
+]
