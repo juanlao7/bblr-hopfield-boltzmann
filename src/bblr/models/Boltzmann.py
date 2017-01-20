@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.special import expit
 
 def sigmoid(X, W, b):
     '''
@@ -6,7 +7,8 @@ def sigmoid(X, W, b):
     sigmoid function, in [0,1].
     '''
     xw = np.dot(X, W)
-    return 1.0 / (1 + np.exp(- xw - b))
+    #return 1.0 / (1 + np.exp(- xw - b))
+    return expit(xw+b)
 
 
 def tanh(X, W, b):
