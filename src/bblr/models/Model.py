@@ -14,7 +14,7 @@ class Model(object):
             associatedPattern = self.findNearestPattern(inputVector, patternDataSet)
             
             time = self.getTime()
-            output, iterations = self.input(inputVector)
+            output, iterations = self.recall(inputVector)
             time = self.getTime() - time
             
             allIterations.append(iterations)
@@ -23,6 +23,7 @@ class Model(object):
             if tuple(associatedPattern) == tuple(output):
                 successfulEquilibriums += 1
             else:
+                print associatedPattern, 'VS', output
                 unsuccessfulEquilibriums += 1
                 
                 if self.isSpurious(associatedPattern, output):
