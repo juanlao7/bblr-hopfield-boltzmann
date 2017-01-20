@@ -23,7 +23,7 @@ class Model(object):
             if tuple(associatedPattern) == tuple(output):
                 successfulEquilibriums += 1
             else:
-                print associatedPattern, 'VS', output
+                #print associatedPattern, 'VS', output
                 unsuccessfulEquilibriums += 1
                 
                 if self.isSpurious(associatedPattern, output):

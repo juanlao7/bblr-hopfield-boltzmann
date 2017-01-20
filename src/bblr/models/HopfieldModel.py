@@ -23,20 +23,20 @@ class HopfieldModel(Model):
         return {'trainingEpochs': 1}
     
     def recall(self, inputVector):
-        print 'Input:', inputVector
+        #print 'Input:', inputVector
         result = numpy.array(map(lambda x: 1.0 if x == 1 else -1.0, inputVector))
-        print 'Converted to -1.0..1.0:', result
+        #print 'Converted to -1.0..1.0:', result
         iterations = 0
         changed = True
         
         while (changed):
-            print 'updating neurons'
+            #print 'updating neurons'
             changed = self.updateNeurons(result)
-            print 'Current:', result
+            #print 'Current:', result
             iterations += 1
             
-        print 'Converged!'
-        raise 'we'
+        #print 'Converged!'
+        #raise 'we'
 
         #return map(lambda x: int(x != -1.0), result), iterations
         return result, iterations
