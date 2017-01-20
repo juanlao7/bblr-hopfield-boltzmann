@@ -14,34 +14,33 @@ class HopfieldModel(Model):
     
     def train(self, patternDataSet):
         self.patternSize = len(patternDataSet[0])
+        hopfieldDomainPatternDataSet = map(lambda pattern: self.toHopfieldDomain(pattern), patternDataSet)
         
         if self.trainingRule == 'hebbian':
-            self.trainHebbian(patternDataSet)
+            self.trainHebbian(hopfieldDomainPatternDataSet)
         else:
-            self.trainStorkey(patternDataSet)
+            self.trainStorkey(hopfieldDomainPatternDataSet)
         
         return {'trainingEpochs': 1}
     
     def recall(self, inputVector):
-        #print 'Input:', inputVector
-        result = numpy.array(map(lambda x: 1.0 if x == 1 else -1.0, inputVector))
-        #print 'Converted to -1.0..1.0:', result
+        result = self.toHopfieldDomain(inputVector)
         iterations = 0
         changed = True
         
         while (changed):
-            #print 'updating neurons'
             changed = self.updateNeurons(result)
-            #print 'Current:', result
             iterations += 1
-            
-        #print 'Converged!'
-        #raise 'we'
 
-        #return map(lambda x: int(x != -1.0), result), iterations
-        return result, iterations
+        return self.toStandardDomain(result), iterations
     
     # Private methods.
+    
+    def toHopfieldDomain(self, vector):
+        return numpy.array(map(lambda x: 1.0 if x == 1 else -1.0, vector))
+    
+    def toStandardDomain(self, vector):
+        return map(lambda x: int(x != -1.0), vector)
     
     def trainHebbian(self, patternDataSet):
         self.weights = numpy.zeros((self.patternSize, self.patternSize))

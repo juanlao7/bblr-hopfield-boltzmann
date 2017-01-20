@@ -41,8 +41,8 @@ ANALYSIS_LABELS = [
     # Test results
     ['timeMean', 'CPU time mean'],
     ['timeStdev', 'CPU time standard deviation'],
-    ['iterationsMean', 'Iterations mean'],
-    ['iterationsStdev', 'Iterations standard deviation'],
+    ['iterationsMean', 'Iterations until equilibrium mean'],
+    ['iterationsStdev', 'Iterations until equilibrium standard deviation'],
     ['successfulEquilibriums', 'Successful equilibriums'],
     ['unsuccessfulEquilibriums', 'Unsuccessful equilibriums'],
     ['spuriousEquilibriums', 'Spurious equilibriums']
