@@ -48,7 +48,7 @@ class MainInputGenerator(object):
                 componentsToFlip = range(patternSize)
                 
                 for k in xrange(flips):
-                    componentIndex = randomGenerator.randint(0, flips - k)
+                    componentIndex = randomGenerator.randint(0, patternSize - k)
                     component = componentsToFlip.pop(componentIndex)
                     inputVector[component] = int(not inputVector[component])
                 
