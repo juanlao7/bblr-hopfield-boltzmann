@@ -24,6 +24,9 @@ ANALYSIS_LABELS = [
     ['weightDecay', 'Weight decay'],
     ['momentum', 'Momentum'],
     ['batchSize', 'Batch size'],
+
+    # Training results
+    ['trainingEpochs', 'Training epochs'],
     
     # Validation results
     ['successfullyStoredPatterns', 'Number of stored patterns'],
@@ -96,12 +99,16 @@ if __name__ == '__main__':
                     model = modelFactory.buildModel()
                     
                     trainingResults = model.train(patternDataSet)
+                    printAnalysis(trainingResults, 2)
+
                     validationResults = model.test(patternDataSet, patternDataSet)
                     
                     validationResults = {
                         'successfullyStoredPatterns': validationResults['successfulEquilibriums'],
                         'unsuccessfullyStoredPatterns': validationResults['unsuccessfulEquilibriums']
                     }
+
+                    printAnalysis(validationResults, 2)
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
                     print '\t\tINPUT:', inputDataSetProperties
