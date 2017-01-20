@@ -32,10 +32,17 @@ class MainInputGenerator(object):
         # Generating the inputs.
         patternSize = patternDataSetProperties.get('patternSize')
         self.originalInputs = []
-        allFlips = map(lambda x: max(0, min(patternSize, int(round(x)))), randomGenerator.normal(mean, stdev, len(originalPatternDataSet) * inputsPerPattern))
+        
+        if stdev == 0:
+            allFlips = [min(patternSize, int(round(mean)))] * (len(originalPatternDataSet) * inputsPerPattern)
+        else:
+            allFlips = map(lambda x: max(0, min(patternSize, int(round(x)))), randomGenerator.normal(mean, stdev, len(originalPatternDataSet) * inputsPerPattern))
         
         for i in xrange(len(originalPatternDataSet)):
-            for j in xrange(inputsPerPattern):
+            insertedInputs = set()
+            j = 0
+            
+            while j < inputsPerPattern:
                 inputVector = list(originalPatternDataSet[i])
                 flips = allFlips[i + j] 
                 componentsToFlip = range(patternSize)
@@ -45,8 +52,13 @@ class MainInputGenerator(object):
                     component = componentsToFlip.pop(componentIndex)
                     inputVector[component] = int(not inputVector[component])
                 
-                self.originalInputs.append(tuple(inputVector))
-        
+                inputVector = tuple(inputVector)
+                
+                if inputVector not in insertedInputs:
+                    self.originalInputs.append(inputVector)
+                    insertedInputs.add(inputVector)
+                    j += 1
+                        
         # Applying transformations.
         self.inputs = Utils.transformDataSet(randomGenerator, self.originalInputs, patternDataSetProperties)
 
