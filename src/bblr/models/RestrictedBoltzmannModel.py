@@ -38,17 +38,17 @@ class RestrictedBoltzmannModel(Model):
         visibleNeurons = len(patternDataSet[0])
         
         # Initializing weights according to Hinton, G. (2010). A practical guide to training restricted Boltzmann machines. Momentum, 9(1), 926.
-        self.weights = 0.01 * self.randomGenerator.randn(visibleNeurons, self.hiddenNeurons)
+        self.weights = self.randomGenerator.normal(0, 0.01, (visibleNeurons, self.hiddenNeurons))
         self.visibleOffset = numpy.zeros((1, visibleNeurons))
-        self.hiddenOffset = 0 * numpy.ones((1, self.hiddenNeurons))
+        self.hiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
         for i in xrange(visibleNeurons):
             p = sum(map(lambda x: x[i], patternDataSet)) / float(len(patternDataSet))
             
             if p == 0:
-                self.visibleOffset[0, i] = -2.
+                self.visibleOffset[0, i] = -2.0
             elif p == 1:
-                self.visibleOffset[0, i] = 2.
+                self.visibleOffset[0, i] = 2.0
             else:
                 self.visibleOffset[0, i] = numpy.log(p / (1 - p))
         
