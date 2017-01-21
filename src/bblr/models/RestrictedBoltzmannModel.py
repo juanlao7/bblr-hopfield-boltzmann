@@ -42,6 +42,16 @@ class RestrictedBoltzmannModel(Model):
         self.visibleOffset = numpy.zeros((1, visibleNeurons))
         self.hiddenOffset = -4.0 * numpy.ones((1, self.hiddenNeurons))
         
+        for i in xrange(visibleNeurons):
+            p = sum(map(lambda x: x[i], patternDataSet)) / float(len(patternDataSet))
+            
+            if p == 0:
+                self.visibleOffset[0, i] = -2
+            elif p == 1:
+                self.visibleOffset[0, i] = 2
+            else:
+                self.visibleOffset[0, i] = numpy.log(p / (1 - p))
+        
         # Training.
         deltaWeights = numpy.zeros((visibleNeurons, self.hiddenNeurons))
         deltaVisibleOffset = numpy.zeros((1, visibleNeurons))
