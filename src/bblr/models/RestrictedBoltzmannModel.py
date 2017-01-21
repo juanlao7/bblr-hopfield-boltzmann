@@ -5,7 +5,7 @@ from numpy.random import RandomState
 from scipy.special import expit
 
 class RestrictedBoltzmannModel(Model):
-    TRAINING_STOP_THRESHOLD = 0.00001
+    STOP_WHEN_NOT_IMPROVEMENT_EPOCHS = 1000
     
     def __init__(self, properties, seedAddition):
         # Validating the configuration.
@@ -47,6 +47,8 @@ class RestrictedBoltzmannModel(Model):
         deltaHiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
         epochs = 0
+        lesserDeltaWeightsNorm = numpy.linalg.norm(deltaWeights)
+        stopCounter = 0
         
         while True:
             oldDeltaWeights = numpy.array(deltaWeights)
@@ -55,16 +57,16 @@ class RestrictedBoltzmannModel(Model):
                 visibleBatch0 = numpy.asarray(patternDataSet[i:i + self.batchSize])
                 
                 # Positive phase: sample hiddenBatch0 from batch
-                hiddenBatch0Probability = self.logistic(visibleBatch0, self.weights, self.hiddenOffset)
+                hiddenBatch0Probability = self.activation(visibleBatch0, self.weights, self.hiddenOffset)
                 
-                # Sample hiddenBatch0: we binarize the results of the logistic
+                # Sample hiddenBatch0: we binarize the results of the activation function
                 hiddenBatch0 = (hiddenBatch0Probability > self.randomGenerator.rand(self.batchSize, self.hiddenNeurons))
                 
                 # Negative phase: calculate visibleBatch1 from our hiddenBatch0 samples
                 # Hinton, 2010 recommends not to binarize when updating visible units
                 # No need to sample the last hidden states because they're not used
-                visibleBatch1 = self.logistic(hiddenBatch0, self.weights.T, self.visibleOffset)
-                hiddenBatch1Probability = self.logistic(visibleBatch1, self.weights, self.hiddenOffset)
+                visibleBatch1 = self.activation(hiddenBatch0, self.weights.T, self.visibleOffset)
+                hiddenBatch1Probability = self.activation(visibleBatch1, self.weights, self.hiddenOffset)
                 
                 # Momentum is set as specified by Hinton's practical guide
 
@@ -84,9 +86,16 @@ class RestrictedBoltzmannModel(Model):
                 self.hiddenOffset += deltaHiddenOffset
             
             epochs += 1
+            deltaWeightsNorm = numpy.linalg.norm(deltaWeights)
             
-            if numpy.linalg.norm((deltaWeights - oldDeltaWeights)) < RestrictedBoltzmannModel.TRAINING_STOP_THRESHOLD:
-                break
+            if deltaWeightsNorm < lesserDeltaWeightsNorm:
+                lesserDeltaWeightsNorm = deltaWeightsNorm
+                stopCounter = 0
+            else:
+                stopCounter += 1
+                
+                if stopCounter > RestrictedBoltzmannModel.STOP_WHEN_NOT_IMPROVEMENT_EPOCHS:
+                    break
         
         return {'trainingEpochs': epochs}
     
@@ -95,13 +104,13 @@ class RestrictedBoltzmannModel(Model):
         self.randomGenerator.seed(self.seed)
         
         # Computing the output.
-        hiddenProbability = self.logistic(visibleValues, self.weights, self.hiddenOffset)
+        hiddenProbability = self.activation(visibleValues, self.weights, self.hiddenOffset)
         hiddenValues = (hiddenProbability > self.randomGenerator.rand(1, self.hiddenNeurons))
-        result = self.logistic(hiddenValues, self.weights.T, self.visibleOffset)
+        result = self.activation(hiddenValues, self.weights.T, self.visibleOffset)
         return tuple(map(lambda x: int(x), result[0] > 0.5)), 1
     
     # Private methods.
     
-    def logistic(self, batch, weights, offset):
+    def activation(self, batch, weights, offset):
         return expit(numpy.dot(batch, weights) + offset)
 
