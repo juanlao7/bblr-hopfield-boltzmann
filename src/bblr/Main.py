@@ -77,7 +77,7 @@ if __name__ == '__main__':
     patternDataSetId = 1
     
     for patternDataSetProperties in patternDataSetPropertiesCombinations:
-        patternDataSetProperties['patternId'] = patternDataSetId
+        patternDataSetProperties['patternDataSetId'] = patternDataSetId
         patternDataSetId += 1
         
         print 'PATTERN:', patternDataSetProperties
@@ -112,11 +112,11 @@ if __name__ == '__main__':
 
                     printAnalysis(validationResults, 2)
                 
-                inputId = 1
+                inputDataSetId = 1
                 
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
-                    inputDataSetProperties['inputId'] = inputId
-                    inputId += 1
+                    inputDataSetProperties['inputDataSetId'] = inputDataSetId
+                    inputDataSetId += 1
                     
                     print '\t\tINPUT:', inputDataSetProperties
                     inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSet, patternDataSetProperties, arguments.seed)
@@ -139,6 +139,8 @@ if __name__ == '__main__':
                         result.update(validationResults)
                         result.update(inputDataSetAnalysis)
                         result.update(testResults)
+                        result['patternDataSetId'] = patternDataSetProperties['patternDataSetId']
+                        result['inputDataSetId'] = inputDataSetProperties['inputDataSetId']
                         
                         results.append(result)
     
