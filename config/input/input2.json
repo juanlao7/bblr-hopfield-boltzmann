@@ -12,7 +12,25 @@
     "seed": 0,
     "inputsPerPattern": 10,
     "minDistance": {
+      "mean": "30%",
+      "stdev": 0
+    },
+    "target": "transformedPatterns"
+  },
+  {
+    "seed": 0,
+    "inputsPerPattern": 10,
+    "minDistance": {
       "mean": "40%",
+      "stdev": 0
+    },
+    "target": "transformedPatterns"
+  },
+  {
+    "seed": 0,
+    "inputsPerPattern": 10,
+    "minDistance": {
+      "mean": "50%",
       "stdev": 0
     },
     "target": "transformedPatterns"
