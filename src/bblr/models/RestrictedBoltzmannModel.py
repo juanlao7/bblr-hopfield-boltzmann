@@ -96,10 +96,6 @@ class RestrictedBoltzmannModel(Model):
                 self.visibleOffset += deltaVisibleOffset
                 self.hiddenOffset += deltaHiddenOffset
             
-            # Stop if already remembered all the patterns.
-            if self.test(patternDataSet, patternDataSet)['successfulEquilibriums'] == len(patternDataSet):
-                break
-            
             # Stop if looks like it is oscillating.
             deltaWeightsNorm = numpy.linalg.norm(deltaWeights)
             deltaWeightsSummation += deltaWeightsNorm
