@@ -3,16 +3,16 @@
 	{
 		"model": "restricted-boltzmann",
     	"seed": 0,
-		"hiddenNeurons": 50,
+		"hiddenNeurons": 100,
 		"learningRate": 0.001,
 		"weightDecay": 0,
 		"momentum": true,
-		"batchSize": 2,
+		"batchSize": 5,
 		"activation": "sigmoid",
     "validation": {
-      "inputsPerPattern": 3,
+      "inputsPerPattern": 5,
       "minDistance": {
-        "mean": 3,
+        "mean": 10,
         "stdev": 1
       }
     }
@@ -24,17 +24,7 @@
 		"learningRate": 0.001,
 		"weightDecay": 0,
 		"momentum": true,
-		"batchSize": 2,
-		"activation": "sigmoid"
-	},
-	{
-		"model": "restricted-boltzmann",
-    	"seed": 0,
-		"hiddenNeurons": 200,
-		"learningRate": 0.001,
-		"weightDecay": 0,
-		"momentum": true,
-		"batchSize": 2,
+		"batchSize": 5,
 		"activation": "sigmoid"
 	}
 ]
