@@ -5,9 +5,9 @@
     	"seed": 0,
 		"hiddenNeurons": 100,
 		"learningRate": 0.001,
-		"weightDecay": 0,
+		"weightDecay": 0.000001,
 		"momentum": true,
-		"batchSize": 1,
+		"batchSize": 5,
 		"activation": "sigmoid"
 	}
 ]

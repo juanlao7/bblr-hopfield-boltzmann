@@ -1,0 +1,264 @@
+  /*
+   * Patterns
+   */
+
+[
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 40,
+    "distance": {
+      "mean": 20,
+      "stdev": 4
+    },
+    "extraBits": {
+      "number": 60,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 10,
+    "patternSize": 40,
+    "distance": {
+      "mean": 20,
+      "stdev": 4
+    },
+    "extraBits": {
+      "number": 60,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 15,
+    "patternSize": 40,
+    "distance": {
+      "mean": 20,
+      "stdev": 4
+    },
+    "extraBits": {
+      "number": 60,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 20,
+    "patternSize": 40,
+    "distance": {
+      "mean": 20,
+      "stdev": 4
+    },
+    "extraBits": {
+      "number": 60,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 60,
+    "distance": {
+      "mean": 30,
+      "stdev": 6
+    },
+    "extraBits": {
+      "number": 40,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 10,
+    "patternSize": 60,
+    "distance": {
+      "mean": 30,
+      "stdev": 6
+    },
+    "extraBits": {
+      "number": 40,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 15,
+    "patternSize": 60,
+    "distance": {
+      "mean": 30,
+      "stdev": 6
+    },
+    "extraBits": {
+      "number": 40,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 20,
+    "patternSize": 60,
+    "distance": {
+      "mean": 30,
+      "stdev": 6
+    },
+    "extraBits": {
+      "number": 40,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 25,
+    "patternSize": 60,
+    "distance": {
+      "mean": 30,
+      "stdev": 6
+    },
+    "extraBits": {
+      "number": 40,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 10,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 15,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 20,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 25,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 30,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 5,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 10,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 15,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 20,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 25,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 30,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  },
+  {
+    "seed": 0,
+    "dataSetSize": 35,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  }
+]
