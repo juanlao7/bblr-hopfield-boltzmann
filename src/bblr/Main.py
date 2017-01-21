@@ -119,10 +119,11 @@ if __name__ == '__main__':
                     inputId += 1
                     
                     print '\t\tINPUT:', inputDataSetProperties
-                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
+                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
                     
                     inputDataSetAnalysis = inputDataSetGenerator.analyze()
+                    inputDataSetAnalysis['inputsPerPattern'] = inputDataSetProperties['inputsPerPattern']
                     printAnalysis(inputDataSetAnalysis, 3)
                     
                     if not arguments.just_analyze_inputs:
