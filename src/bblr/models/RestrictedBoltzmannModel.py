@@ -6,6 +6,7 @@ from scipy.special import expit
 
 class RestrictedBoltzmannModel(Model):
     STOP_WHEN_NOT_IMPROVEMENT_EPOCHS = 1000
+    DELTA_WEIGHTS_NORM_N = 1000
     
     def __init__(self, properties, seedAddition):
         # Validating the configuration.
@@ -47,7 +48,9 @@ class RestrictedBoltzmannModel(Model):
         deltaHiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
         epochs = 0
-        lesserDeltaWeightsNorm = None
+        lesserDeltaWeightsNormSummation = None
+        deltaWeightsSummation = 0
+        lastDeltaWeightsNorm = 0
         stopCounter = 0
         
         while True:
@@ -69,7 +72,7 @@ class RestrictedBoltzmannModel(Model):
                 # Momentum is set as specified by Hinton's practical guide
 
                 if self.momentum:
-                    momentum = 0.5 if epochs > 5 else 0.9
+                    momentum = 0.5 if epochs > 5 else 0.9           # TODO: > 5 o >= 5?
                 else:
                     momentum = 1
                 
@@ -83,19 +86,25 @@ class RestrictedBoltzmannModel(Model):
                 self.visibleOffset += deltaVisibleOffset
                 self.hiddenOffset += deltaHiddenOffset
             
-            epochs += 1
             deltaWeightsNorm = numpy.linalg.norm(deltaWeights)
+            deltaWeightsSummation += deltaWeightsNorm
             
-            if lesserDeltaWeightsNorm == None or deltaWeightsNorm < lesserDeltaWeightsNorm:
-                lesserDeltaWeightsNorm = deltaWeightsNorm
-                stopCounter = 0
-            else:
-                stopCounter += 1
+            if epochs > RestrictedBoltzmannModel.DELTA_WEIGHTS_NORM_N:
+                deltaWeightsSummation -= lastDeltaWeightsNorm
                 
-                if stopCounter > RestrictedBoltzmannModel.STOP_WHEN_NOT_IMPROVEMENT_EPOCHS:
-                    break
+                if deltaWeightsSummation < lesserDeltaWeightsNormSummation or lesserDeltaWeightsNormSummation == None:
+                    lesserDeltaWeightsNormSummation = deltaWeightsSummation
+                    stopCounter = 0
+                else:
+                    stopCounter += 1
+                    
+                    if stopCounter >= RestrictedBoltzmannModel.STOP_WHEN_NOT_IMPROVEMENT_EPOCHS:
+                        break
+            
+            lastDeltaWeightsNorm = deltaWeightsNorm
+            epochs += 1
         
-        return {'trainingEpochs': epochs}
+        return {'trainingEpochs': epochs + 1}
     
     def recall(self, visibleValues):
         # Initializing the random generator.
