@@ -27,6 +27,18 @@ class Utils(object):
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
     
     @staticmethod
+    def assertProportionOrFloat(name, value, minProportionValue=None, minFloatValue=None):
+        isProportion = False
+        
+        if value.endswith('%'):
+            value = value[:-1]
+            isProportion = True
+        
+        Utils.assertFloat(name, value, minProportionValue if isProportion else minFloatValue)
+        return isProportion
+        
+    
+    @staticmethod
     def assertBoolean(name, value):
         if type(value) is not bool:
             raise Exception(name + ' must be boolean')

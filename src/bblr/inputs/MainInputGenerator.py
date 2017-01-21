@@ -5,25 +5,37 @@ from bblr.Utils import Utils
 class MainInputGenerator(object):
     MAX_TRIES = 400
     
-    def __init__(self, properties, originalPatternDataSet, patternDataSetProperties, seedAddition):
+    def __init__(self, properties, originalPatternDataSet, patternDataSet, patternDataSetProperties, seedAddition):
         self.properties = properties
-        self.originalPatternDataSet = originalPatternDataSet
         
         # Validating the configuration.
         seed = properties.get('seed')
         inputsPerPattern = self.properties.get('inputsPerPattern')
+        target = properties.get('target')
         minDistance = properties.get('minDistance')
         
         Utils.assertInt('Random seed', seed)
         Utils.assertInt('Inputs per pattern', inputsPerPattern, 1)
         
+        if target not in ('originalPatterns', 'transformedPatterns'):
+            raise Exception('Target must be "originalPatterns" or "transformedPatterns"') 
+        
         if minDistance == None:
             raise Exception('Minimum distance not defined.')
         
         mean = minDistance.get('mean')
-        Utils.assertFloat('Mean minimum distance', mean, 0)
+        meanIsProportion = Utils.assertProportionOrFloat('Mean minimum distance', mean, 0, 0)
         stdev = minDistance.get('stdev')
-        Utils.assertFloat('Standard deviation of minimum distance', stdev, 0)
+        stdevIsProportion = Utils.assertProportionOrFloat('Standard deviation of minimum distance', stdev, 0, 0)
+        
+        if meanIsProportion or stdevIsProportion and 'distance' not in patternDataSetProperties:
+            raise Exception('Trying to create an input data set proportional to the distance of the pattern data set, but pattern data set has not defined distance.')
+        
+        if meanIsProportion:
+            mean *= patternDataSetProperties['distance']['mean']
+        
+        if stdevIsProportion:
+            stdev *= patternDataSetProperties['distance']['stdev']
         
         # Initializing the random generator.
         randomGenerator = RandomState()
@@ -32,18 +44,19 @@ class MainInputGenerator(object):
         # Generating the inputs.
         patternSize = patternDataSetProperties.get('patternSize')
         self.originalInputs = []
+        self.targetDataSet = originalPatternDataSet if target == 'originalPatterns' else patternDataSet
         
         if stdev == 0:
-            allFlips = [min(patternSize, int(round(mean)))] * (len(originalPatternDataSet) * inputsPerPattern)
+            allFlips = [min(patternSize, int(round(mean)))] * (len(self.targetDataSet) * inputsPerPattern)
         else:
-            allFlips = map(lambda x: max(0, min(patternSize, int(round(x)))), randomGenerator.normal(mean, stdev, len(originalPatternDataSet) * inputsPerPattern))
+            allFlips = map(lambda x: max(0, min(patternSize, int(round(x)))), randomGenerator.normal(mean, stdev, len(self.targetDataSet) * inputsPerPattern))
         
-        for i in xrange(len(originalPatternDataSet)):
+        for i in xrange(len(self.targetDataSet)):
             insertedInputs = set()
             j = 0
             
             while j < inputsPerPattern:
-                inputVector = list(originalPatternDataSet[i])
+                inputVector = list(self.targetDataSet[i])
                 flips = allFlips[i + j] 
                 componentsToFlip = range(patternSize)
                 
@@ -60,7 +73,11 @@ class MainInputGenerator(object):
                     j += 1
                         
         # Applying transformations.
-        self.inputs = Utils.transformDataSet(randomGenerator, self.originalInputs, patternDataSetProperties)
+        
+        if target == 'originalPatterns':
+            self.inputs = Utils.transformDataSet(randomGenerator, self.originalInputs, patternDataSetProperties)
+        else:
+            self.inputs = self.originalInputs
 
     # Public methods. A generator must implement these methods in order to use it in Main.py
     
@@ -73,7 +90,7 @@ class MainInputGenerator(object):
     # Private methods.
     
     def analyzeDataSet(self, dataSet):
-        minDs = map(lambda x: Utils.minDistance(x, self.originalPatternDataSet), dataSet)
+        minDs = map(lambda x: Utils.minDistance(x, self.targetDataSet), dataSet)
         n = float(len(dataSet))
         mean = sum(minDs) / n
         variance = sum(map(lambda minD: (minD - mean)**2, minDs)) / n
