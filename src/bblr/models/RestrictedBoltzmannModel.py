@@ -47,12 +47,10 @@ class RestrictedBoltzmannModel(Model):
         deltaHiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
         epochs = 0
-        lesserDeltaWeightsNorm = numpy.linalg.norm(deltaWeights)
+        lesserDeltaWeightsNorm = None
         stopCounter = 0
         
         while True:
-            oldDeltaWeights = numpy.array(deltaWeights)
-            
             for i in xrange(0, len(patternDataSet), self.batchSize):
                 visibleBatch0 = numpy.asarray(patternDataSet[i:i + self.batchSize])
                 
@@ -88,7 +86,7 @@ class RestrictedBoltzmannModel(Model):
             epochs += 1
             deltaWeightsNorm = numpy.linalg.norm(deltaWeights)
             
-            if deltaWeightsNorm < lesserDeltaWeightsNorm:
+            if lesserDeltaWeightsNorm == None or deltaWeightsNorm < lesserDeltaWeightsNorm:
                 lesserDeltaWeightsNorm = deltaWeightsNorm
                 stopCounter = 0
             else:
