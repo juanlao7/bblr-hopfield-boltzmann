@@ -58,6 +58,8 @@ class RBM(object):
         It allows to train using the momentum improvement by passing
         momentum=True
         '''
+        self.initializeVisibleOffsets(X)
+        
         if self.verbose:
             print 'Initial weights', self.W
             print 'Initial visible offsets', self.v_offset
@@ -116,3 +118,13 @@ class RBM(object):
         h0 = prob_h0 > np.random.rand(1, self.n_hidden)
         
         return self.activation(h0, self.W.T, self.v_offset)
+    
+    def initializeVisibleOffsets(self, X):
+        for i in range(self.n_visible):
+            p = sum(X[:,i]) / X.shape[0]
+            if p==0:
+                self.v_offset[0,i] = -2
+            elif p==1:
+                self.v_offset[0,i] = 2
+            else:
+                self.v_offset[0,i] = np.log(p/(1-p))
