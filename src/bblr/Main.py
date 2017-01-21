@@ -100,7 +100,7 @@ if __name__ == '__main__':
                     modelFactory = ModelFactory(modelProperties, arguments.seed)
                     model = modelFactory.buildModel()
                     
-                    trainingResults = model.train(patternDataSet)
+                    trainingResults = model.train(patternDataSet, patternDataSetProperties)
                     printAnalysis(trainingResults, 2)
 
                     validationResults = model.test(patternDataSet, patternDataSet)

@@ -12,7 +12,7 @@ class HopfieldModel(Model):
 
     # Public methods. A model must implement these methods in order to use it in Main.py
     
-    def train(self, patternDataSet):
+    def train(self, patternDataSet, patternDataSetProperties):
         self.patternSize = len(patternDataSet[0])
         hopfieldDomainPatternDataSet = map(lambda pattern: self.toHopfieldDomain(pattern), patternDataSet)
         

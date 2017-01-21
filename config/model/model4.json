@@ -1,5 +1,5 @@
 [
-  // Model 4: 
+  // Model 4:
 	{
 		"model": "restricted-boltzmann",
     	"seed": 0,
@@ -8,7 +8,14 @@
 		"weightDecay": 0,
 		"momentum": true,
 		"batchSize": 2,
-		"activation": "sigmoid"
+		"activation": "sigmoid",
+    "validation": {
+      "inputsPerPattern": 3,
+      "minDistance": {
+        "mean": 3,
+        "stdev": 1
+      }
+    }
 	},
 	{
 		"model": "restricted-boltzmann",

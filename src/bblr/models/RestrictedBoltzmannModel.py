@@ -3,9 +3,11 @@ import numpy
 from bblr.models.Model import Model
 from numpy.random import RandomState
 from scipy.special import expit
+from bblr.inputs.MainInputGenerator import MainInputGenerator
 
 class RestrictedBoltzmannModel(Model):
-    STOP_WHEN_NOT_IMPROVEMENT_EPOCHS = 1000
+    STOP_ACCURACY_EPOCHS = 1000
+    STOP_DELTA_WEIGHTS_EPOCHS = 1000
     DELTA_WEIGHTS_NORM_N = 1000
     
     def __init__(self, properties, seedAddition):
@@ -16,6 +18,7 @@ class RestrictedBoltzmannModel(Model):
         self.weightDecay = properties.get('weightDecay')
         self.momentum = properties.get('momentum')
         self.batchSize = properties.get('batchSize')
+        self.validation = properties.get('validation')
         
         Utils.assertInt('Random seed', self.seed)
         Utils.assertInt('Hidden neurons', self.hiddenNeurons, 0)
@@ -25,13 +28,29 @@ class RestrictedBoltzmannModel(Model):
         Utils.assertInt('Batch size', self.batchSize, 0)
         self.batchSize = int(self.batchSize)
         
+        if self.validation == None:
+            raise Exception('Validation data set not defined.')
+        
+        
+        
         # Preparing the random generator.
         self.randomGenerator = RandomState()
         self.seed += seedAddition
     
     # Public methods. A model must implement these methods in order to use it in Main.py
 
-    def train(self, patternDataSet):
+    def train(self, patternDataSet, patternDataSetProperties):
+        # Creating the validation data set.
+        
+        inputDataSetProperties = {
+            'seed': self.seed,
+            'target': 'transformedPatterns'
+        }
+        
+        inputDataSetProperties.update(self.validation)
+        inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, patternDataSet, patternDataSet, patternDataSetProperties, self.seed)
+        validationDataSet = inputDataSetGenerator.getInputs()
+                
         # Initializing the random generator.
         self.randomGenerator.seed(self.seed)
         
@@ -58,10 +77,17 @@ class RestrictedBoltzmannModel(Model):
         deltaHiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
         epochs = 0
+        
+        bestAccuracy = None
+        
         lesserDeltaWeightsNormSummation = None
         deltaWeightsSummation = 0
         lastDeltaWeightsNorm = 0
-        stopCounter = 0
+        deltaWeightsStopCounter = 0
+        
+        bestWeights = None
+        bestVisibleOffset = None
+        bestHiddenOffset = None
         
         while True:
             for i in xrange(0, len(patternDataSet), self.batchSize):
@@ -96,6 +122,19 @@ class RestrictedBoltzmannModel(Model):
                 self.visibleOffset += deltaVisibleOffset
                 self.hiddenOffset += deltaHiddenOffset
             
+            # Stop when validation does not improve for several epochs
+            currentAccuracy = self.test(validationDataSet, patternDataSet)['successfulEquilibriums']
+            
+            if bestAccuracy == None or currentAccuracy > bestAccuracy:
+                bestAccuracy = currentAccuracy
+                accuracyStopCounter = 0
+                bestWeights, bestVisibleOffset, bestHiddenOffset = self.copyState()
+            else:
+                accuracyStopCounter += 1
+            
+            if accuracyStopCounter >= RestrictedBoltzmannModel.STOP_ACCURACY_EPOCHS:
+                break
+            
             # Stop if looks like it is oscillating.
             deltaWeightsNorm = numpy.linalg.norm(deltaWeights)
             deltaWeightsSummation += deltaWeightsNorm
@@ -103,18 +142,21 @@ class RestrictedBoltzmannModel(Model):
             if epochs > RestrictedBoltzmannModel.DELTA_WEIGHTS_NORM_N:
                 deltaWeightsSummation -= lastDeltaWeightsNorm
                 
-                if deltaWeightsSummation < lesserDeltaWeightsNormSummation or lesserDeltaWeightsNormSummation == None:
+                if lesserDeltaWeightsNormSummation == None or deltaWeightsSummation < lesserDeltaWeightsNormSummation:
                     lesserDeltaWeightsNormSummation = deltaWeightsSummation
-                    stopCounter = 0
+                    deltaWeightsStopCounter = 0
                 else:
-                    stopCounter += 1
+                    deltaWeightsStopCounter += 1
                     
-                    if stopCounter >= RestrictedBoltzmannModel.STOP_WHEN_NOT_IMPROVEMENT_EPOCHS:
+                    if deltaWeightsStopCounter >= RestrictedBoltzmannModel.STOP_DELTA_WEIGHTS_EPOCHS:
                         break
             
             lastDeltaWeightsNorm = deltaWeightsNorm
             epochs += 1
         
+        self.weights = bestWeights
+        self.visibleOffset = bestVisibleOffset
+        self.hiddenOffset = bestHiddenOffset
         return {'trainingEpochs': epochs + 1}
     
     def recall(self, visibleValues):
@@ -128,6 +170,9 @@ class RestrictedBoltzmannModel(Model):
         return tuple(map(lambda x: int(x), result[0] > 0.5)), 1
     
     # Private methods.
+    
+    def copyState(self):
+        return numpy.copy(self.weights), numpy.copy(self.visibleOffset), numpy.copy(self.hiddenOffset)
     
     def activation(self, batch, weights, offset):
         return expit(numpy.dot(batch, weights) + offset)
