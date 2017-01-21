@@ -23,10 +23,8 @@ class MainInputGenerator(object):
         if minDistance == None:
             raise Exception('Minimum distance not defined.')
         
-        mean = minDistance.get('mean')
-        meanIsProportion = Utils.assertProportionOrFloat('Mean minimum distance', mean, 0, 0)
-        stdev = minDistance.get('stdev')
-        stdevIsProportion = Utils.assertProportionOrFloat('Standard deviation of minimum distance', stdev, 0, 0)
+        mean, meanIsProportion = Utils.assertProportionOrFloat('Mean minimum distance', minDistance.get('mean'), 0, 0)
+        stdev, stdevIsProportion = Utils.assertProportionOrFloat('Standard deviation of minimum distance', minDistance.get('stdev'), 0, 0)
         
         if (meanIsProportion or stdevIsProportion) and 'distance' not in patternDataSetProperties:
             raise Exception('Trying to create an input data set proportional to the distance of the pattern data set, but pattern data set has not defined distance.')
