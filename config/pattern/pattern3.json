@@ -1,11 +1,11 @@
   /*
-   * Pattern Dataset 1
+   * Pattern Dataset 3
    */
 
 [
   {
     "seed": 0,
-    "dataSetSize": 5,
+    "dataSetSize": 15,
     "patternSize": 40,
     "distance": {
       "mean": 20,

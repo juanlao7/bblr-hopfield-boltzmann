@@ -5,7 +5,7 @@ from numpy.random import RandomState
 from scipy.special import expit
 
 class RestrictedBoltzmannModel(Model):
-    TRAINING_STOP_THRESHOLD = 0.000001
+    TRAINING_STOP_THRESHOLD = 0.00001
     
     def __init__(self, properties, seedAddition):
         # Validating the configuration.

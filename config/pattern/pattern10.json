@@ -1,18 +1,18 @@
   /*
-   * Pattern Dataset 1
+   * Pattern Dataset 10
    */
 
 [
   {
     "seed": 0,
     "dataSetSize": 5,
-    "patternSize": 40,
+    "patternSize": 80,
     "distance": {
-      "mean": 20,
-      "stdev": 4
+      "mean": 40,
+      "stdev": 8
     },
     "extraBits": {
-      "number": 60,
+      "number": 20,
       "values": "randomFixed"
     }
   }

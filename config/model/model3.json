@@ -1,0 +1,23 @@
+[
+  // Combination 2: dolor sit amet
+	{
+		"model": "restricted-boltzmann",
+    	"seed": 0,
+		"hiddenNeurons": 50,
+		"learningRate": 0.001,
+		"weightDecay": 0,
+		"momentum": true,
+		"batchSize": 1,
+		"activation": "sigmoid"
+	},
+	{
+		"model": "restricted-boltzmann",
+    	"seed": 0,
+		"hiddenNeurons": 50,
+		"learningRate": 0.01,
+		"weightDecay": 0,
+		"momentum": true,
+		"batchSize": 2,
+		"activation": "sigmoid"
+	}
+]

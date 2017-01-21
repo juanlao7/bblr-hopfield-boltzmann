@@ -1,0 +1,15 @@
+  /*
+   * Pattern Dataset 18
+   */
+
+[
+  {
+    "seed": 0,
+    "dataSetSize": 15,
+    "patternSize": 100,
+    "distance": {
+      "mean": 50,
+      "stdev": 10
+    }
+  }
+]

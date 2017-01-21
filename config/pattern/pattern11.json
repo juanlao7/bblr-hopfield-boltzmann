@@ -1,0 +1,19 @@
+  /*
+   * Pattern Dataset 11
+   */
+
+[
+  {
+    "seed": 0,
+    "dataSetSize": 10,
+    "patternSize": 80,
+    "distance": {
+      "mean": 40,
+      "stdev": 8
+    },
+    "extraBits": {
+      "number": 20,
+      "values": "randomFixed"
+    }
+  }
+]

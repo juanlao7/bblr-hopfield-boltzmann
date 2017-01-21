@@ -3,7 +3,7 @@
     "seed": 0,
     "inputsPerPattern": 10,
     "minDistance": {
-      "mean": "10%",
+      "mean": "20%",
       "stdev": 0
     },
     "target": "transformedPatterns"
