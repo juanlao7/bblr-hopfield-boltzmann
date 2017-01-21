@@ -1,4 +1,15 @@
+import json
+import re
+
 class Utils(object):
+    @staticmethod
+    def loadJsonFile(path):
+        with open(path) as handler:
+            data = handler.read()
+            data = re.sub(re.compile("/\*.*?\*/", re.DOTALL), '', data) # remove all occurrence streamed comments (/* COMMENT */)
+            data = re.sub(re.compile("//.*?\n" ), '', data)             # remove all occurrence single line comments (// COMMENT\n)
+            return json.loads(data)
+        
     @staticmethod
     def assertInt(name, value, minValue=None):
         if type(value) is not int:
