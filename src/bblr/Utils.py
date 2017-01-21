@@ -35,8 +35,7 @@ class Utils(object):
             isProportion = True
         
         Utils.assertFloat(name, value, minProportionValue if isProportion else minFloatValue)
-        return isProportion, value
-        
+        return value, isProportion
     
     @staticmethod
     def assertBoolean(name, value):
