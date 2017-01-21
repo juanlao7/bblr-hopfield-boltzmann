@@ -1,9 +1,9 @@
 import argparse
-import json
-import re
 from bblr.patterns.MainPatternGenerator import MainPatternGenerator
 from bblr.models.ModelFactory import ModelFactory
 from bblr.inputs.MainInputGenerator import MainInputGenerator
+from bblr.Utils import Utils
+import json
 
 PATTERN_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
 MODELS_FORMAT_URL = 'https://github.com/juanlao7/bblr-hopfield-boltzmann/wiki/Pattern-data-set-properties-file-format'
@@ -48,13 +48,6 @@ ANALYSIS_LABELS = [
     ['spuriousEquilibriums', 'Spurious equilibriums']
 ]
 
-def loadJsonFile(path):
-    with open(path) as handler:
-        data = handler.read()
-        data = re.sub(re.compile("/\*.*?\*/", re.DOTALL), '', data) # remove all occurrence streamed comments (/* COMMENT */)
-        data = re.sub(re.compile("//.*?\n" ), '', data)             # remove all occurrence single line comments (// COMMENT\n)
-        return json.loads(data)
-
 def printAnalysis(analysis, identation=0):
     for key, label in ANALYSIS_LABELS:
         if key in analysis:
@@ -75,14 +68,18 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
     
     # Loading preferences
-    patternDataSetPropertiesCombinations = loadJsonFile(arguments.pattern_data_set_properties_file)
-    modelPropertiesCombinations = loadJsonFile(arguments.model_properties_file)
-    inputDataSetPropertiesCombinations = loadJsonFile(arguments.input_data_set_properties_file)
+    patternDataSetPropertiesCombinations = Utils.loadJsonFile(arguments.pattern_data_set_properties_file)
+    modelPropertiesCombinations = Utils.loadJsonFile(arguments.model_properties_file)
+    inputDataSetPropertiesCombinations = Utils.loadJsonFile(arguments.input_data_set_properties_file)
     
     # Main loop
     results = []
+    patternDataSetId = 1
     
     for patternDataSetProperties in patternDataSetPropertiesCombinations:
+        patternDataSetProperties['patternId'] = patternDataSetId
+        patternDataSetId += 1
+        
         print 'PATTERN:', patternDataSetProperties
         patternDataSetGenerator = MainPatternGenerator(patternDataSetProperties, arguments.seed)
         patternDataSet = patternDataSetGenerator.getPatterns()
@@ -92,7 +89,12 @@ if __name__ == '__main__':
         printAnalysis(patternDataSetAnalysis, 1)
         
         if not arguments.just_analyze_patterns:
+            modelId = 1
+            
             for modelProperties in modelPropertiesCombinations:
+                modelProperties['modelId'] = modelId
+                modelId += 1
+                
                 if not arguments.just_analyze_inputs:
                     print '\tMODEL:', modelProperties
                     modelFactory = ModelFactory(modelProperties, arguments.seed)
@@ -110,12 +112,18 @@ if __name__ == '__main__':
 
                     printAnalysis(validationResults, 2)
                 
+                inputId = 1
+                
                 for inputDataSetProperties in inputDataSetPropertiesCombinations:
+                    inputDataSetProperties['inputId'] = inputId
+                    inputId += 1
+                    
                     print '\t\tINPUT:', inputDataSetProperties
-                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSetProperties, arguments.seed)
+                    inputDataSetGenerator = MainInputGenerator(inputDataSetProperties, originalPatternDataSet, patternDataSet, patternDataSetProperties, arguments.seed)
                     inputDataSet = inputDataSetGenerator.getInputs()
                     
                     inputDataSetAnalysis = inputDataSetGenerator.analyze()
+                    inputDataSetAnalysis['inputsPerPattern'] = inputDataSetProperties['inputsPerPattern']
                     printAnalysis(inputDataSetAnalysis, 3)
                     
                     if not arguments.just_analyze_inputs:

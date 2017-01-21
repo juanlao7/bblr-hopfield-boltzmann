@@ -23,8 +23,8 @@ class MainPatternGenerator(object):
         if extraBits != None:
             Utils.assertInt('Number of extra bits', extraBits.get('number'), 1)
             
-            if extraBits.get('values') not in (0, 1, 'random'):
-                raise Exception('Extra bits values must be 0, 1 or "random"')
+            if extraBits.get('values') not in (0, 1, 'random', 'randomFixed'):
+                raise Exception('Extra bits values must be 0, 1, "random" or "randomFixed"')
         
         if distance != None:
             Utils.assertFloat('Mean distance', distance.get('mean'), 0)

@@ -1,4 +1,15 @@
+import json
+import re
+
 class Utils(object):
+    @staticmethod
+    def loadJsonFile(path):
+        with open(path) as handler:
+            data = handler.read()
+            data = re.sub(re.compile("/\*.*?\*/", re.DOTALL), '', data) # remove all occurrence streamed comments (/* COMMENT */)
+            data = re.sub(re.compile("//.*?\n" ), '', data)             # remove all occurrence single line comments (// COMMENT\n)
+            return json.loads(data)
+        
     @staticmethod
     def assertInt(name, value, minValue=None):
         if type(value) is not int:
@@ -14,6 +25,18 @@ class Utils(object):
         
         if minValue != None and value < minValue:
             raise Exception(name + ' must be equal or greater than ' + str(minValue))
+    
+    @staticmethod
+    def assertProportionOrFloat(name, value, minProportionValue=None, minFloatValue=None):
+        isProportion = False
+        
+        if value.endswith('%'):
+            value = value[:-1]
+            isProportion = True
+        
+        Utils.assertFloat(name, value, minProportionValue if isProportion else minFloatValue)
+        return isProportion
+        
     
     @staticmethod
     def assertBoolean(name, value):
@@ -98,19 +121,29 @@ class Utils(object):
 
     @staticmethod
     def transformDataSet(randomGenerator, dataSet, patternDataSetProperties):
-        return map(lambda x: Utils.scale(Utils.addExtraBits(randomGenerator, list(x), patternDataSetProperties), patternDataSetProperties), dataSet)
+        if 'extraBits' not in patternDataSetProperties or patternDataSetProperties['extraBits']['values'] != 'randomFixed':
+            randomFixedExtraBits = None
+        else:
+            randomFixedExtraBits = Utils.randomBits(randomGenerator, patternDataSetProperties['extraBits']['number'])
+         
+        return map(lambda x: Utils.scale(Utils.addExtraBits(randomGenerator, list(x), patternDataSetProperties, randomFixedExtraBits), patternDataSetProperties), dataSet)
     
     @staticmethod
-    def addExtraBits(randomGenerator, vector, patternDataSetProperties):
+    def addExtraBits(randomGenerator, vector, patternDataSetProperties, randomFixedExtraBits):
         extraBits = patternDataSetProperties.get('extraBits')
         
         if extraBits == None:
             return vector
         
-        if extraBits.get('values') in (0, 1):
-            return vector + [extraBits.get('values')] * extraBits.get('number')
+        values = extraBits['values']
         
-        return vector + Utils.randomBits(randomGenerator, extraBits.get('number'))
+        if values in (0, 1):
+            return vector + [values] * extraBits['number']
+        
+        if values == 'randomFixed':
+            return vector + randomFixedExtraBits
+        
+        return vector + Utils.randomBits(randomGenerator, extraBits['number'])
 
     @staticmethod
     def scale(vector, patternDataSetProperties):
