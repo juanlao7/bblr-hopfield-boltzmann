@@ -67,13 +67,12 @@ class RBM(object):
         d_v = np.zeros((1, self.n_visible))
         d_h = np.zeros((1, self.n_hidden))
         
-        batches = X.shape[0] // batch_size
         epoch = 0
         while 1:
             old_dw = np.array(d_w)
-            for batch in range(batches):
+            for i in range(0, X.shape[0], batch_size):
                 # Positive phase: sample h0 from v0
-                v0 = X[int(batch*batch_size):int((batch+1)*batch_size)]
+                v0 = X[i:i+batch_size]
                 prob_h0 = self.activation(v0, self.W, self.h_offset)
                 
                 # Sample h0: we use binary units we binarize the results of sigmoid
