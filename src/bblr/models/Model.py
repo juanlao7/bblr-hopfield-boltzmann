@@ -20,13 +20,18 @@ class Model(object):
             allIterations.append(iterations)
             times.append(time)
             
-            if tuple(associatedPattern) == tuple(output):
+            if not isinstance(associatedPattern, tuple):
+                raise Exception('Pattern is not a tuple.')
+            
+            if not isinstance(output, tuple):
+                raise Exception('Model output is not a tuple.')
+            
+            if associatedPattern == output:
                 successfulEquilibriums += 1
             else:
-                #print associatedPattern, 'VS', output
                 unsuccessfulEquilibriums += 1
                 
-                if self.isSpurious(associatedPattern, output):
+                if output not in patternDataSet:
                     spuriousEquilibriums += 1
         
         return {
@@ -54,11 +59,5 @@ class Model(object):
                 minPattern = pattern
     
         return minPattern
-    
-    def isSpurious(self, vector1, vector2):
-        for i, j in zip(vector1, vector2):
-            if i == j:
-                return False
-        
-        return True
+
     

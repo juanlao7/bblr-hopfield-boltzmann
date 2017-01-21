@@ -126,7 +126,7 @@ class Utils(object):
         else:
             randomFixedExtraBits = Utils.randomBits(randomGenerator, patternDataSetProperties['extraBits']['number'])
          
-        return map(lambda x: Utils.scale(Utils.addExtraBits(randomGenerator, list(x), patternDataSetProperties, randomFixedExtraBits), patternDataSetProperties), dataSet)
+        return map(lambda x: tuple(Utils.scale(Utils.addExtraBits(randomGenerator, list(x), patternDataSetProperties, randomFixedExtraBits), patternDataSetProperties)), dataSet)
     
     @staticmethod
     def addExtraBits(randomGenerator, vector, patternDataSetProperties, randomFixedExtraBits):

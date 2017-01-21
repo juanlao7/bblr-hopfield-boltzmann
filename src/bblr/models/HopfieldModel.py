@@ -40,7 +40,7 @@ class HopfieldModel(Model):
         return numpy.array(map(lambda x: 1.0 if x == 1 else -1.0, vector))
     
     def toStandardDomain(self, vector):
-        return map(lambda x: int(x != -1.0), vector)
+        return tuple(map(lambda x: int(x != -1.0), vector))
     
     def trainHebbian(self, patternDataSet):
         self.weights = numpy.zeros((self.patternSize, self.patternSize))

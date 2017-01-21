@@ -46,14 +46,13 @@ class RestrictedBoltzmannModel(Model):
         deltaVisibleOffset = numpy.zeros((1, visibleNeurons))
         deltaHiddenOffset = numpy.zeros((1, self.hiddenNeurons))
         
-        numberOfBatches = len(patternDataSet) // self.batchSize
         epochs = 0
         
         while True:
             oldDeltaWeights = numpy.array(deltaWeights)
             
-            for i in xrange(numberOfBatches):
-                visibleBatch0 = numpy.asarray(patternDataSet[i * self.batchSize:(i + 1) * self.batchSize])
+            for i in xrange(0, len(patternDataSet), self.batchSize):
+                visibleBatch0 = numpy.asarray(patternDataSet[i:i + self.batchSize])
                 
                 # Positive phase: sample hiddenBatch0 from batch
                 hiddenBatch0Probability = self.logistic(visibleBatch0, self.weights, self.hiddenOffset)
@@ -99,7 +98,7 @@ class RestrictedBoltzmannModel(Model):
         hiddenProbability = self.logistic(visibleValues, self.weights, self.hiddenOffset)
         hiddenValues = (hiddenProbability > self.randomGenerator.rand(1, self.hiddenNeurons))
         result = self.logistic(hiddenValues, self.weights.T, self.visibleOffset)
-        return map(lambda x: int(x), result[0] > 0.5), 1
+        return tuple(map(lambda x: int(x), result[0] > 0.5)), 1
     
     # Private methods.
     
