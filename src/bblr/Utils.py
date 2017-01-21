@@ -30,8 +30,8 @@ class Utils(object):
     def assertProportionOrFloat(name, value, minProportionValue=None, minFloatValue=None):
         isProportion = False
         
-        if value.endswith('%'):
-            value = value[:-1]
+        if isinstance(value, basestring) and value.endswith('%'):
+            value = float(value[:-1])
             isProportion = True
         
         Utils.assertFloat(name, value, minProportionValue if isProportion else minFloatValue)
