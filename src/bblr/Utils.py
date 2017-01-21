@@ -31,7 +31,7 @@ class Utils(object):
         isProportion = False
         
         if isinstance(value, basestring) and value.endswith('%'):
-            value = float(value[:-1])
+            value = float(value[:-1]) / 100
             isProportion = True
         
         Utils.assertFloat(name, value, minProportionValue if isProportion else minFloatValue)
