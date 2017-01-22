@@ -3,7 +3,6 @@ import numpy
 from bblr.models.Model import Model
 from numpy.random import RandomState
 from scipy.special import expit
-from bblr.inputs.MainInputGenerator import MainInputGenerator
 
 class RestrictedBoltzmannModel(Model):
     STOP_DELTA_WEIGHTS_EPOCHS = 1000
