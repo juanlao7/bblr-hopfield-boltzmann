@@ -3,7 +3,7 @@ import math
 from bblr.Utils import Utils
 
 class MainPatternGenerator(object):
-    MAX_TRIES = 10
+    MAX_TRIES = 1000
     
     def __init__(self, properties, seedAddition):
         self.properties = properties
