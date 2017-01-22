@@ -3,6 +3,9 @@ from Utils import Utils
 import numpy
 
 PATTERN_DATA_SETS_PER_MAIN_TABLE = 100
+PATTERNS_TABLE_MAX_COLUMNS = 5
+MODELS_TABLE_MAX_COLUMNS = 5
+TRAINING_TABLE_MAX_COLUMNS = 4
 TESTING_TABLE_MAX_COLUMNS = 5
 DEFAULT_DECIMALS = 3
 
@@ -10,7 +13,6 @@ def getInterval(arrayOfDictionaries, key):
     values = map(lambda x: x[key], arrayOfDictionaries)
     mean = numberToString(numpy.mean(values))
     stdev = numberToString(numpy.std(values))
-    
     return mean + '$\\pm$' + stdev
 
 def numberToString(number, decimals=DEFAULT_DECIMALS):
@@ -29,6 +31,9 @@ def getObject(parent, key, defaultObject):
     
     parent[key] = defaultObject
     return parent[key]
+
+def parseKey(itemKey):
+    return itemKey.replace('P0', 'P').replace('M0', 'M').replace('I0', 'I')
 
 def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     print """
@@ -55,7 +60,7 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
         """
         
         for itemKey in itemKeysOfThisTable:
-            print ' & ' + itemKey,
+            print ' & ' + parseKey(itemKey),
         
         print ' \\\\ \\cline{2-' + str(numberOfItemsInThisTable + 1) + '}'
         
@@ -126,7 +131,7 @@ if __name__ == '__main__':
     testingIndexTable = {}
 
     for patternDataSetId, patternDataSetResults in patternDataSetResultDictionary.iteritems():
-        patternDataSetIndexTable['P' + str(patternDataSetId)] = [
+        patternDataSetIndexTable['P' + str(patternDataSetId).zfill(2)] = [
             ['Data set size', patternDataSetResults[0]['patternDataSetSize']],
             ['Pattern size', patternDataSetResults[0]['patternDimension']],
             ['Mean distance between two different patterns', getInterval(patternDataSetResults, 'patternsDistanceMean')],
@@ -155,19 +160,18 @@ if __name__ == '__main__':
                 ['Patterns per batch', modelResults[0]['batchSize']]
             ]
     
-        modelIndexTable['M' + str(modelId)] = modelInfo
+        modelIndexTable['M' + str(modelId).zfill(2)] = modelInfo
     
     for inputDataSetId, inputDataSetResults in inputDataSetResultDictionary.iteritems():
-        inputDataSetIndexTable['I' + str(inputDataSetId)] = [
-            ['Data set size', inputDataSetResults[0]['inputDataSetSize']],
-            ['Inputs per pattern', inputDataSetResults[0]['inputsPerPattern']],
-            ['Mean minimum distance between an input and a pattern', getInterval(inputDataSetResults, 'inputMinimumDistanceMean')],
-            ['Standard deviation of minimum distance between an input and a pattern', getInterval(inputDataSetResults, 'inputMinimumDistanceStdev')]
+        for i in inputDataSetResults:
+            i.update({'ratioInputMinimumDistanceMean': i['inputMinimumDistanceMean'] / float(i['patternsDistanceMean'])})
+        
+        inputDataSetIndexTable['I' + str(inputDataSetId).zfill(2)] = [
+            ['Number of inputs per each pattern of the pattern data set', inputDataSetResults[0]['inputsPerPattern']],
+            ['Mean minimum distance between an input $i$ and the closest pattern to $i$, expressed as a proportion of the mean distance between 2 random patterns of the pattern data set', getInterval(inputDataSetResults, 'ratioInputMinimumDistanceMean')]
         ]
 
     for key, trainingAndValidationResults in trainingAndValidationResultDictionary.iteritems():
-        patternDataSetId, modelId = key.split(':')
-        
         for i in trainingAndValidationResults:
             i.update({'ratioStoredPatterns': i['successfullyStoredPatterns'] / float(i['patternDataSetSize'])})
         
@@ -186,15 +190,16 @@ if __name__ == '__main__':
                 ['Training epochs', '']                
             ]
         
-        trainingAndValidationIndexTable['\\{P' + patternDataSetId + ',M' + modelId + '\\}'] = trainingInfo
+        patternDataSetId, modelId = key.split(':')
+        trainingAndValidationIndexTable['\\{P' + patternDataSetId.zfill(2) + ',M' + modelId.zfill(2) + '\\}'] = trainingInfo
     
     for key, testingResults in testingResultDictionary.iteritems():
-        patternDataSetId, modelId, inputDataSetId = key.split(':')
-        
         for i in testingResults:
             i.update({'ratioSuccessfulEquilibriums': i['successfulEquilibriums'] / float(i['inputDataSetSize'])})
         
-        testingIndexTable['\\{P' + patternDataSetId + ',M' + modelId + ',I' + inputDataSetId + '\\}'] = [
+        patternDataSetId, modelId, inputDataSetId = key.split(':')
+        
+        testingIndexTable['\\{P' + patternDataSetId.zfill(2) + ',M' + modelId.zfill(2) + ',I' + inputDataSetId.zfill(2) + '\\}'] = [
             ['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
             ['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
             ['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
@@ -254,9 +259,9 @@ if __name__ == '__main__':
         """
     
     # Generating LaTeX code of index tables.
-    generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets')
-    generateIndexTable(modelIndexTable, 'MODELS TABLE', 'Analyzed models')
+    generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets', PATTERNS_TABLE_MAX_COLUMNS)
+    generateIndexTable(modelIndexTable, 'MODELS TABLE', 'Analyzed models', MODELS_TABLE_MAX_COLUMNS)
     generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Tested inputs')
-    generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Obtained training results')
+    generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Obtained training results', TRAINING_TABLE_MAX_COLUMNS)
     generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Obtained testing results', TESTING_TABLE_MAX_COLUMNS)
     
