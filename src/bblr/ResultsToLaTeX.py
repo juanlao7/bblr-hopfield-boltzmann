@@ -9,6 +9,10 @@ TRAINING_TABLE_MAX_COLUMNS = 4
 TESTING_TABLE_MAX_COLUMNS = 5
 DEFAULT_DECIMALS = 3
 
+BLACKLIST_PATTERNS = sorted([2, 4])
+BLACKLIST_MODELS = sorted([2, 4])
+BLACKLIST_INPUTS = sorted([2, 4])
+
 def getInterval(arrayOfDictionaries, key):
     values = map(lambda x: x[key], arrayOfDictionaries)
     mean = numberToString(numpy.mean(values))
@@ -33,7 +37,7 @@ def getObject(parent, key, defaultObject):
     return parent[key]
 
 def parseKey(itemKey):
-    return itemKey.replace('P0', 'P').replace('M0', 'M').replace('I0', 'I')
+    return itemKey.replace('P_{0', 'P_{').replace('M_{0', 'M_{').replace('I_{0', 'I_{')
 
 def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     print """
@@ -90,6 +94,20 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     \\end {description}
     """
 
+def getIdAfterBlacklist(itemId, blackList):
+    if itemId in blackList:
+        return None
+    
+    newItemId = itemId
+    
+    for blackListedId in blackList:
+        if blackListedId > itemId:
+            break
+        
+        newItemId -= 1
+    
+    return newItemId
+
 if __name__ == '__main__':
     # Parsing arguments
     parser = argparse.ArgumentParser(prog='bblr-hopfield-boltzmann results to LaTeX script', description='Automatic script to convert the results of the project bblr-hopfield-boltzmann into LaTeX.')
@@ -103,7 +121,6 @@ if __name__ == '__main__':
         results += Utils.loadJsonFile(resultFile)
     
     # Organizing results.
-    schema = {}
     patternDataSetResultDictionary = {}
     modelResultDictionary = {}
     inputDataSetResultDictionary = {}
@@ -111,12 +128,14 @@ if __name__ == '__main__':
     testingResultDictionary = {}
     
     for result in results:
-        # Schema.
-        patternDataSet = getObject(schema, result['patternDataSetId'], {})
-        model = getObject(patternDataSet, result['modelId'], {})
-        inputDataSet = getObject(model, result['inputDataSetId'], [])
-        inputDataSet.append(result)
+        # Managing the black list.
+        result['patternDataSetId'] = getIdAfterBlacklist(result['patternDataSetId'], BLACKLIST_PATTERNS)
+        result['modelId'] = getIdAfterBlacklist(result['modelId'], BLACKLIST_MODELS)
+        result['inputDataSetId'] = getIdAfterBlacklist(result['inputDataSetId'], BLACKLIST_INPUTS)
         
+        if None in (result['patternDataSetId'], result['modelId'], result['inputDataSetId']):
+            continue
+
         # Index tables.
         getObject(patternDataSetResultDictionary, result['patternDataSetId'], []).append(result)
         getObject(modelResultDictionary, result['modelId'], []).append(result)
@@ -131,11 +150,11 @@ if __name__ == '__main__':
     testingIndexTable = {}
 
     for patternDataSetId, patternDataSetResults in patternDataSetResultDictionary.iteritems():
-        patternDataSetIndexTable['P' + str(patternDataSetId).zfill(2)] = [
+        patternDataSetIndexTable['$P_{' + str(patternDataSetId).zfill(2) + '}$'] = [
             ['Data set size', patternDataSetResults[0]['patternDataSetSize']],
             ['Pattern size', patternDataSetResults[0]['patternDimension']],
-            ['Mean distance between two different patterns', getInterval(patternDataSetResults, 'patternsDistanceMean')],
-            ['Standard deviation of distance between two different patterns', getInterval(patternDataSetResults, 'patternsDistanceStdev')],
+            ['Mean distance $\mu_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceMean')],
+            ['Standard deviation of distance $\sigma_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceStdev')],
         ]
 
     for modelId, modelResults in modelResultDictionary.iteritems():
@@ -145,30 +164,30 @@ if __name__ == '__main__':
                 ['Learning rule', modelResults[0]['trainingRule'].capitalize()],
                 ['Number of hidden neurons', ''],
                 ['Learning rate', ''],
-                ['Weight decay', ''],
-                ['Momentum', ''],
+                #['Weight decay', ''],
+                #['Momentum. By Hinton\'s recommendation[CITA], the training starts with a momentum of 0.5. Once the large initial progress in the reduction of the reconstruction error has settled down to gentle progress after 5 epochs, the momentum is increased to 0.9', ''],
                 ['Patterns per batch', '']
             ]
         else:
             modelInfo = [
                 ['Model', 'RBM'],
-                ['Learning rule', 'CD'],
-                ['Number of hidden neurons', modelResults[0]['hiddenNeurons']],
-                ['Learning rate', modelResults[0]['learningRate']],
-                ['Weight decay', modelResults[0]['weightDecay']],
-                ['Momentum', 1.0 if not modelResults[0]['momentum'] else 'recommended'],
+                ['Learning rule.', 'CD'],
+                ['Number of hidden neurons.', modelResults[0]['hiddenNeurons']],
+                ['Learning rate.', modelResults[0]['learningRate']],
+                #['Weight decay.', modelResults[0]['weightDecay']],
+                #['Momentum. By Hinton\'s recommendation[CITA], the training starts with a momentum of 0.5. Once the large initial progress in the reduction of the reconstruction error has settled down to gentle progress after 5 epochs, the momentum is increased to 0.9', 'no' if not modelResults[0]['momentum'] else 'yes'],
                 ['Patterns per batch', modelResults[0]['batchSize']]
             ]
     
-        modelIndexTable['M' + str(modelId).zfill(2)] = modelInfo
+        modelIndexTable['$M_{' + str(modelId).zfill(2) + '}$'] = modelInfo
     
     for inputDataSetId, inputDataSetResults in inputDataSetResultDictionary.iteritems():
         for i in inputDataSetResults:
             i.update({'ratioInputMinimumDistanceMean': i['inputMinimumDistanceMean'] / float(i['patternsDistanceMean'])})
         
-        inputDataSetIndexTable['I' + str(inputDataSetId).zfill(2)] = [
+        inputDataSetIndexTable['$I_{' + str(inputDataSetId).zfill(2) + '}$'] = [
             ['Number of inputs per each pattern of the pattern data set', inputDataSetResults[0]['inputsPerPattern']],
-            ['Mean minimum distance between an input $i$ and the closest pattern to $i$, expressed as a proportion of the mean distance between 2 random patterns of the pattern data set', getInterval(inputDataSetResults, 'ratioInputMinimumDistanceMean')]
+            ['Mean minimum distance between a random input $v$ and the closest pattern to $v$, expressed as a proportion of the mean distance between 2 random patterns of the pattern data set', getInterval(inputDataSetResults, 'ratioInputMinimumDistanceMean')]
         ]
 
     for key, trainingAndValidationResults in trainingAndValidationResultDictionary.iteritems():
@@ -176,8 +195,8 @@ if __name__ == '__main__':
             i.update({'ratioStoredPatterns': i['successfullyStoredPatterns'] / float(i['patternDataSetSize'])})
         
         trainingInfo = [
-            ['Successfully stored patterns', getInterval(trainingAndValidationResults, 'successfullyStoredPatterns')],
-            ['Unsuccessfully stored patterns', getInterval(trainingAndValidationResults, 'unsuccessfullyStoredPatterns')],
+            #['Successfully stored patterns', getInterval(trainingAndValidationResults, 'successfullyStoredPatterns')],
+            #['Unsuccessfully stored patterns', getInterval(trainingAndValidationResults, 'unsuccessfullyStoredPatterns')],
             ['Ratio of stored patterns, proportional to the number of training patterns', getInterval(trainingAndValidationResults, 'ratioStoredPatterns')]
         ]
         
@@ -191,7 +210,7 @@ if __name__ == '__main__':
             ]
         
         patternDataSetId, modelId = key.split(':')
-        trainingAndValidationIndexTable['\\{P' + patternDataSetId.zfill(2) + ',M' + modelId.zfill(2) + '\\}'] = trainingInfo
+        trainingAndValidationIndexTable['\\{$P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '}$\\}'] = trainingInfo
     
     for key, testingResults in testingResultDictionary.iteritems():
         for i in testingResults:
@@ -199,13 +218,13 @@ if __name__ == '__main__':
         
         patternDataSetId, modelId, inputDataSetId = key.split(':')
         
-        testingIndexTable['\\{P' + patternDataSetId.zfill(2) + ',M' + modelId.zfill(2) + ',I' + inputDataSetId.zfill(2) + '\\}'] = [
-            ['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
-            ['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
-            ['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
+        testingIndexTable['\\{$P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '},I_{' + inputDataSetId.zfill(2) + '}$\\}'] = [
+            #['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
+            #['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
+            #['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
             ['Ratio of successful recalls, proportional to the number of test inputs', getInterval(testingResults, 'ratioSuccessfulEquilibriums')],
             ['Mean CPU time per recall', getInterval(testingResults, 'timeMean')],
-            ['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
+            #['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
         ]
     
     numberOfPatterns = len(patternDataSetResultDictionary)
@@ -214,49 +233,50 @@ if __name__ == '__main__':
     
     # Generating LaTeX code of the main table.
     
-    print """
-    % MAIN TABLES
-    """
-    
-    for i in xrange(0, numberOfPatterns, PATTERN_DATA_SETS_PER_MAIN_TABLE):
-        numberOfPatternsInThisTable = min(i + PATTERN_DATA_SETS_PER_MAIN_TABLE, numberOfPatterns) - i
-        
+    if False:
         print """
-        \\begin{table}[]
-        \\centering
-        \\label{my-label}
-        \\begin{tabular}{c|""" + ((('c' * numberOfInputs) + '|') * numberOfPatternsInThisTable) + """}
-        \\cline{2-""" + str(numberOfPatternsInThisTable * numberOfInputs + 1) + """} 
+        % MAIN TABLES
         """
         
-        for patternDataSetId in xrange(i + 1, i + numberOfPatternsInThisTable + 1):
-            print ' & \\multicolumn{' + str(numberOfInputs) + '}{c|}{\\textbf{P' + str(patternDataSetId) + '}}',
-        
-        print ' \\\\ \\cline{2-' + str(numberOfPatternsInThisTable * numberOfInputs + 1) + '}'
-        
-        for _ in xrange(numberOfPatternsInThisTable):
-            for inputDataSetId in xrange(1, numberOfInputs + 1):
-                print ' & I' + str(inputDataSetId),
-        
-        print ' \\\\ \\hline'
-        
-        for modelId in xrange(1, numberOfModels + 1):
-            print '\\multicolumn{1}{|c|}{\\textbf{M' + str(modelId) + '}}',
+        for i in xrange(0, numberOfPatterns, PATTERN_DATA_SETS_PER_MAIN_TABLE):
+            numberOfPatternsInThisTable = min(i + PATTERN_DATA_SETS_PER_MAIN_TABLE, numberOfPatterns) - i
+            
+            print """
+            \\begin{table}[]
+            \\centering
+            \\label{my-label}
+            \\begin{tabular}{c|""" + ((('c' * numberOfInputs) + '|') * numberOfPatternsInThisTable) + """}
+            \\cline{2-""" + str(numberOfPatternsInThisTable * numberOfInputs + 1) + """} 
+            """
             
             for patternDataSetId in xrange(i + 1, i + numberOfPatternsInThisTable + 1):
-                for inputDataSetId in xrange(1, numberOfInputs + 1):
-                    print ' & \\{P' + str(patternDataSetId) + ',M' + str(modelId) + ',I' + str(inputDataSetId) + '\\}'
+                print ' & \\multicolumn{' + str(numberOfInputs) + '}{c|}{\\textbf{$P_{' + str(patternDataSetId) + '}$}}',
             
-            if modelId == numberOfModels:
-                print '\\\\  \\hline'
-            else:
-                print '\\\\ '
-        
-        print """
-        \\end{tabular}
-        \\caption{My caption}
-        \\end{table}
-        """
+            print ' \\\\ \\cline{2-' + str(numberOfPatternsInThisTable * numberOfInputs + 1) + '}'
+            
+            for _ in xrange(numberOfPatternsInThisTable):
+                for inputDataSetId in xrange(1, numberOfInputs + 1):
+                    print ' & $I_{' + str(inputDataSetId) + '}$',
+            
+            print ' \\\\ \\hline'
+            
+            for modelId in xrange(1, numberOfModels + 1):
+                print '\\multicolumn{1}{|c|}{\\textbf{$M_{' + str(modelId) + '}$}}',
+                
+                for patternDataSetId in xrange(i + 1, i + numberOfPatternsInThisTable + 1):
+                    for inputDataSetId in xrange(1, numberOfInputs + 1):
+                        print ' & \\{$P_{' + str(patternDataSetId) + '},M_{' + str(modelId) + '},I_{' + str(inputDataSetId) + '}$\\}'
+                
+                if modelId == numberOfModels:
+                    print '\\\\  \\hline'
+                else:
+                    print '\\\\ '
+            
+            print """
+            \\end{tabular}
+            \\caption{My caption}
+            \\end{table}
+            """
     
     # Generating LaTeX code of index tables.
     generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets', PATTERNS_TABLE_MAX_COLUMNS)
