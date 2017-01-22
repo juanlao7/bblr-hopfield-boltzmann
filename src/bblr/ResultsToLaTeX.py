@@ -10,9 +10,6 @@ def getInterval(arrayOfDictionaries, key):
     values = map(lambda x: x[key], arrayOfDictionaries)
     mean = numberToString(numpy.mean(values))
     stdev = numberToString(numpy.std(values))
-        
-    if stdev == '0':
-        return mean
     
     return mean + '$\\pm$' + stdev
 
@@ -171,10 +168,13 @@ if __name__ == '__main__':
     for key, trainingAndValidationResults in trainingAndValidationResultDictionary.iteritems():
         patternDataSetId, modelId = key.split(':')
         
+        for i in trainingAndValidationResults:
+            i.update({'ratioStoredPatterns': i['successfullyStoredPatterns'] / float(i['patternDataSetSize'])})
+        
         trainingInfo = [
             ['Successfully stored patterns', getInterval(trainingAndValidationResults, 'successfullyStoredPatterns')],
-            ['Unsuccessfully stored patterns', getInterval(trainingAndValidationResults, 'unsuccessfullyStoredPatterns')]
-            # TODO CPU time
+            ['Unsuccessfully stored patterns', getInterval(trainingAndValidationResults, 'unsuccessfullyStoredPatterns')],
+            ['Ratio of stored patterns, proportional to the number of training patterns', getInterval(trainingAndValidationResults, 'ratioStoredPatterns')]
         ]
         
         if trainingAndValidationResults[0]['model'] == 'restricted-boltzmann':
@@ -191,11 +191,14 @@ if __name__ == '__main__':
     for key, testingResults in testingResultDictionary.iteritems():
         patternDataSetId, modelId, inputDataSetId = key.split(':')
         
+        for i in testingResults:
+            i.update({'ratioSuccessfulEquilibriums': i['successfulEquilibriums'] / float(i['inputDataSetSize'])})
+        
         testingIndexTable['\\{P' + patternDataSetId + ',M' + modelId + ',I' + inputDataSetId + '\\}'] = [
-            # Take care, these properties assume that all input data set sizes are equal.
             ['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
             ['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
-            ['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],          # TODO decide if we want to put this property only in hopfield
+            ['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
+            ['Ratio of successful recalls, proportional to the number of test inputs', getInterval(testingResults, 'ratioSuccessfulEquilibriums')],
             ['Mean CPU time per recall', getInterval(testingResults, 'timeMean')],
             ['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
         ]
