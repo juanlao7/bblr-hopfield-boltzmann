@@ -73,7 +73,12 @@ if __name__ == '__main__':
     inputDataSetPropertiesCombinations = Utils.loadJsonFile(arguments.input_data_set_properties_file)
     
     # Main loop
-    results = []
+    
+    if arguments.results_file:
+        handler = open(arguments.results_file, 'w')
+        handler.write('[\r\n')
+        handler.close()
+    
     patternDataSetId = 1
     
     for patternDataSetProperties in patternDataSetPropertiesCombinations:
@@ -142,9 +147,12 @@ if __name__ == '__main__':
                         result['patternDataSetId'] = patternDataSetProperties['patternDataSetId']
                         result['inputDataSetId'] = inputDataSetProperties['inputDataSetId']
                         
-                        results.append(result)
+                        if arguments.results_file:
+                            handler = open(arguments.results_file, 'a')
+                            handler.write(json.dumps(result, indent=4, sort_keys=True) + ',\r\n')
+                            handler.close()
     
     if arguments.results_file:
-        handler = open(arguments.results_file, 'w')
-        handler.write(json.dumps(results, indent=4, sort_keys=True))
+        handler = open(arguments.results_file, 'a')
+        handler.write('\r\n]')
         handler.close()

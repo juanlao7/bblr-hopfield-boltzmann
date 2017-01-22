@@ -1,5 +1,5 @@
 #!/bin/sh
-SAMPLES=2
+SAMPLES=8
 
 mkdir -p out/results
 cd src
@@ -10,6 +10,6 @@ do
 	echo "###### SAMPLE $i ######"
 	echo
 
-	python -m bblr.Main --out ../out/results/$i.json --seed $i ../config/pattern/final.json ../config/model/final.json ../config/input/final.json
+	python -m bblr.Main --out ../out/results/$i.json --seed $i ../config/pattern/patterns.json ../config/model/models.json ../config/input/inputs.json &
 done
 
