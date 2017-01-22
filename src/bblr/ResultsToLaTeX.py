@@ -3,6 +3,7 @@ from Utils import Utils
 import numpy
 
 PATTERN_DATA_SETS_PER_MAIN_TABLE = 100
+TESTING_TABLE_MAX_COLUMNS = 5
 DEFAULT_DECIMALS = 3
 
 def getInterval(arrayOfDictionaries, key):
@@ -32,37 +33,51 @@ def getObject(parent, key, defaultObject):
     parent[key] = defaultObject
     return parent[key]
 
-def generateIndexTable(indexTable, title):
+def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
+    print """
+    % """ + latexComment + """
+    
+    """
+        
     numberOfItems = len(indexTable)
     numberOfProperties = len(indexTable[indexTable.keys()[0]])
+    numberOfTables = len(range(0, numberOfItems, maxColumns))
+    currentTableNumber = 1
+    
+    for i in xrange(0, numberOfItems, maxColumns):
+        numberOfItemsInThisTable = min(i + maxColumns, numberOfItems) - i
+        itemKeysOfThisTable = sorted(indexTable.keys())[i:i + numberOfItemsInThisTable]
+        captionOfThisTable = caption if maxColumns > numberOfItems else caption + ' (' + str(currentTableNumber) + ' of ' + str(numberOfTables) + ')'
+        currentTableNumber += 1 
+        
+        print """
+        \\begin{table}[]
+        \\centering
+        \\label{my-label}
+        \\begin{tabular}{c""" + ('c' * numberOfItemsInThisTable) + """}
+        """
+        
+        for itemKey in itemKeysOfThisTable:
+            print ' & ' + itemKey,
+        
+        print ' \\\\ \\cline{2-' + str(numberOfItemsInThisTable + 1) + '}'
+        
+        for propertyIndex in xrange(numberOfProperties):
+            print '(' + str(propertyIndex + 1) + ')',
+            
+            for itemKey in itemKeysOfThisTable:
+                print ' &', indexTable[itemKey][propertyIndex][1],
+            
+            if propertyIndex != numberOfProperties - 1:
+                print '\\\\'
+        
+        print """
+        \\end{tabular}
+        \\caption{""" + captionOfThisTable + """}
+        \\end{table}
+        """
     
     print """
-    % """ + title + """
-    
-    \\begin{table}[]
-    \\centering
-    \\label{my-label}
-    \\begin{tabular}{c""" + ('c' * numberOfItems) + """}
-    """
-    
-    for itemKey in sorted(indexTable.keys()):
-        print ' & ' + itemKey,
-    
-    print ' \\\\ \\cline{2-' + str(numberOfItems + 1) + '}'
-    
-    for propertyIndex in xrange(numberOfProperties):
-        print '(' + str(propertyIndex + 1) + ')',
-        
-        for itemKey in sorted(indexTable.keys()):
-            print ' &', indexTable[itemKey][propertyIndex][1],
-        
-        if propertyIndex != numberOfProperties - 1:
-            print '\\\\'
-    
-    print """
-    \\end{tabular}
-    \\caption{My caption}
-    \\end{table}
     \\begin{description}
     """
     
@@ -178,8 +193,8 @@ if __name__ == '__main__':
         
         testingIndexTable['\\{P' + patternDataSetId + ',M' + modelId + ',I' + inputDataSetId + '\\}'] = [
             # Take care, these properties assume that all input data set sizes are equal.
-            ['Successful equilibriums', getInterval(testingResults, 'successfulEquilibriums')],
-            ['Unsuccessful equilibriums', getInterval(testingResults, 'unsuccessfulEquilibriums')],
+            ['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
+            ['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
             ['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],          # TODO decide if we want to put this property only in hopfield
             ['Mean CPU time per recall', getInterval(testingResults, 'timeMean')],
             ['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
@@ -220,9 +235,9 @@ if __name__ == '__main__':
         for modelId in xrange(1, numberOfModels + 1):
             print '\\multicolumn{1}{|c|}{\\textbf{M' + str(modelId) + '}}',
             
-            for patternDataSetIndex in xrange(i, i + numberOfPatternsInThisTable):
+            for patternDataSetId in xrange(i + 1, i + numberOfPatternsInThisTable + 1):
                 for inputDataSetId in xrange(1, numberOfInputs + 1):
-                    print ' & R' + str(patternDataSetIndex * numberOfModels * numberOfInputs + (modelId - 1) * numberOfInputs + inputDataSetId),
+                    print ' & \\{P' + str(patternDataSetId) + ',M' + str(modelId) + ',I' + str(inputDataSetId) + '\\}'
             
             if modelId == numberOfModels:
                 print '\\\\  \\hline'
@@ -236,9 +251,9 @@ if __name__ == '__main__':
         """
     
     # Generating LaTeX code of index tables.
-    generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE')
-    generateIndexTable(modelIndexTable, 'MODELS TABLE')
-    generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE')
-    generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE')
-    generateIndexTable(testingIndexTable, 'TESTING TABLE')
+    generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets')
+    generateIndexTable(modelIndexTable, 'MODELS TABLE', 'Analyzed models')
+    generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Tested inputs')
+    generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Obtained training results')
+    generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Obtained testing results', TESTING_TABLE_MAX_COLUMNS)
     
