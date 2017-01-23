@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{17}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -33,11 +33,6 @@ Parallel retrieval of correlated patterns: From hopfield networks to boltzmann
   machines.
 \newblock \emph{Neural Networks}, 38:\penalty0 52 -- 63, 2013.
 \newblock ISSN 0893-6080.
-
-\bibitem[Fis(2014)]{Fischer201425}
-Training restricted boltzmann machines: An introduction.
-\newblock \emph{Pattern Recognition}, 47\penalty0 (1):\penalty0 25 -- 39, 2014.
-\newblock ISSN 0031-3203.
 
 \bibitem[Carreira-Perpinan and Hinton(2005)]{carreira2005contrastive}
 Miguel~A Carreira-Perpinan and Geoffrey~E Hinton.

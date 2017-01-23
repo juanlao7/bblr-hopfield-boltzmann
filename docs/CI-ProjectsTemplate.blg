@@ -66,19 +66,16 @@ You're missing a field name---line 235 of file bibfile.bib
  : %doi="10.1007/BFb0020196",
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
-Warning--I didn't find a database entry for "hinton2010practica"
 Warning--to sort, need author or key in DAI1998159
 Warning--to sort, need author or key in SCHULZ1995145
 Warning--to sort, need author or key in Barra20121
 Warning--to sort, need author or key in Agliari201352
 Warning--to sort, need author or key in Ackley1985147
-Warning--to sort, need author or key in Fischer201425
 Warning--empty author in Ackley1985147
 Warning--empty author in SCHULZ1995145
 Warning--empty author in DAI1998159
 Warning--empty author in Barra20121
 Warning--empty author in Agliari201352
-Warning--empty author in Fischer201425
 Warning--can't use both author and editor fields in Hinton2012
 Warning--empty title in KrizhevskyH11
 Warning--empty booktitle in KrizhevskyH11
