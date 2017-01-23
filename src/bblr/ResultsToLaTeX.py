@@ -3,20 +3,20 @@ from Utils import Utils
 import numpy
 
 PATTERN_DATA_SETS_PER_MAIN_TABLE = 100
-PATTERNS_TABLE_MAX_COLUMNS = 5
+PATTERNS_TABLE_MAX_COLUMNS = 4
 MODELS_TABLE_MAX_COLUMNS = 5
-TRAINING_TABLE_MAX_COLUMNS = 4
-TESTING_TABLE_MAX_COLUMNS = 5
+TRAINING_TABLE_MAX_COLUMNS = 3
+TESTING_TABLE_MAX_COLUMNS = 4
 DEFAULT_DECIMALS = 3
 
-BLACKLIST_PATTERNS = sorted([2, 4])
-BLACKLIST_MODELS = sorted([2, 4])
-BLACKLIST_INPUTS = sorted([2, 4])
+BLACKLIST_PATTERNS = sorted([])
+BLACKLIST_MODELS = sorted([])
+BLACKLIST_INPUTS = sorted([])
 
-def getInterval(arrayOfDictionaries, key):
+def getInterval(arrayOfDictionaries, key, decimals=DEFAULT_DECIMALS):
     values = map(lambda x: x[key], arrayOfDictionaries)
-    mean = numberToString(numpy.mean(values))
-    stdev = numberToString(numpy.std(values))
+    mean = numberToString(numpy.mean(values), decimals)
+    stdev = numberToString(numpy.std(values), decimals)
     return mean + '$\\pm$' + stdev
 
 def numberToString(number, decimals=DEFAULT_DECIMALS):
@@ -43,10 +43,21 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     print """
     % """ + latexComment + """
     
+    \\section{""" + caption + """}
+
+    \\begin{description}
+    """
+    
+    numberOfProperties = len(indexTable[indexTable.keys()[0]])
+    
+    for propertyIndex in xrange(numberOfProperties):
+        print '\\item [(' + str(propertyIndex + 1) + ')]', indexTable[indexTable.keys()[0]][propertyIndex][0] 
+
+    print """
+    \\end {description}
     """
         
     numberOfItems = len(indexTable)
-    numberOfProperties = len(indexTable[indexTable.keys()[0]])
     numberOfTables = len(range(0, numberOfItems, maxColumns))
     currentTableNumber = 1
     
@@ -57,9 +68,9 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
         currentTableNumber += 1 
         
         print """
-        \\begin{table}[]
+        \\begin{table}[H]
         \\centering
-        \\label{my-label}
+        %\\label{my-label}
         \\begin{tabular}{c""" + ('c' * numberOfItemsInThisTable) + """}
         """
         
@@ -82,17 +93,6 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
         \\caption{""" + captionOfThisTable + """}
         \\end{table}
         """
-    
-    print """
-    \\begin{description}
-    """
-    
-    for propertyIndex in xrange(numberOfProperties):
-        print '\\item [(' + str(propertyIndex + 1) + ')]', indexTable[indexTable.keys()[0]][propertyIndex][0] 
-
-    print """
-    \\end {description}
-    """
 
 def getIdAfterBlacklist(itemId, blackList):
     if itemId in blackList:
@@ -202,7 +202,7 @@ if __name__ == '__main__':
         
         if trainingAndValidationResults[0]['model'] == 'restricted-boltzmann':
             trainingInfo += [
-                ['Training epochs', getInterval(trainingAndValidationResults, 'trainingEpochs')]                
+                ['Training epochs', getInterval(trainingAndValidationResults, 'trainingEpochs', 1)]                
             ]
         else:
             trainingInfo += [
@@ -210,7 +210,7 @@ if __name__ == '__main__':
             ]
         
         patternDataSetId, modelId = key.split(':')
-        trainingAndValidationIndexTable['\\{$P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '}$\\}'] = trainingInfo
+        trainingAndValidationIndexTable['$\\{P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '}\\}$'] = trainingInfo
     
     for key, testingResults in testingResultDictionary.iteritems():
         for i in testingResults:
@@ -218,12 +218,12 @@ if __name__ == '__main__':
         
         patternDataSetId, modelId, inputDataSetId = key.split(':')
         
-        testingIndexTable['\\{$P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '},I_{' + inputDataSetId.zfill(2) + '}$\\}'] = [
+        testingIndexTable['$\\{P_{' + patternDataSetId.zfill(2) + '},M_{' + modelId.zfill(2) + '},I_{' + inputDataSetId.zfill(2) + '}\\}$'] = [
             #['Successful recalls', getInterval(testingResults, 'successfulEquilibriums')],
             #['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
             #['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
             ['Ratio of successful recalls, proportional to the number of test inputs', getInterval(testingResults, 'ratioSuccessfulEquilibriums')],
-            ['Mean CPU time per recall', getInterval(testingResults, 'timeMean')],
+            ['Mean CPU time (ms) per recall', getInterval(testingResults, 'timeMean', 1)],
             #['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
         ]
     
@@ -232,6 +232,12 @@ if __name__ == '__main__':
     numberOfModels = len(modelResultDictionary)
     
     # Generating LaTeX code of the main table.
+    
+    print """
+    \\documentclass[12pt]{article}
+    \\usepackage{float}
+    \\begin{document}
+    """
     
     if False:
         print """
@@ -265,7 +271,7 @@ if __name__ == '__main__':
                 
                 for patternDataSetId in xrange(i + 1, i + numberOfPatternsInThisTable + 1):
                     for inputDataSetId in xrange(1, numberOfInputs + 1):
-                        print ' & \\{$P_{' + str(patternDataSetId) + '},M_{' + str(modelId) + '},I_{' + str(inputDataSetId) + '}$\\}'
+                        print ' & $\\{P_{' + str(patternDataSetId) + '},M_{' + str(modelId) + '},I_{' + str(inputDataSetId) + '}\\}$'
                 
                 if modelId == numberOfModels:
                     print '\\\\  \\hline'
@@ -284,4 +290,8 @@ if __name__ == '__main__':
     generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Tested inputs')
     generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Obtained training results', TRAINING_TABLE_MAX_COLUMNS)
     generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Obtained testing results', TESTING_TABLE_MAX_COLUMNS)
+    
+    print """
+    \\end{document}
+    """
     
