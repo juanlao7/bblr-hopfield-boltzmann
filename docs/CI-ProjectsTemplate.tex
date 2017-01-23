@@ -3,6 +3,9 @@
 % The following packages will be automatically loaded:
 % amsmath, amssymb, natbib, graphicx, url, algorithm2e
 \usepackage{float}
+\usepackage{amsthm}
+
+\newtheorem*{assumption}{Assumption}
 
 \title[My CI Project]{A Practical Comparison Between Hopfield Networks and Restricted Boltzmann Machines as Content-Addressable Autoassociative Memories}
 
@@ -53,22 +56,27 @@ In this paper we analyze the performance of Hopfield Networks and Restricted Bol
 \end{keywords}
 
 
-\section{Problem statement and goals}
+\section{Introduction}
 
 Attractor networks such as Hopfield Networks [\cite{hopfield1982neural}] and Restricted Boltzmann Machines [\cite{Smolensky87}] are widely used as binary content-addressable memory systems, [\cite{DAI1998159}][\cite{SCHULZ1995145}][\cite{KrizhevskyH11}] and the theory behind them has been deeply studied in the past years. [\cite{80232}][\cite{298706}][\cite{6889573}] Both models have been compared on specific problems [\cite{552753}] and mathematical relations of equivalence have been demonstrated. [\cite{Barra20121}][\cite{Agliari201352}]
 
 In this paper we analyze the behaviour of both models after being trained with several random pattern data sets that satisfy certain statistical properties. These properties can be extracted from any kind of binary data set and, in conjunction with the result tables presented in this paper, the reader can have an approximate idea about what model offers the best results for his specific problem. In addition, if the reader has a sample of expected input for the system, it is possible to extract other statistical properties from the sample and compare them with the statistical properties of the tested random input pattern data sets.
 
-\paragraph{What we expected:} 
-\begin{itemize}
-	\item A higher ability to memorize patterns/capacity of Hopfield Networks trained with the Storkey rule vs Hebbian rule.
-	\item A worse performance of Hopfield networks when:
-	\begin{itemize}
-		\item Incrementing the number of patterns to memorize.
-		\item Incrementing the correlation between the patterns to memorize.
-	\end{itemize}
-	\item Nothing special about RBMs (perhaps the possibility to adapt to the data by tuning its parameters? Able to memorize whatever thanks to overfitting?).
-\end{itemize}
+Hopfield Networks are known to have a limited number of patterns that can be successfully stored, a.k.a. \emph{capacity}, as well as to be very sensitive to correlations between the training samples, which aggravates their ability to generate correct attractors and also reduces the capacity of the network[\cite{hopfield1982neural}][\cite{Storkey1997}]. For this reason, we expect bad performances of these networks both when considering training samples very correlated and when considering large amounts of patterns to store.
+
+Regarding Restricted Boltzmann Machines, we are not aware of any limitation, We presumably expect this networks to have a higher ability to memorize large amounts of patterns than Hopfield Networks, but perhaps at the expense of a smaller ability to recall these memories from similar ones.
+
+
+%\paragraph{What we expected:} 
+%\begin{itemize}
+%	\item A higher ability to memorize patterns/capacity of Hopfield Networks trained with the Storkey rule vs Hebbian rule.
+%	\item A worse performance of Hopfield networks when:
+%	\begin{itemize}
+%		\item Incrementing the number of patterns to memorize.
+%		\item Incrementing the correlation between the patterns to memorize.
+%	\end{itemize}
+%	\item Nothing special about RBMs (perhaps the possibility to adapt to the data by tuning its parameters? Able to memorize whatever thanks to overfitting?).
+%\end{itemize}
 
 \section{Analyzed Models}
 
@@ -79,28 +87,86 @@ Additionally, units in the Hopfield Network may be updated either synchronously 
 Boltzmann Machines are usually considered a stochastic analogue of the Hopfield Networks. [\cite{Ackley1985147}] Despite their theoretical usefulness, it is well known that in practice they cannot learn properly for large enough problems. That’s why we are considering its constrained version, the Restricted Boltzmann Machine, that permits an efficient training using the Contrastive Divergence algorithm. [\cite{carreira2005contrastive}]
 
 Learning in a Restricted Boltzmann Machine is dependent on several parameters that have to be tuned appropriately. Our experiments try to follow Hinton’s recommendations [\cite{Hinton2012}] on the following issues, although some details have been implemented in a different way:
+\begin{itemize}
+	\item An appropriate estimation of the number of hidden units required is necessary to prevent overfitting, but hard to define. Our decisions are inspired in Hinton’s recommendations.
+	\item A mini-batch containing one element of each class is proposed by Hinton’s, but we find that smaller mini-batches work better in our study.  In fact, we use an online strategy for training.
+	\item  Stopping criteria of the training algorithm. Given the norm of the delta for the weights in each epoch, the training algorithm stops when the summation of the norm of the delta weights for the last 1000 epochs do not decrease during other 1000 epochs. At this point it is supposed that the weights are oscillating around their target value.
+	\item The weights and offsets initialization follows the recommended values: small random values for the weights chosen from a normal $N(0,0.01)$ distribution, hidden offsets equal to 0, and visible offsets set to $\log{\frac{p_i}{(1-p_i)}}$, where $p_i$ is the proportion of training vectors in which unit $i$ is on.
+	\item The learning rate parameter is also crucial for a good performance of the network. We fix it to 0.001 in all our models since this value provides better results than any other checked.
+	\item Momentum is an improvement on the speed of the learning rule. We follow the recommendations, setting its value to 0.5 during the first stages of the learning process (5 epochs) and then incrementing it to 0.9.
+	\item Theoretically, weight decay helps learning and improves generalization. However, this seems not to apply in our case, as the obtained results are worse when we use it. For this reason, we decide to disable this parameter in our final models.
+	
+\end{itemize}
+
+Appendix \ref{AppB} presents a table of the analyzed models in this experiment, with explicit values for each of its parameters.
 
 
+\section{Pattern Data Set Statistical Properties}
+
+In abstract, a set of statistical properties can be extracted from any kind of binary pattern data set. For this experiment we generated random pattern data sets that have a predefined set of statistical property values.
+
+Let $d(A, B)$ be the distance\footnote{For every pair $A,B \in \{0,1\}^n$, we define the distance $d$ between $A$ and $B$, $d(A,B)$, as the number of different components between both vectors; formally, $d(A,B) = \sum_{i=1}^{n} |A_i - B_i|$. Note that, with this definition, $d$ is the restriction of the well-known $L_1$ distance to the space $\{0,1\}^n$.} between the couple of patterns $A$, $B$. If we choose randomly (with a uniform distribution) a couple of 2 different patterns $A$, $B$ from a pattern data set $P$ and we define $D_P=d(A, B)$, we conclude that $D_P$ is a random variable that follows a normal distribution, with mean $\mu_P$ and standard deviation $\sigma_P$.
+	
+Basically, the following statistical properties define a pattern data set $P$:
+\begin{itemize}
+	\item $\left|P\right|$, the number of patterns in the set.
+	\item $n$, the dimension of the patterns in $P$. 
+	\item $\frac{\mu_P}{n}$
+	\item $\frac{\sigma_P}{n}$
+\end{itemize}
+	
+We point out that we use this mean distance between two random patterns of the Pattern Data Set as a direct measure of their correlation; the smaller the distance is, the higher the number of components shared, i.e. the higher the correlation. 
+
+The reader of this paper can extract these statistical properties from any desired pattern data set, and use as a reference the most similar pattern data set analyzed in this experiment. Appendix \ref{AppA} presents a table of the generated and analyzed pattern data sets, with explicit values for their statistical properties.
 
 
+\section{Input Data Set Statistical Properties}
 
-\section{Previous work}
+Input data sets have a strong relation with the original pattern data set used to train the model. It is possible to extract some statistical properties from this relation, and they can be used to have an idea about the performance of the model for input data sets with the same properties.
 
-Hopfield Networks and Restricted Boltzman Machines had been compared several times for associative memory, even though both have divers applications, this is the most known one, at least for Hopfield Networks. This comparison has been made by applying both Neural Networks to several databases, which raises a new problem, how to generate this databases. For this task several algorithm had been proposed, genetic algorithms between them, however the solution was a simple randomized setting to generate patterns with $ 0s $ and $ 1s $ of length $N$. The databases are classified by certain property in relation with the Hamming distance between vectors. For this we try to assure that the distance between vectors in this datasets has an standard deviation of $\sigma$ and a mean of $\mu$. 
+For each input vector $v$, let $minD(v,P)=d(v,p)$, where $p$ is the pattern from the pattern data set $P$ such that $d(v,p)\leq d(v,p'),\;\forall p'\in P,\;p'\neq p$.
 
-This properties along with the size of the vectors $L$ and the total number of vectors $N$ will characterize the datasets for training and testing both algorithms.
+For a given pattern data set $P$, if we choose randomly (with a uniform distribution) an input vector $v$ from an input data set $I$ and we define $D_I=minD(v,P)$, we conclude that $D_I$ is a random variable that follows a normal distribution, with mean $\mu_I$ and standard deviation $\sigma_I$.
 
-\section{The CI methods}
+Basically, the only proposed statistical property that defines an input data set is $\frac{\mu_I}{\mu_P}$, the mean minimum distance between a random input $v$ and the closest pattern to $v$, expressed as a proportion of the mean distance between 2 random patterns of the pattern data set. We consider that $\sigma_I$ has not huge relevance for our analysis.
 
-Do not repeat well-known theory or formulas. Just mention which methods you use and why you choose them, and provide relevant citations. 
+The reader of this paper can extract these statistical properties from any sample input data set passed to the system, and use as a reference the most similar input data set analyzed in this experiment. Appendix \ref{AppC} presents a table of the generated and analyzed input data sets, with explicit values for their statistical property.
+ 
 
-\section{Results and Discussion}
+\section{Experiment}
 
-The main part of the document.
+In this experiment we generated stochastically 28 different pattern data sets (with different statistical properties), 6 different models (with different determined combinations of tuned parameters) and 5 different random input data sets (with different statistical properties). The characteristics of each of these items are defined in appendices \ref{AppA}, \ref{AppB}, \ref{AppC}.
 
-\section{Strengths and weaknesses}
+The next step of the experiment consisted in training each of the 6 models with each of the 28 pattern data sets, obtaining 168 training and validation results that are presented in appendix \ref{AppD}.
 
-Be critic with your work ...
+Finally, we tested each of the 168 trained models with each of the 5 input data sets, obtaining 840 test results that are presented in appendix \ref{AppE}.
+
+This process has been executed 8 times, and the tables presented in appendices \ref{AppA}, \ref{AppB}, \ref{AppC} contain the mean and standard deviation of the generated and obtained values.
+
+This experiment can be reproduced following the steps explained in appendix \ref{AppF}.
+
+\section{Analysis of the Results}
+
+Before presenting the obtained results after training and testing the models, we need to make an explanation, in regards to the dimensionality of the pattern data sets:
+
+\begin{assumption} We are computing many measures as a proportion of the dimension of the patterns, and we assume that the obtained results may not depend on that pattern dimension. Some tests that we have performed considering both lower and higher pattern dimensions suggest that the behaviour does not change when the dimension varies, but this should be checked more rigorously in Future Work.
+\end{assumption}
+
+We have separated the results for both phases mentioned above, first we will start with the training phase results.
+
+\subsection{Training and Validation Results}
+Appendix \ref{AppD} presents the training and validation results we obtained for the analyzed models. The first thing we need to note is the possible variations in the learning rules. Hopfield Networks trained with the Storkey rule clearly outperformed the ability to memorize patterns of those trained with the Hebbian rule, independently of the correlation (or distance) between the patterns of the pattern data set. The results suggest an increase of the capacity using the Storkey rule, as we expected.
+
+An issue that has been commented before and is presented in several publications is the correlation between patterns, which clearly affects the capacity of Hopfield Networks. As the mean distance between two random patterns of the pattern data set is increased (i.e. the correlation is reduced), we observe that these networks are able to successfully store a higher number of patterns 
+
+Furthermore, results show a much higher robustness of the RBM with respect to both the correlation of the patterns of the pattern data set and the number of patterns that must be stored. In some configurations, such as M3 and M4, RBM is able to remember almost all patterns even when they are numerous and highly correlated. Hence, for pattern data sets whose $\mu_P$ is lower or equal than $ 30\% $ of the dimension of the patterns (i.e. whose patterns exhibit a strong correlation), Restricted Boltzmann Machines properly configured provide much better ratios of stored patterns than any Hopfield Network.
+
+When dealing with pattern data sets with less correlated patterns (i.e. with mean distances between patterns higher than $30\%$ of the dimension of the patterns), Hopfield Networks trained with the Storkey rule achieve similar ratios of successfully stored patterns than those of RBM, all of this as long as the capacity of the Hopfield Network is not largely exceeded by the number of patterns to store [\cite{Storkey1997}]. The increase of the capacity using the Storkey rule allows us to obtain very good results with Hopfield Networks for a considerably wide range of numbers of patterns to be memorized.
+
+Finally, we also notice that RBM properly configured seem to have a very large capacity compared to Hopfield Networks. Therefore, if the considered pattern data set contains a higher number of patterns to be stored than the relative fractions analyzed in this paper, it will be reasonable that the reader considers the use of an RBM instead of a Hopfield Network.
+
+\subsection{Testing results}
+
 
 \section{Conclusions and future work}
 
