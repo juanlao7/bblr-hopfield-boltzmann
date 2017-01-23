@@ -3,27 +3,36 @@ from Utils import Utils
 import numpy
 
 PATTERN_DATA_SETS_PER_MAIN_TABLE = 100
-PATTERNS_TABLE_MAX_COLUMNS = 4
-MODELS_TABLE_MAX_COLUMNS = 5
-TRAINING_TABLE_MAX_COLUMNS = 3
+PATTERNS_TABLE_MAX_COLUMNS = 7
+MODELS_TABLE_MAX_COLUMNS = 6
+TRAINING_TABLE_MAX_COLUMNS = 6
 TESTING_TABLE_MAX_COLUMNS = 5
-DEFAULT_DECIMALS = 3
+DEFAULT_MAX_DECIMALS = 3
 
 BLACKLIST_PATTERNS = sorted([])
-BLACKLIST_MODELS = sorted([])
+BLACKLIST_MODELS = sorted([7])
 BLACKLIST_INPUTS = sorted([])
 
-def getInterval(arrayOfDictionaries, key, decimals=DEFAULT_DECIMALS):
+def getRawInterval(arrayOfDictionaries, key):
     values = map(lambda x: x[key], arrayOfDictionaries)
-    mean = numberToString(numpy.mean(values), decimals)
-    stdev = numberToString(numpy.std(values), decimals)
-    return mean + '$\\pm$' + stdev
+    mean = numpy.mean(values)
+    stdev = numpy.std(values)
+    return mean, stdev
 
-def numberToString(number, decimals=DEFAULT_DECIMALS):
-    powerOfTen = 10 ** decimals
+def getInterval(arrayOfDictionaries, key, maxDecimals=DEFAULT_MAX_DECIMALS, decimals=None):
+    mean, stdev = getRawInterval(arrayOfDictionaries, key)
+    mean = numberToString(mean, maxDecimals, decimals)
+    meanDecimals = max(0, mean[::-1].find('.'))
+    return '$' + mean + '\\pm' + numberToString(stdev, decimals=meanDecimals) + '$'
+
+def numberToString(number, maxDecimals=DEFAULT_MAX_DECIMALS, decimals=None):
+    if decimals != None:
+        return ('%.' + str(decimals) + 'f') % number
+
+    powerOfTen = 10 ** maxDecimals
     
     number = round(number * powerOfTen) / powerOfTen
-    
+
     if number == int(number):
         return str(int(number))
     
@@ -42,21 +51,19 @@ def parseKey(itemKey):
 def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     print """
     % """ + latexComment + """
-    
-    \\section{""" + caption + """}
-
-    \\begin{description}
     """
     
     numberOfProperties = len(indexTable[indexTable.keys()[0]])
+    propertiesDefinition = []
+    i = 1;
     
     for propertyIndex in xrange(numberOfProperties):
-        print '\\item [(' + str(propertyIndex + 1) + ')]', indexTable[indexTable.keys()[0]][propertyIndex][0] 
+        propertyDefinition = indexTable[indexTable.keys()[0]][propertyIndex][0]
 
-    print """
-    \\end {description}
-    """
-        
+        if not propertyDefinition.startswith('$'):
+            propertiesDefinition.append('\\item [(' + str(i) + ')] ' + propertyDefinition)
+            i += 1
+    
     numberOfItems = len(indexTable)
     numberOfTables = len(range(0, numberOfItems, maxColumns))
     currentTableNumber = 1
@@ -64,13 +71,15 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
     for i in xrange(0, numberOfItems, maxColumns):
         numberOfItemsInThisTable = min(i + maxColumns, numberOfItems) - i
         itemKeysOfThisTable = sorted(indexTable.keys())[i:i + numberOfItemsInThisTable]
-        captionOfThisTable = caption if maxColumns > numberOfItems else caption + ' (' + str(currentTableNumber) + ' of ' + str(numberOfTables) + ')'
+        captionOfThisTable = caption if maxColumns >= numberOfItems else caption + ' (' + str(currentTableNumber) + ' of ' + str(numberOfTables) + ')'
         currentTableNumber += 1 
         
         print """
         \\begin{table}[H]
         \\centering
         %\\label{my-label}
+        \\def\\arraystretch{1.5}
+        %\\resizebox{\\textwidth}{!}{%
         \\begin{tabular}{c""" + ('c' * numberOfItemsInThisTable) + """}
         """
         
@@ -78,9 +87,16 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
             print ' & ' + parseKey(itemKey),
         
         print ' \\\\ \\cline{2-' + str(numberOfItemsInThisTable + 1) + '}'
+        i = 1
         
         for propertyIndex in xrange(numberOfProperties):
-            print '(' + str(propertyIndex + 1) + ')',
+            propertyDefinition = indexTable[indexTable.keys()[0]][propertyIndex][0]
+
+            if propertyDefinition.startswith('$'):
+                print propertyDefinition,
+            else:
+                print '(' + str(i) + ')',
+                i += 1
             
             for itemKey in itemKeysOfThisTable:
                 print ' &', indexTable[itemKey][propertyIndex][1],
@@ -90,9 +106,50 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
         
         print """
         \\end{tabular}
+        %\\end{tabular}}
         \\caption{""" + captionOfThisTable + """}
         \\end{table}
         """
+
+    if len(propertiesDefinition) > 0:
+        print """
+        \\begin{description}
+        """ + '\r\n'.join(propertiesDefinition) + """
+        \\end {description}
+        """
+
+def generateCrossTable(crossTable, resultKey, latexComment, caption):
+    numberOfColumns = len(crossTable[crossTable.keys()[0]])
+
+    print """
+    % """ + latexComment + """
+
+    \\begin{table}[H]
+    \\centering
+    %\\label{my-label}
+    \\def\\arraystretch{1.5}
+    \\resizebox{\\textwidth}{!}{%
+    \\begin{tabular}{c""" + ('c' * numberOfColumns) + """}
+    """
+
+    for columnLabel in sorted(crossTable[crossTable.keys()[0]]):
+        print ' &', parseKey(columnLabel),
+
+    print '\\\\ \\cline{2-' + str(numberOfColumns + 1) + '}'
+
+    for rowLabel in sorted(crossTable):
+        print parseKey(rowLabel),
+
+        for columnLabel in sorted(crossTable[rowLabel]):
+            print ' &', crossTable[rowLabel][columnLabel][resultKey],
+
+        print '\\\\'
+
+    print """
+    \\end{tabular}}
+    \\caption{""" + caption + """}
+    \\end{table}
+    """
 
 def getIdAfterBlacklist(itemId, blackList):
     if itemId in blackList:
@@ -146,15 +203,20 @@ if __name__ == '__main__':
     patternDataSetIndexTable = {}
     modelIndexTable = {}
     inputDataSetIndexTable = {}
-    trainingAndValidationIndexTable = {}
-    testingIndexTable = {}
+    #trainingAndValidationIndexTable = {}
+    #testingIndexTable = {}
 
     for patternDataSetId, patternDataSetResults in patternDataSetResultDictionary.iteritems():
+        mean = '$' + numberToString(getRawInterval(patternDataSetResults, 'patternsDistanceMean')[0] / float(patternDataSetResults[0]['patternDimension']), decimals=2) + '$'
+        stdev = '$' + numberToString(getRawInterval(patternDataSetResults, 'patternsDistanceStdev')[0] / float(patternDataSetResults[0]['patternDimension']), decimals=2) + '$'
+
         patternDataSetIndexTable['$P_{' + str(patternDataSetId).zfill(2) + '}$'] = [
-            ['Data set size', patternDataSetResults[0]['patternDataSetSize']],
-            ['Pattern size', patternDataSetResults[0]['patternDimension']],
-            ['Mean distance $\mu_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceMean')],
-            ['Standard deviation of distance $\sigma_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceStdev')],
+            ['$\\left|P_i\\right|$', patternDataSetResults[0]['patternDataSetSize']],
+            ['$n$', patternDataSetResults[0]['patternDimension']],
+            ['$\\frac{\\mu_{P_i}}{n}$', mean],
+            ['$\\frac{\\sigma_{P_i}}{n}$', stdev]
+            #['Mean distance $\mu_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceMean')],
+            #['Standard deviation of distance $\sigma_{P_i}$ between two random different patterns', getInterval(patternDataSetResults, 'patternsDistanceStdev')],
         ]
 
     for modelId, modelResults in modelResultDictionary.iteritems():
@@ -162,18 +224,18 @@ if __name__ == '__main__':
             modelInfo = [
                 ['Model', 'Hopfield'],
                 ['Learning rule', modelResults[0]['trainingRule'].capitalize()],
-                ['Number of hidden neurons', ''],
-                ['Learning rate', ''],
+                ['Number of hidden neurons', '\\textcolor{gray}{n/a}'],
+                #['Learning rate', '\\textcolor{gray}{n/a}'],
                 #['Weight decay', ''],
                 #['Momentum. By Hinton\'s recommendation[CITA], the training starts with a momentum of 0.5. Once the large initial progress in the reduction of the reconstruction error has settled down to gentle progress after 5 epochs, the momentum is increased to 0.9', ''],
-                ['Patterns per batch', '']
+                ['Number of patterns per training batch', '\\textcolor{gray}{n/a}']
             ]
         else:
             modelInfo = [
                 ['Model', 'RBM'],
                 ['Learning rule.', 'CD'],
                 ['Number of hidden neurons.', modelResults[0]['hiddenNeurons']],
-                ['Learning rate.', modelResults[0]['learningRate']],
+                #['Learning rate.', modelResults[0]['learningRate']],
                 #['Weight decay.', modelResults[0]['weightDecay']],
                 #['Momentum. By Hinton\'s recommendation[CITA], the training starts with a momentum of 0.5. Once the large initial progress in the reduction of the reconstruction error has settled down to gentle progress after 5 epochs, the momentum is increased to 0.9', 'no' if not modelResults[0]['momentum'] else 'yes'],
                 ['Patterns per batch', modelResults[0]['batchSize']]
@@ -186,10 +248,11 @@ if __name__ == '__main__':
             i.update({'ratioInputMinimumDistanceMean': i['inputMinimumDistanceMean'] / float(i['patternsDistanceMean'])})
         
         inputDataSetIndexTable['$I_{' + str(inputDataSetId).zfill(2) + '}$'] = [
-            ['Number of inputs per each pattern of the pattern data set', inputDataSetResults[0]['inputsPerPattern']],
-            ['Mean minimum distance between a random input $v$ and the closest pattern to $v$, expressed as a proportion of the mean distance between 2 random patterns of the pattern data set', getInterval(inputDataSetResults, 'ratioInputMinimumDistanceMean')]
+            ['Number of generated inputs per each pattern of the pattern data set, $\\frac{\\left|I_i\\right|}{\\left|P_j\\right|}$', inputDataSetResults[0]['inputsPerPattern']],
+            ['$\\frac{\\mu_{I_i}}{\\mu_{P_j}}$', getInterval(inputDataSetResults, 'ratioInputMinimumDistanceMean')]
         ]
 
+    """
     for key, trainingAndValidationResults in trainingAndValidationResultDictionary.iteritems():
         for i in trainingAndValidationResults:
             i.update({'ratioStoredPatterns': i['successfullyStoredPatterns'] / float(i['patternDataSetSize'])})
@@ -197,16 +260,16 @@ if __name__ == '__main__':
         trainingInfo = [
             #['Successfully stored patterns', getInterval(trainingAndValidationResults, 'successfullyStoredPatterns')],
             #['Unsuccessfully stored patterns', getInterval(trainingAndValidationResults, 'unsuccessfullyStoredPatterns')],
-            ['Ratio of stored patterns, proportional to the number of training patterns', getInterval(trainingAndValidationResults, 'ratioStoredPatterns')]
+            ['Number of stored patterns, proportional to $\\left|P_i\\right|$', getInterval(trainingAndValidationResults, 'ratioStoredPatterns', decimals=2)]
         ]
         
         if trainingAndValidationResults[0]['model'] == 'restricted-boltzmann':
             trainingInfo += [
-                ['Training epochs', getInterval(trainingAndValidationResults, 'trainingEpochs', 1)]                
+                ['Training epochs', getInterval(trainingAndValidationResults, 'trainingEpochs', 0)]
             ]
         else:
             trainingInfo += [
-                ['Training epochs', '']                
+                ['Training epochs', '\\textcolor{gray}{n/a}']                
             ]
         
         patternDataSetId, modelId = key.split(':')
@@ -223,9 +286,37 @@ if __name__ == '__main__':
             #['Unsuccessful recalls', getInterval(testingResults, 'unsuccessfulEquilibriums')],
             #['Spurious pattern recalls', getInterval(testingResults, 'spuriousEquilibriums')],
             ['Ratio of successful recalls, proportional to the number of test inputs', getInterval(testingResults, 'ratioSuccessfulEquilibriums')],
-            ['Mean CPU time (ms) per recall', getInterval(testingResults, 'timeMean', 1)],
+            #['Mean CPU time (ms) per recall', getInterval(testingResults, 'timeMean', 1)],
             #['Standard deviation of CPU time per recall', getInterval(testingResults, 'timeStdev')]
         ]
+    """
+
+    trainingAndValidationCrossTable = {}
+    testingCrossTables = {}
+
+    for key, trainingAndValidationResults in trainingAndValidationResultDictionary.iteritems():
+        for i in trainingAndValidationResults:
+            i.update({'ratioStoredPatterns': i['successfullyStoredPatterns'] / float(i['patternDataSetSize'])})
+
+        patternDataSetId, modelId = key.split(':')
+        row = getObject(trainingAndValidationCrossTable, '$P_{' + patternDataSetId.zfill(2) + '}$', {})
+
+        row['$M_{' + modelId.zfill(2) + '}$'] = {
+            'ratioStoredPatterns': getInterval(trainingAndValidationResults, 'ratioStoredPatterns', decimals=2),
+            'trainingEpochs': '\\textcolor{gray}{n/a}' if trainingAndValidationResults[0]['model'] == 'hopfield' else getInterval(trainingAndValidationResults, 'trainingEpochs', 0)
+        }
+
+    for key, testingResults in testingResultDictionary.iteritems():
+        for i in testingResults:
+            i.update({'ratioSuccessfulEquilibriums': i['successfulEquilibriums'] / float(i['inputDataSetSize'])})
+        
+        patternDataSetId, modelId, inputDataSetId = key.split(':')
+        testingCrossTable = getObject(testingCrossTables, '$P_{' + patternDataSetId.zfill(2) + '}$', {})
+        row = getObject(testingCrossTable, '$M_{' + modelId.zfill(2) + '}$', {})
+        
+        row['$I_{' + inputDataSetId.zfill(2) + '}$'] = {
+            'ratioSuccessfulEquilibriums': getInterval(testingResults, 'ratioSuccessfulEquilibriums', decimals=3)
+        }
     
     numberOfPatterns = len(patternDataSetResultDictionary)
     numberOfInputs = len(inputDataSetResultDictionary)
@@ -236,6 +327,9 @@ if __name__ == '__main__':
     print """
     \\documentclass[12pt]{article}
     \\usepackage{float}
+    \\usepackage{xcolor}
+    \\usepackage{graphicx}
+    \\usepackage[justification=centering]{caption}
     \\begin{document}
     """
     
@@ -285,11 +379,26 @@ if __name__ == '__main__':
             """
     
     # Generating LaTeX code of index tables.
+    print '\\section{Analyzed pattern data sets}'
     generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets', PATTERNS_TABLE_MAX_COLUMNS)
+
+    print '\\section{Analyzed models}'
     generateIndexTable(modelIndexTable, 'MODELS TABLE', 'Analyzed models', MODELS_TABLE_MAX_COLUMNS)
-    generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Tested inputs')
-    generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Obtained training results', TRAINING_TABLE_MAX_COLUMNS)
-    generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Obtained testing results', TESTING_TABLE_MAX_COLUMNS)
+
+    print '\\section{Tested input data sets}'
+    generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Randomly generated and tested input data sets')
+
+    print '\\section{Training results}'
+    #generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Results of training model $M_i$ with pattern data set $P_j$', TRAINING_TABLE_MAX_COLUMNS)
+    generateCrossTable(trainingAndValidationCrossTable, 'trainingEpochs', 'TRAINING EPOCHS TABLE', 'Number of epochs needed to train model $M_i$ with pattern data set $P_j$')
+    generateCrossTable(trainingAndValidationCrossTable, 'ratioStoredPatterns', 'TRAINING STORED PATTERNS TABLE', 'Number of stored patterns, proportional to $\\left|P_i\\right|$')
+
+    print '\\section{Testing results}'
+    #generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Results of testing input data set $I_i$ with model $M_j$, previously trained with pattern data set $P_k$', TESTING_TABLE_MAX_COLUMNS)
+
+    for patternDataSetId, testingCrossTable in sorted(testingCrossTables.iteritems()):
+        print '\\subsection{Testing results for pattern data set ' + parseKey(patternDataSetId) + '}'
+        generateCrossTable(testingCrossTable, 'ratioSuccessfulEquilibriums', 'TESTING TABLE', 'Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set ' + parseKey(patternDataSetId) + ', proportional to $\\left|I_i\\right|$')
     
     print """
     \\end{document}
