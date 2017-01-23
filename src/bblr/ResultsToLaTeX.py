@@ -10,7 +10,7 @@ TESTING_TABLE_MAX_COLUMNS = 5
 DEFAULT_MAX_DECIMALS = 3
 
 BLACKLIST_PATTERNS = sorted([])
-BLACKLIST_MODELS = sorted([7])
+BLACKLIST_MODELS = sorted([4, 6, 7])
 BLACKLIST_INPUTS = sorted([])
 
 def getRawInterval(arrayOfDictionaries, key):
@@ -118,7 +118,7 @@ def generateIndexTable(indexTable, latexComment, caption, maxColumns=100000):
         \\end {description}
         """
 
-def generateCrossTable(crossTable, resultKey, latexComment, caption):
+def generateCrossTable(crossTable, resultKey, latexComment, caption, fontSize="footnotesize"):
     numberOfColumns = len(crossTable[crossTable.keys()[0]])
 
     print """
@@ -128,7 +128,8 @@ def generateCrossTable(crossTable, resultKey, latexComment, caption):
     \\centering
     %\\label{my-label}
     \\def\\arraystretch{1.5}
-    \\resizebox{\\textwidth}{!}{%
+    %\\resizebox{\\textwidth}{!}{%
+    \\""" + fontSize + """
     \\begin{tabular}{c""" + ('c' * numberOfColumns) + """}
     """
 
@@ -146,7 +147,8 @@ def generateCrossTable(crossTable, resultKey, latexComment, caption):
         print '\\\\'
 
     print """
-    \\end{tabular}}
+    \\end{tabular}
+    %\\end{tabular}}
     \\caption{""" + caption + """}
     \\end{table}
     """
@@ -233,10 +235,10 @@ if __name__ == '__main__':
         else:
             modelInfo = [
                 ['Model', 'RBM'],
-                ['Learning rule.', 'CD'],
-                ['Number of hidden neurons.', modelResults[0]['hiddenNeurons']],
-                #['Learning rate.', modelResults[0]['learningRate']],
-                #['Weight decay.', modelResults[0]['weightDecay']],
+                ['Learning rule', 'CD'],
+                ['Number of hidden neurons', modelResults[0]['hiddenNeurons']],
+                #['Learning rate', modelResults[0]['learningRate']],
+                #['Weight decay', modelResults[0]['weightDecay']],
                 #['Momentum. By Hinton\'s recommendation[CITA], the training starts with a momentum of 0.5. Once the large initial progress in the reduction of the reconstruction error has settled down to gentle progress after 5 epochs, the momentum is increased to 0.9', 'no' if not modelResults[0]['momentum'] else 'yes'],
                 ['Patterns per batch', modelResults[0]['batchSize']]
             ]
@@ -330,7 +332,10 @@ if __name__ == '__main__':
     \\usepackage{xcolor}
     \\usepackage{graphicx}
     \\usepackage[justification=centering]{caption}
+    \usepackage[toc,page]{appendix}
     \\begin{document}
+    
+    \\begin{appendices}
     """
     
     if False:
@@ -379,28 +384,29 @@ if __name__ == '__main__':
             """
     
     # Generating LaTeX code of index tables.
-    print '\\section{Analyzed pattern data sets}'
+    print '\\section{Annalyzed Pattern Data Sets}'
     generateIndexTable(patternDataSetIndexTable, 'PATTERN DATA SETS TABLE', 'Analyzed pattern data sets', PATTERNS_TABLE_MAX_COLUMNS)
 
-    print '\\section{Analyzed models}'
+    print '\\section{Analyzed Models}'
     generateIndexTable(modelIndexTable, 'MODELS TABLE', 'Analyzed models', MODELS_TABLE_MAX_COLUMNS)
 
-    print '\\section{Tested input data sets}'
+    print '\\section{Tested Input Data Sets}'
     generateIndexTable(inputDataSetIndexTable, 'INPUT DATA SETS TABLE', 'Randomly generated and tested input data sets')
 
-    print '\\section{Training results}'
+    print '\\section{Training and Validation Results}'
     #generateIndexTable(trainingAndValidationIndexTable, 'TRAININGS AND VALIDATIONS TABLE', 'Results of training model $M_i$ with pattern data set $P_j$', TRAINING_TABLE_MAX_COLUMNS)
-    generateCrossTable(trainingAndValidationCrossTable, 'trainingEpochs', 'TRAINING EPOCHS TABLE', 'Number of epochs needed to train model $M_i$ with pattern data set $P_j$')
+    generateCrossTable(trainingAndValidationCrossTable, 'trainingEpochs', 'TRAINING EPOCHS TABLE', 'Number of epochs needed to train model $M_i$ with pattern data set $P_j$', "scriptsize")
     generateCrossTable(trainingAndValidationCrossTable, 'ratioStoredPatterns', 'TRAINING STORED PATTERNS TABLE', 'Number of stored patterns, proportional to $\\left|P_i\\right|$')
 
-    print '\\section{Testing results}'
+    print '\\section{Testing Results}'
     #generateIndexTable(testingIndexTable, 'TESTING TABLE', 'Results of testing input data set $I_i$ with model $M_j$, previously trained with pattern data set $P_k$', TESTING_TABLE_MAX_COLUMNS)
 
     for patternDataSetId, testingCrossTable in sorted(testingCrossTables.iteritems()):
-        print '\\subsection{Testing results for pattern data set ' + parseKey(patternDataSetId) + '}'
+        print '\\subsection{Testing Results for Pattern Data Set ' + parseKey(patternDataSetId) + '}'
         generateCrossTable(testingCrossTable, 'ratioSuccessfulEquilibriums', 'TESTING TABLE', 'Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set ' + parseKey(patternDataSetId) + ', proportional to $\\left|I_i\\right|$')
     
     print """
+    \\end{appendices}
     \\end{document}
     """
     

@@ -1,0 +1,884 @@
+
+    \documentclass[12pt]{article}
+    \usepackage{float}
+    \usepackage{xcolor}
+    \usepackage{graphicx}
+    \usepackage[justification=centering]{caption}
+    \usepackage[toc,page]{appendix}
+    \begin{document}
+    
+    \begin{appendices}
+    
+\section{Annalyzed Pattern Data Sets}
+
+    % PATTERN DATA SETS TABLE
+    
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{cccccccc}
+        
+ & $P_{1}$  & $P_{2}$  & $P_{3}$  & $P_{4}$  & $P_{5}$  & $P_{6}$  & $P_{7}$  \\ \cline{2-8}
+$\left|P_i\right|$  & 5  & 10  & 15  & 20  & 25  & 30  & 35 \\
+$n$  & 100  & 100  & 100  & 100  & 100  & 100  & 100 \\
+$\frac{\mu_{P_i}}{n}$  & $0.20$  & $0.20$  & $0.20$  & $0.20$  & $0.20$  & $0.20$  & $0.20$ \\
+$\frac{\sigma_{P_i}}{n}$  & $0.02$  & $0.02$  & $0.02$  & $0.02$  & $0.02$  & $0.02$  & $0.02$ 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Analyzed pattern data sets (1 of 4)}
+        \end{table}
+        
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{cccccccc}
+        
+ & $P_{8}$  & $P_{9}$  & $P_{10}$  & $P_{11}$  & $P_{12}$  & $P_{13}$  & $P_{14}$  \\ \cline{2-8}
+$\left|P_i\right|$  & 5  & 10  & 15  & 20  & 25  & 30  & 35 \\
+$n$  & 100  & 100  & 100  & 100  & 100  & 100  & 100 \\
+$\frac{\mu_{P_i}}{n}$  & $0.30$  & $0.30$  & $0.30$  & $0.30$  & $0.30$  & $0.30$  & $0.30$ \\
+$\frac{\sigma_{P_i}}{n}$  & $0.03$  & $0.03$  & $0.03$  & $0.03$  & $0.03$  & $0.03$  & $0.03$ 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Analyzed pattern data sets (2 of 4)}
+        \end{table}
+        
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{cccccccc}
+        
+ & $P_{15}$  & $P_{16}$  & $P_{17}$  & $P_{18}$  & $P_{19}$  & $P_{20}$  & $P_{21}$  \\ \cline{2-8}
+$\left|P_i\right|$  & 5  & 10  & 15  & 20  & 25  & 30  & 35 \\
+$n$  & 100  & 100  & 100  & 100  & 100  & 100  & 100 \\
+$\frac{\mu_{P_i}}{n}$  & $0.40$  & $0.40$  & $0.40$  & $0.40$  & $0.40$  & $0.40$  & $0.40$ \\
+$\frac{\sigma_{P_i}}{n}$  & $0.04$  & $0.04$  & $0.04$  & $0.04$  & $0.04$  & $0.04$  & $0.04$ 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Analyzed pattern data sets (3 of 4)}
+        \end{table}
+        
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{cccccccc}
+        
+ & $P_{22}$  & $P_{23}$  & $P_{24}$  & $P_{25}$  & $P_{26}$  & $P_{27}$  & $P_{28}$  \\ \cline{2-8}
+$\left|P_i\right|$  & 5  & 10  & 15  & 20  & 25  & 30  & 35 \\
+$n$  & 100  & 100  & 100  & 100  & 100  & 100  & 100 \\
+$\frac{\mu_{P_i}}{n}$  & $0.50$  & $0.50$  & $0.50$  & $0.50$  & $0.50$  & $0.50$  & $0.50$ \\
+$\frac{\sigma_{P_i}}{n}$  & $0.05$  & $0.05$  & $0.05$  & $0.05$  & $0.05$  & $0.05$  & $0.05$ 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Analyzed pattern data sets (4 of 4)}
+        \end{table}
+        
+\section{Analyzed Models}
+
+    % MODELS TABLE
+    
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{ccccc}
+        
+ & $M_{1}$  & $M_{2}$  & $M_{3}$  & $M_{4}$  \\ \cline{2-5}
+(1)  & Hopfield  & Hopfield  & RBM  & RBM \\
+(2)  & Hebbian  & Storkey  & CD  & CD \\
+(3)  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & 50  & 100 \\
+(4)  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & 1  & 1 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Analyzed models}
+        \end{table}
+        
+
+        \begin{description}
+        \item [(1)] Model
+\item [(2)] Learning rule.
+\item [(3)] Number of hidden neurons.
+\item [(4)] Patterns per batch
+        \end {description}
+        
+\section{Tested Input Data Sets}
+
+    % INPUT DATA SETS TABLE
+    
+
+        \begin{table}[H]
+        \centering
+        %\label{my-label}
+        \def\arraystretch{1.5}
+        %\resizebox{\textwidth}{!}{%
+        \begin{tabular}{cccccc}
+        
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$  \\ \cline{2-6}
+(1)  & 10  & 10  & 10  & 10  & 10 \\
+$\frac{\mu_{I_i}}{\mu_{P_j}}$  & $0.1\pm0.0$  & $0.2\pm0.0$  & $0.3\pm0.0$  & $0.4\pm0.0$  & $0.5\pm0.0$ 
+        \end{tabular}
+        %\end{tabular}}
+        \caption{Randomly generated and tested input data sets}
+        \end{table}
+        
+
+        \begin{description}
+        \item [(1)] Number of generated inputs per each pattern of the pattern data set, $\frac{\left|I_i\right|}{\left|P_j\right|}$
+        \end {description}
+        
+\section{Training and Validation Results}
+
+    % TRAINING EPOCHS TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \scriptsize
+    \begin{tabular}{ccccc}
+    
+ & $M_{1}$  & $M_{2}$  & $M_{3}$  & $M_{4}$ \\ \cline{2-5}
+$P_{1}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $18124\pm7069$  & $14541\pm2420$ \\
+$P_{2}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $29057\pm8731$  & $11242\pm2781$ \\
+$P_{3}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $33583\pm11031$  & $12570\pm3410$ \\
+$P_{4}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $28940\pm16282$  & $12377\pm5766$ \\
+$P_{5}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $35530\pm14682$  & $9834\pm2972$ \\
+$P_{6}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $25162\pm9013$  & $12035\pm2854$ \\
+$P_{7}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $22319\pm8792$  & $12006\pm3489$ \\
+$P_{8}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $31690\pm8718$  & $21964\pm4678$ \\
+$P_{9}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $35074\pm8181$  & $18915\pm3348$ \\
+$P_{10}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $42173\pm21376$  & $23287\pm9620$ \\
+$P_{11}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $42339\pm25028$  & $26494\pm15153$ \\
+$P_{12}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $64959\pm39081$  & $36511\pm14325$ \\
+$P_{13}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $38354\pm22668$  & $24570\pm11618$ \\
+$P_{14}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $36352\pm23636$  & $30642\pm14164$ \\
+$P_{15}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $44274\pm14970$  & $44308\pm13092$ \\
+$P_{16}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $60494\pm12280$  & $37955\pm7551$ \\
+$P_{17}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $86497\pm46676$  & $50112\pm22391$ \\
+$P_{18}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $64698\pm33553$  & $37774\pm12024$ \\
+$P_{19}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $95758\pm71621$  & $60481\pm30881$ \\
+$P_{20}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $76866\pm60918$  & $98700\pm16541$ \\
+$P_{21}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $58147\pm41255$  & $74267\pm29266$ \\
+$P_{22}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $74411\pm38141$  & $59317\pm11266$ \\
+$P_{23}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $69858\pm33073$  & $66048\pm10678$ \\
+$P_{24}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $132268\pm57657$  & $82277\pm23651$ \\
+$P_{25}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $217777\pm271439$  & $93176\pm38089$ \\
+$P_{26}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $53481\pm55669$  & $114696\pm31592$ \\
+$P_{27}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $43289\pm35583$  & $131611\pm65733$ \\
+$P_{28}$  & \textcolor{gray}{n/a}  & \textcolor{gray}{n/a}  & $56949\pm69490$  & $151782\pm41599$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of epochs needed to train model $M_i$ with pattern data set $P_j$}
+    \end{table}
+    
+
+    % TRAINING STORED PATTERNS TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{ccccc}
+    
+ & $M_{1}$  & $M_{2}$  & $M_{3}$  & $M_{4}$ \\ \cline{2-5}
+$P_{1}$  & $0.00\pm0.00$  & $0.42\pm0.12$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{2}$  & $0.00\pm0.00$  & $0.17\pm0.04$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{3}$  & $0.00\pm0.00$  & $0.07\pm0.02$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{4}$  & $0.00\pm0.00$  & $0.05\pm0.00$  & $0.87\pm0.33$  & $1.00\pm0.00$ \\
+$P_{5}$  & $0.00\pm0.00$  & $0.04\pm0.00$  & $0.95\pm0.09$  & $1.00\pm0.01$ \\
+$P_{6}$  & $0.00\pm0.00$  & $0.04\pm0.01$  & $0.99\pm0.01$  & $0.99\pm0.01$ \\
+$P_{7}$  & $0.00\pm0.00$  & $0.03\pm0.01$  & $0.80\pm0.33$  & $1.00\pm0.01$ \\
+$P_{8}$  & $0.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{9}$  & $0.00\pm0.00$  & $0.47\pm0.10$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{10}$  & $0.00\pm0.00$  & $0.30\pm0.06$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{11}$  & $0.00\pm0.00$  & $0.17\pm0.04$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{12}$  & $0.00\pm0.00$  & $0.10\pm0.03$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{13}$  & $0.00\pm0.00$  & $0.10\pm0.02$  & $0.98\pm0.04$  & $1.00\pm0.00$ \\
+$P_{14}$  & $0.00\pm0.00$  & $0.05\pm0.02$  & $1.00\pm0.01$  & $1.00\pm0.00$ \\
+$P_{15}$  & $0.82\pm0.16$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{16}$  & $0.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{17}$  & $0.00\pm0.00$  & $0.93\pm0.03$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{18}$  & $0.00\pm0.00$  & $0.81\pm0.09$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{19}$  & $0.00\pm0.00$  & $0.61\pm0.06$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{20}$  & $0.00\pm0.00$  & $0.44\pm0.07$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{21}$  & $0.00\pm0.00$  & $0.25\pm0.04$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{22}$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{23}$  & $0.99\pm0.03$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{24}$  & $0.72\pm0.12$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{25}$  & $0.42\pm0.09$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{26}$  & $0.08\pm0.03$  & $1.00\pm0.00$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{27}$  & $0.03\pm0.03$  & $0.99\pm0.02$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+$P_{28}$  & $0.01\pm0.02$  & $0.96\pm0.03$  & $1.00\pm0.00$  & $1.00\pm0.00$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of stored patterns, proportional to $\left|P_i\right|$}
+    \end{table}
+    
+\section{Testing Results}
+\subsection{Testing Results for Pattern Data Set $P_{1}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.370\pm0.066$  & $0.375\pm0.071$  & $0.305\pm0.046$  & $0.273\pm0.042$  & $0.258\pm0.045$ \\
+$M_{3}$  & $1.000\pm0.000$  & $0.998\pm0.007$  & $0.995\pm0.009$  & $0.948\pm0.041$  & $0.855\pm0.060$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.998\pm0.007$  & $0.972\pm0.026$  & $0.840\pm0.036$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{1}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{2}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.164\pm0.040$  & $0.149\pm0.042$  & $0.140\pm0.035$  & $0.128\pm0.025$  & $0.115\pm0.022$ \\
+$M_{3}$  & $0.991\pm0.014$  & $0.938\pm0.055$  & $0.752\pm0.101$  & $0.490\pm0.104$  & $0.254\pm0.064$ \\
+$M_{4}$  & $0.998\pm0.007$  & $0.966\pm0.017$  & $0.801\pm0.065$  & $0.528\pm0.049$  & $0.230\pm0.040$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{2}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{3}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.068\pm0.004$  & $0.068\pm0.002$  & $0.067\pm0.000$  & $0.067\pm0.000$  & $0.067\pm0.003$ \\
+$M_{3}$  & $0.930\pm0.053$  & $0.700\pm0.091$  & $0.383\pm0.085$  & $0.162\pm0.036$  & $0.063\pm0.022$ \\
+$M_{4}$  & $0.981\pm0.008$  & $0.833\pm0.067$  & $0.494\pm0.061$  & $0.195\pm0.049$  & $0.054\pm0.018$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{3}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{4}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.050\pm0.000$  & $0.050\pm0.000$  & $0.050\pm0.000$  & $0.050\pm0.000$  & $0.050\pm0.000$ \\
+$M_{3}$  & $0.746\pm0.288$  & $0.443\pm0.185$  & $0.179\pm0.077$  & $0.053\pm0.024$  & $0.007\pm0.006$ \\
+$M_{4}$  & $0.907\pm0.044$  & $0.586\pm0.065$  & $0.219\pm0.047$  & $0.048\pm0.020$  & $0.008\pm0.004$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{4}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{5}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.040\pm0.000$  & $0.040\pm0.000$  & $0.040\pm0.000$  & $0.040\pm0.001$  & $0.040\pm0.001$ \\
+$M_{3}$  & $0.662\pm0.103$  & $0.283\pm0.059$  & $0.075\pm0.017$  & $0.018\pm0.008$  & $0.003\pm0.003$ \\
+$M_{4}$  & $0.829\pm0.049$  & $0.378\pm0.074$  & $0.087\pm0.024$  & $0.011\pm0.011$  & $0.002\pm0.002$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{5}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{6}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.033\pm0.000$  & $0.033\pm0.002$  & $0.033\pm0.000$  & $0.032\pm0.002$  & $0.032\pm0.003$ \\
+$M_{3}$  & $0.609\pm0.064$  & $0.175\pm0.042$  & $0.042\pm0.013$  & $0.006\pm0.005$  & $0.001\pm0.002$ \\
+$M_{4}$  & $0.746\pm0.086$  & $0.248\pm0.056$  & $0.035\pm0.011$  & $0.004\pm0.003$  & $0.000\pm0.000$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{6}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{7}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.032\pm0.009$  & $0.031\pm0.006$  & $0.029\pm0.001$  & $0.029\pm0.000$  & $0.026\pm0.003$ \\
+$M_{3}$  & $0.388\pm0.162$  & $0.112\pm0.049$  & $0.020\pm0.011$  & $0.003\pm0.004$  & $0.000\pm0.000$ \\
+$M_{4}$  & $0.672\pm0.097$  & $0.185\pm0.041$  & $0.018\pm0.007$  & $0.000\pm0.001$  & $0.000\pm0.000$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{7}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{8}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.998\pm0.007$  & $0.968\pm0.042$  & $0.890\pm0.087$  & $0.843\pm0.087$  & $0.735\pm0.086$ \\
+$M_{3}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.985\pm0.017$  & $0.902\pm0.064$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.995\pm0.009$  & $0.950\pm0.035$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{8}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{9}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.440\pm0.077$  & $0.395\pm0.072$  & $0.345\pm0.034$  & $0.295\pm0.036$  & $0.273\pm0.038$ \\
+$M_{3}$  & $1.000\pm0.000$  & $0.996\pm0.005$  & $0.921\pm0.033$  & $0.736\pm0.074$  & $0.471\pm0.073$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.966\pm0.015$  & $0.820\pm0.039$  & $0.474\pm0.037$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{9}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{10}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.264\pm0.041$  & $0.213\pm0.043$  & $0.172\pm0.027$  & $0.132\pm0.026$  & $0.109\pm0.017$ \\
+$M_{3}$  & $0.994\pm0.006$  & $0.928\pm0.027$  & $0.709\pm0.059$  & $0.377\pm0.079$  & $0.133\pm0.042$ \\
+$M_{4}$  & $0.999\pm0.002$  & $0.978\pm0.014$  & $0.822\pm0.038$  & $0.470\pm0.076$  & $0.152\pm0.033$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{10}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{11}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.153\pm0.030$  & $0.127\pm0.028$  & $0.108\pm0.026$  & $0.089\pm0.025$  & $0.078\pm0.023$ \\
+$M_{3}$  & $0.981\pm0.013$  & $0.814\pm0.049$  & $0.473\pm0.045$  & $0.166\pm0.024$  & $0.037\pm0.009$ \\
+$M_{4}$  & $0.992\pm0.018$  & $0.918\pm0.049$  & $0.587\pm0.084$  & $0.210\pm0.043$  & $0.031\pm0.012$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{11}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{12}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.083\pm0.026$  & $0.074\pm0.023$  & $0.060\pm0.017$  & $0.049\pm0.009$  & $0.042\pm0.010$ \\
+$M_{3}$  & $0.948\pm0.029$  & $0.611\pm0.071$  & $0.232\pm0.027$  & $0.054\pm0.017$  & $0.007\pm0.004$ \\
+$M_{4}$  & $0.988\pm0.008$  & $0.820\pm0.046$  & $0.365\pm0.041$  & $0.079\pm0.017$  & $0.006\pm0.002$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{12}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{13}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.082\pm0.013$  & $0.074\pm0.008$  & $0.051\pm0.009$  & $0.041\pm0.007$  & $0.028\pm0.009$ \\
+$M_{3}$  & $0.823\pm0.063$  & $0.436\pm0.080$  & $0.096\pm0.024$  & $0.015\pm0.010$  & $0.003\pm0.003$ \\
+$M_{4}$  & $0.969\pm0.015$  & $0.650\pm0.064$  & $0.185\pm0.028$  & $0.023\pm0.010$  & $0.001\pm0.001$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{13}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{14}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.048\pm0.012$  & $0.042\pm0.011$  & $0.036\pm0.009$  & $0.028\pm0.004$  & $0.023\pm0.004$ \\
+$M_{3}$  & $0.754\pm0.053$  & $0.285\pm0.052$  & $0.051\pm0.013$  & $0.006\pm0.005$  & $0.000\pm0.001$ \\
+$M_{4}$  & $0.934\pm0.032$  & $0.479\pm0.078$  & $0.098\pm0.019$  & $0.005\pm0.003$  & $0.000\pm0.001$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{14}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{15}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.723\pm0.103$  & $0.583\pm0.053$  & $0.425\pm0.060$  & $0.272\pm0.055$  & $0.170\pm0.070$ \\
+$M_{2}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.998\pm0.007$  & $0.990\pm0.014$ \\
+$M_{3}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.998\pm0.007$  & $0.970\pm0.032$  & $0.912\pm0.077$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.995\pm0.009$  & $0.960\pm0.032$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{15}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{16}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.988\pm0.029$  & $0.981\pm0.033$  & $0.970\pm0.033$  & $0.925\pm0.046$  & $0.847\pm0.033$ \\
+$M_{3}$  & $1.000\pm0.000$  & $0.994\pm0.013$  & $0.954\pm0.033$  & $0.810\pm0.108$  & $0.529\pm0.110$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.993\pm0.008$  & $0.883\pm0.061$  & $0.631\pm0.105$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{16}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{17}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.912\pm0.033$  & $0.880\pm0.040$  & $0.802\pm0.047$  & $0.696\pm0.058$  & $0.537\pm0.054$ \\
+$M_{3}$  & $0.997\pm0.003$  & $0.955\pm0.024$  & $0.785\pm0.084$  & $0.466\pm0.085$  & $0.214\pm0.045$ \\
+$M_{4}$  & $1.000\pm0.000$  & $0.998\pm0.005$  & $0.943\pm0.021$  & $0.645\pm0.048$  & $0.287\pm0.028$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{17}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{18}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.748\pm0.074$  & $0.689\pm0.068$  & $0.571\pm0.057$  & $0.445\pm0.037$  & $0.292\pm0.034$ \\
+$M_{3}$  & $0.989\pm0.009$  & $0.868\pm0.067$  & $0.577\pm0.070$  & $0.251\pm0.046$  & $0.067\pm0.025$ \\
+$M_{4}$  & $0.999\pm0.002$  & $0.976\pm0.011$  & $0.790\pm0.046$  & $0.372\pm0.038$  & $0.090\pm0.020$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{18}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{19}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.518\pm0.049$  & $0.420\pm0.044$  & $0.325\pm0.030$  & $0.205\pm0.039$  & $0.112\pm0.022$ \\
+$M_{3}$  & $0.969\pm0.014$  & $0.728\pm0.036$  & $0.344\pm0.054$  & $0.099\pm0.030$  & $0.014\pm0.010$ \\
+$M_{4}$  & $0.998\pm0.003$  & $0.933\pm0.026$  & $0.607\pm0.046$  & $0.201\pm0.030$  & $0.023\pm0.013$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{19}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{20}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.326\pm0.045$  & $0.253\pm0.027$  & $0.173\pm0.029$  & $0.104\pm0.025$  & $0.048\pm0.013$ \\
+$M_{3}$  & $0.929\pm0.028$  & $0.559\pm0.063$  & $0.188\pm0.033$  & $0.041\pm0.009$  & $0.005\pm0.004$ \\
+$M_{4}$  & $0.996\pm0.006$  & $0.877\pm0.028$  & $0.420\pm0.027$  & $0.079\pm0.016$  & $0.005\pm0.003$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{20}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{21}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.204\pm0.039$  & $0.156\pm0.028$  & $0.095\pm0.020$  & $0.055\pm0.015$  & $0.023\pm0.010$ \\
+$M_{3}$  & $0.876\pm0.037$  & $0.437\pm0.060$  & $0.101\pm0.029$  & $0.011\pm0.007$  & $0.001\pm0.002$ \\
+$M_{4}$  & $0.987\pm0.008$  & $0.742\pm0.038$  & $0.258\pm0.034$  & $0.029\pm0.008$  & $0.002\pm0.002$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{21}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{22}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.988\pm0.010$ \\
+$M_{2}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.995\pm0.009$ \\
+$M_{3}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.998\pm0.007$  & $0.950\pm0.020$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.970\pm0.026$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{22}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{23}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.968\pm0.045$  & $0.953\pm0.065$  & $0.926\pm0.088$  & $0.884\pm0.089$  & $0.802\pm0.129$ \\
+$M_{2}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.994\pm0.007$ \\
+$M_{3}$  & $1.000\pm0.000$  & $0.998\pm0.004$  & $0.981\pm0.013$  & $0.881\pm0.061$  & $0.635\pm0.056$ \\
+$M_{4}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.996\pm0.005$  & $0.924\pm0.044$  & $0.726\pm0.067$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{23}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{24}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.648\pm0.102$  & $0.603\pm0.122$  & $0.537\pm0.110$  & $0.439\pm0.117$  & $0.307\pm0.087$ \\
+$M_{2}$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $1.000\pm0.000$  & $0.991\pm0.007$  & $0.924\pm0.018$ \\
+$M_{3}$  & $1.000\pm0.000$  & $0.947\pm0.027$  & $0.791\pm0.062$  & $0.481\pm0.095$  & $0.220\pm0.049$ \\
+$M_{4}$  & $1.000\pm0.000$  & $0.997\pm0.005$  & $0.939\pm0.031$  & $0.708\pm0.058$  & $0.338\pm0.053$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{24}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{25}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.339\pm0.083$  & $0.268\pm0.070$  & $0.192\pm0.058$  & $0.134\pm0.035$  & $0.064\pm0.024$ \\
+$M_{2}$  & $1.000\pm0.000$  & $0.999\pm0.002$  & $0.994\pm0.008$  & $0.926\pm0.013$  & $0.761\pm0.036$ \\
+$M_{3}$  & $0.995\pm0.004$  & $0.902\pm0.053$  & $0.639\pm0.097$  & $0.297\pm0.055$  & $0.089\pm0.030$ \\
+$M_{4}$  & $0.999\pm0.002$  & $0.984\pm0.012$  & $0.839\pm0.057$  & $0.480\pm0.072$  & $0.161\pm0.027$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{25}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{26}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.042\pm0.025$  & $0.025\pm0.018$  & $0.009\pm0.008$  & $0.008\pm0.006$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.998\pm0.003$  & $0.988\pm0.011$  & $0.933\pm0.011$  & $0.748\pm0.031$  & $0.488\pm0.026$ \\
+$M_{3}$  & $0.972\pm0.025$  & $0.759\pm0.070$  & $0.389\pm0.079$  & $0.123\pm0.049$  & $0.024\pm0.010$ \\
+$M_{4}$  & $0.998\pm0.004$  & $0.952\pm0.026$  & $0.675\pm0.093$  & $0.285\pm0.063$  & $0.055\pm0.022$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{26}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{27}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.011\pm0.013$  & $0.007\pm0.010$  & $0.003\pm0.004$  & $0.001\pm0.002$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.970\pm0.020$  & $0.912\pm0.023$  & $0.772\pm0.027$  & $0.519\pm0.038$  & $0.275\pm0.040$ \\
+$M_{3}$  & $0.925\pm0.022$  & $0.611\pm0.071$  & $0.223\pm0.049$  & $0.053\pm0.015$  & $0.006\pm0.004$ \\
+$M_{4}$  & $0.999\pm0.002$  & $0.890\pm0.034$  & $0.477\pm0.056$  & $0.127\pm0.020$  & $0.014\pm0.006$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{27}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+\subsection{Testing Results for Pattern Data Set $P_{28}$}
+
+    % TESTING TABLE
+
+    \begin{table}[H]
+    \centering
+    %\label{my-label}
+    \def\arraystretch{1.5}
+    %\resizebox{\textwidth}{!}{%
+    \footnotesize
+    \begin{tabular}{cccccc}
+    
+ & $I_{1}$  & $I_{2}$  & $I_{3}$  & $I_{4}$  & $I_{5}$ \\ \cline{2-6}
+$M_{1}$  & $0.005\pm0.007$  & $0.001\pm0.001$  & $0.001\pm0.002$  & $0.000\pm0.000$  & $0.000\pm0.000$ \\
+$M_{2}$  & $0.914\pm0.031$  & $0.798\pm0.016$  & $0.572\pm0.014$  & $0.310\pm0.032$  & $0.124\pm0.022$ \\
+$M_{3}$  & $0.874\pm0.048$  & $0.475\pm0.060$  & $0.152\pm0.023$  & $0.020\pm0.006$  & $0.003\pm0.003$ \\
+$M_{4}$  & $0.991\pm0.006$  & $0.789\pm0.052$  & $0.336\pm0.055$  & $0.050\pm0.012$  & $0.005\pm0.003$ \\
+
+    \end{tabular}
+    %\end{tabular}}
+    \caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{28}$, proportional to $\left|I_i\right|$}
+    \end{table}
+    
+
+    \end{appendices}
+    \end{document}
+    
