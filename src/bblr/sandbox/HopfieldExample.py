@@ -1,5 +1,5 @@
 import numpy as np
-from bblr.models import Hopfield
+from bblr.models import HopfieldPrototype
 
 
 partialA1 = """
@@ -35,7 +35,7 @@ XX.XX
 
 
 def exampleWithLetters():
-    from bblr.generators import Letters as gen
+    from bblr.patterns import Letters as gen
     
     slg = gen.SimpleLetterGenerator()
     a = slg.toPattern(gen.A)
@@ -49,7 +49,7 @@ def exampleWithLetters():
     
     test = a
     
-    hop = Hopfield.Hopfield(verbose=True)
+    hop = HopfieldPrototype.Hopfield(verbose=True)
     patterns = np.atleast_2d((i, u, z, a))
     '''Using Storkey rule'''
     hop.train(patterns, learningRule='storkey')
@@ -65,7 +65,7 @@ def exampleWithLetters():
 
 
 def exampleWithVectors(vector_size=25):
-    from bblr.generators import BinaryVectors as gen
+    from bblr.patterns import BinaryVectors as gen
     
     svg = gen.SimpleVectorGenerator()
     patterns = np.vstack((svg.genAlternatingVector(vector_size), \
@@ -73,7 +73,7 @@ def exampleWithVectors(vector_size=25):
     test = svg.genRandomBinaryVector(vector_size)
     test1 = svg.genRepeatedVector(1, vector_size)
     
-    hop = Hopfield.Hopfield(verbose=True)
+    hop = HopfieldPrototype.Hopfield(verbose=True)
     hop.train(patterns, learningRule='storkey')
     recovered = hop.recall(test, maxSteps=11)
     print 'Training patterns:', patterns

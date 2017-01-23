@@ -1,5 +1,5 @@
 import numpy as np
-from bblr.models import Boltzmann
+from bblr.models import BoltzmannPrototype
 
 
 partialA = """
@@ -16,7 +16,7 @@ def exampleWithLetters():
     slg = gen.SimpleLetterGenerator(pos=1, neg=0)
     a = slg.toPattern(gen.A)
     z = slg.toPattern(gen.Z)
-    rbm = Boltzmann.RBM(25, 5, verbose=False)
+    rbm = BoltzmannPrototype.RBM(25, 5, verbose=False)
 
     patterns = np.atleast_2d((a,z))
     rbm.train(patterns, thr=0.000001, learning_rate=0.01, decay=0.0001, momentum=True)
@@ -35,7 +35,7 @@ def exampleWithVectors(vector_size=5):
     print 'Training patterns:', patterns
     print 'Test patterns:', test
     
-    rbm = Boltzmann.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
+    rbm = BoltzmannPrototype.RBM(n_visible=vector_size, n_hidden=5, verbose=False)
     rbm.train(patterns, thr=0.00001, learning_rate=0.01, batch_size=2)
     recovered = rbm.recall(test)
     print 'Recovered:', np.around(recovered)
