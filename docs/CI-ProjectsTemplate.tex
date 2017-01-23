@@ -3,11 +3,11 @@
 % The following packages will be automatically loaded:
 % amsmath, amssymb, natbib, graphicx, url, algorithm2e
 \usepackage{float}
-\usepackage{amsthm}
+%\usepackage{amsthm}
 
-\newtheorem*{assumption}{Assumption}
+\newtheorem{assumption}{Assumption}
 
-\title[My CI Project]{A Practical Comparison Between Hopfield Networks and Restricted Boltzmann Machines as Content-Addressable Autoassociative Memories}
+\title[A Practical Comparison Between Hopfield Networks and Restricted Boltzmann Machines]{A Practical Comparison Between Hopfield Networks and Restricted Boltzmann Machines as Content-Addressable Autoassociative Memories}
 
  % Use \Name{Author Name} to specify the name.
  % If the surname contains spaces, enclose the surname
@@ -31,16 +31,16 @@
  % Authors with different addresses:
  \author{
  \Name{Javier Beltr{\'a}n} \Email{javierbeltranj@gmail.com}\\
- \addr Academic address (optional)
+ %\addr Academic address (optional)
  \AND
- \Name{Guillermo Bern{\'e}rdez} \Email{gbg1441@gmail.com}\\
- \addr Academic address (optional)
+ \Name{Guillermo Bern{\'n}rdez} \Email{gbg1441@gmail.com}\\
+ %\addr Academic address (optional)
  \AND
- \Name{Juan Lao} \Email{nitzing@gmail.com}\\
- \addr Academic address (optional)
+ \Name{Juan Lao-Tebar} \Email{nitzing@gmail.com}\\
+ %\addr Academic address (optional)
  \AND
  \Name{Jorge Rodr{\'i}guez} \Email{j.rodriguez.molinuevo@gmail.com}\\
- \addr Academic address (optional)
+ %\addr Academic address (optional)
  }
 
 \begin{document}
@@ -167,16 +167,43 @@ Finally, we also notice that RBM properly configured seem to have a very large c
 
 \subsection{Testing results}
 
+Appendix \ref{AppE} presents the testing results we obtained for the analyzed models. These results can be summarized as follows. 
+
+To begin with, as we have described in the previous subsection, Hopfield Networks trained with the Hebbian rule show very bad performances in terms of memorizing patterns when they are compared to those trained with the Storkey rule, mainly because of its lower capacity. The difficulties of the learning process are obviously inherited in these testing results, where we test the ability of the models to recall the original patterns: they provide the worst performance by far.
+
+We have observed a general trend shared by all models with respect to the input properties: the ability to recall the original patterns decreases as the inputs differ more from them. This behaviour was expected.
+
+In our specific case, both RBM configurations considered ($M_3$ and $M_4$) only differ from the number of hidden neurons. We note that they obtain similar results in the majority of cases, though the model with the higher number of hidden neurons provides a slightly better overall performance.
+
+We also observe that the ability of RBM to recall the training patterns given similar input vectors now depends on both the number of stored patterns ---more patterns imply lower ability--- and the correlation between the training patterns ---the more decorrelated the patterns are, the higher ability to recall them---. The latter dependency seems stronger.
+
+However, as happened in training, with the most correlated pattern data sets RBM still performs better than Hopfield Networks. Since Hopfield can store a lower number of patterns than RBM, this behaviour was expected. Nevertheless, as the correlation between patterns decreases, results suggest that Hopfield Networks using the Storkey rule outperform RBM when restoring patterns that highly differ from the original ones. 
+
+It seems then that Hopfield Networks generate deeper attractors than RBM. It can be observed that, given a pattern data set, the ability of Hopfield Networks to recall patterns remains approximately constant when augmenting the variability of the input patterns with respect to the original stored patterns. Yet, in RBM there is a clear loss of restoration power as the variability of the inputs increases. Hence, if the patterns of the pattern data set are sufficiently decorrelated and it is expected to receive highly variable inputs, Hopfield Networks appear to be more robust for recalling, as long as the number of patterns to be stored does not overtake the capacity of the network.
+
 
 \section{Conclusions and future work}
 
-The conclusions are not a mere repetition of the abstract. Basically, you should describe ``what you know now that you did \emph{not} before doing the work''. In addition, mention what would be natural follow-up lines of work.
+In this project we do a practical analysis on the performance of two models used as autoassociative memories for several kinds of addressable binary content: Hopfield Networks and Restricted Boltzmann Machines. For this purpose we generate random pattern data sets ---with different properties---, we train the models and then perform several tests in order to extract some conclusions from the results.
+
+As we observed in the training and validation process, in all the cases, Hopfield Networks trained with the Storkey learning rule are able to store a higher number of patterns than those trained with the Hebbian rule. Additionally, as the distance between patterns increases (i.e. the correlation decreases), Hopfield Networks are able to store a larger amount of patterns. We also observed that RBM is able to store a large amount of patterns (in comparison with Hopfield Networks), independently of the correlation between them.
+
+On the testing process, we observed that Hopfield Networks are able to recall almost all remembered patterns, independently on the distance between the given input and the pattern. On the other hand, RBM recall performance is inversely proportional to the distance between the input and the pattern, not being able to recall it in several cases. However, a larger number of hidden neurons provides a slightly better overall performance. RBM recall performance also depends on the number of stored patterns, as more stored patterns imply a slight reduction of successful recalls.
+
+More testing cases are still pending (e.g. several combinations of pattern properties), but due to the limited resources of our team, we could not perform a larger experiment. We assume that our conclusions are valid for any pattern dimension, but more research is needed so as to validate it.
+
+It is also possible to tune several parameters of RBM to offer better results. The optimal tuning of RBM is far from the scope of this paper, but in the future it could be done automatically using an optimization algorithm, such as simplex or genetic algorithms. In the past years some techniques for improving Hopfield Networks appeared, [\cite{Paik1992}] and it would be interesting to test them too.
+
+Additionally, although Hinton’s guide for training RBM [\cite{Hinton2012}] recommends the usage of a weight decay, we were unable to train any model using it, so we have not included it in this paper. It is possible that this part of our RBM implementation is not correct, causing this problem.
+
+Taking everything into account, it would be interesting to reinforce the conclusions of this paper in a real scenario, such as classifying the MNIST database of handwritten digits. [\cite{lecun1998mnist}]
+
 
 %\section*{References}
 
 \bibliography{bibfile}
 
-
+\pagebreak
 
 \appendix
 
