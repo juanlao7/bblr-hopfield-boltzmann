@@ -982,5 +982,26 @@ The conclusions are not a mere repetition of the abstract. Basically, you should
 			%\end{tabular}}
 			\caption{Number of successful recalls when input data set $I_i$ is given to model $M_j$, trained with pattern data set $P_{28}$, proportional to $\left|I_i\right|$}
 		\end{table}
+		
+	\section{Reproducibility}\label{AppF}
+	The source code of this project is public on github\footnote{https://github.com/juanlao7/bblr-hopfield-boltzmann}. The default configured random seed produces the same exact results as the ones published in this paper.
+	Requirements
+	\begin{itemize}
+		\item $Python \ \rightarrow \ 2.7.0$
+		\item $NumPy \ \rightarrow \  1.12.0$
+		\item $UNIX-like \ system \ shell$
+	\end{itemize}
+	
+	\paragraph{Execution}
+	Just execute the following command in the root of the project to generate data sets and test the models:
+	
+	$$\$\ sh\ generate\_results.sh$$
+	
+	This will create several JSON files in $ out/results/ $. When it finishes, execute the following command:
+	
+	$$\$\ sh\ generate\_latex.sh\ >\ out/tables.tex$$
+	
+	This will create a TeX file in $ out/tables.tex $ containing the result tables used in this paper.
+	
 
 \end{document}
