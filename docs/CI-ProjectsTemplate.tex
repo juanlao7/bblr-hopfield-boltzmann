@@ -3,7 +3,7 @@
 % The following packages will be automatically loaded:
 % amsmath, amssymb, natbib, graphicx, url, algorithm2e
 
-\title[My CI Project]{My beautiful CI Project}
+\title[My CI Project]{A Practical Comparison Between Hopfield Networks and Restricted Boltzmann Machines as Content-Addressable Autoassociative Memories}
 
  % Use \Name{Author Name} to specify the name.
  % If the surname contains spaces, enclose the surname
@@ -44,22 +44,45 @@
 \maketitle
 
 \begin{abstract}
-This paper analyses the performance of Hopfield Neural Network and Restricted Boltzmann Machine for several kinds of addressable content. In particular, it focuses on which of the algorithms has a better performance for each database defined by a certain property. 
+In this paper we analyze the performance of Hopfield Networks and Restricted Boltzmann Machines when they are used as autoassociative memories for several kinds of addressable binary content. The aim of this work is to recommend to the reader a model that offers the best results for a specific given pattern data set, based on the results obtained after testing several parameterized models against different random pattern data sets that satisfy the same statistical properties. 
 \end{abstract}
 
 \begin{keywords}
-Neural Networks, Hopfield Neural Networks, Boltzman Machine, Database, 
+ Artificial Neural Networks, Recurrent Neural Networks, Hopfield Networks, Restricted Boltzmann Machine, Autoassociative Memory, Addressable Content
 \end{keywords}
 
 
 \section{Problem statement and goals}
 
-This is where the content of your paper starts. Remember:
+Attractor networks such as Hopfield Networks [\cite{hopfield1982neural}] and Restricted Boltzmann Machines [\cite{Smolensky87}] are widely used as binary content-addressable memory systems, [\cite{DAI1998159}][\cite{SCHULZ1995145}][\cite{KrizhevskyH11}] and the theory behind them has been deeply studied in the past years. [\cite{80232}][\cite{298706}][\cite{6889573}] Both models have been compared on specific problems [\cite{552753}] and mathematical relations of equivalence have been demonstrated. [\cite{Barra20121}][\cite{Agliari201352}]
+
+In this paper we analyze the behaviour of both models after being trained with several random pattern data sets that satisfy certain statistical properties. These properties can be extracted from any kind of binary data set and, in conjunction with the result tables presented in this paper, the reader can have an approximate idea about what model offers the best results for his specific problem. In addition, if the reader has a sample of expected input for the system, it is possible to extract other statistical properties from the sample and compare them with the statistical properties of the tested random input pattern data sets.
+
+\paragraph{What we expected:} 
 \begin{itemize}
-\item Limit the main text (without bibliography and appendices) to 10 pages.
-\item Include, either in the main text or the appendices, enough details to convince the lecturers of the project's merits.
-\item You should cite or give credit to all material that is not yours (including pictures, books, web pages, code, ...)
+	\item A higher ability to memorize patterns/capacity of Hopfield Networks trained with the Storkey rule vs Hebbian rule.
+	\item A worse performance of Hopfield networks when:
+	\begin{itemize}
+		\item Incrementing the number of patterns to memorize.
+		\item Incrementing the correlation between the patterns to memorize.
+	\end{itemize}
+	\item Nothing special about RBMs (perhaps the possibility to adapt to the data by tuning its parameters? Able to memorize whatever thanks to overfitting?).
 \end{itemize}
+
+\section{Analyzed Models}
+
+Hopfield Networks are well-known content-addressable memories for which the Hebbian learning rule has been the traditional training approach. [\cite{hopfield1982neural}][\cite{Hebb1950}] This paper analyzes the Storkey learning rule [\cite{Storkey1997}] as well as the previously mentioned Hebbian. Storkey is being considered because it has been proved to provide a great increase in the capacity of the network, that is, it is able to recall more patterns.
+
+Additionally, units in the Hopfield Network may be updated either synchronously or asynchronously. This paper only contains an analysis of the asynchronous method, since the synchronous is considered less realistic based on the absence of observed global clock influencing analogous biological or physical systems of interest. [\cite{MacKay2003}]
+
+Boltzmann Machines are usually considered a stochastic analogue of the Hopfield Networks. [\cite{Ackley1985147}] Despite their theoretical usefulness, it is well known that in practice they cannot learn properly for large enough problems. That’s why we are considering its constrained version, the Restricted Boltzmann Machine, that permits an efficient training using the Contrastive Divergence algorithm. [\cite{carreira2005contrastive}]
+
+Learning in a Restricted Boltzmann Machine is dependent on several parameters that have to be tuned appropriately. Our experiments try to follow Hinton’s recommendations [\cite{hinton2012}] on the following issues, although some details have been implemented in a different way:
+
+
+
+
+
 
 The main goal for this project is to analyse the performance of Hopfield Neural Networks and Boltzman Machines as content addressable memory system, for this we create a series of databases with a certain property each. We will focus on Restricted Boltzman Machines, since the learning procedure is impractical in General Boltzman Machines and their use is very limited. This paper will try to answer the following questions:
 
@@ -69,15 +92,18 @@ The main goal for this project is to analyse the performance of Hopfield Neural 
 	\item ¿In which cases Holpfield Neural Networks should be used and in which Boltzman Machines?
 \end{itemize}
 
-The general problem to be solve is, given a database for which a content addressable memory system is needed, which of the two Neural Networks should be used. 
+The general problem to be solve is, given a database for which a content addressable memory system is needed, which of the two Neural Networks should be used.
 
 % para citar \cite{lo que ponga en el principio de bib} eg
-\cite{Ackley1985147}
+
 
 
 \section{Previous work}
 
-This is a very important part, because it puts your work in context.
+Hopfield Networks and Restricted Boltzman Machines had been compared several times for associative memory, even though both have divers applications, this is the most known one, at least for Hopfield Networks. This comparison has been made by applying both Neural Networks to several databases, which raises a new problem, how to generate this databases. For this task several algorithm had been proposed, genetic algorithms between them, however the solution was a simple randomized setting to generate patterns with $ 0s $ and $ 1s $ of length $N$. The databases are classified by certain property in relation with the Hamming distance between vectors. For this we try to assure that the distance between vectors in this datasets has an standard deviation of $\sigma$ and a mean of $\mu$. 
+
+This properties along with the size of the vectors $L$ and the total number of vectors $N$ will characterize the datasets for training and testing both algorithms.
+
 
 \section{The CI methods}
 
@@ -95,7 +121,7 @@ Be critic with your work ...
 
 The conclusions are not a mere repetition of the abstract. Basically, you should describe ``what you know now that you did \emph{not} before doing the work''. In addition, mention what would be natural follow-up lines of work.
 
-\section*{References}
+%\section*{References}
 
 \bibliography{bibfile}
 
